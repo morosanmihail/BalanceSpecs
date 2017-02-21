@@ -1,0 +1,3 @@
+<batch>
+	<run paramfile="F:\GitHub\PacMan-CSharp\Bridges\MsPacman.json" outputfolder="PacmanTest" runs="2" generations="5" randomseed="10007" />
+</batch>
