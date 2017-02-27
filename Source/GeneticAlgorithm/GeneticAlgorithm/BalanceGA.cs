@@ -1,10 +1,14 @@
-﻿using SharpGenetics.BaseClasses;
+﻿using GeneticAlgorithm.Evaluators;
+using Newtonsoft.Json;
+using SharpGenetics.BaseClasses;
 using SharpGenetics.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GeneticAlgorithm.GeneticAlgorithm
@@ -16,6 +20,9 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
         [DataMember]
         public String CreatedBy = "";
+
+        [DataMember]
+        public string Results = "";
 
         public BalanceGA(PopulationManager<BalanceGA, int, double> Manager, List<double> root = null, CRandom rand = null)
         {
@@ -89,9 +96,105 @@ namespace GeneticAlgorithm.GeneticAlgorithm
         {
             double finalResult = 0;
 
-            //TODO
+            dynamic JResults = null;
+            
+            if((string)Manager.GetParameters().GetParameter("string_Bridge_Type") == "local")
+            {
+                Results = RunGamesLocal();
+            } else
+            {
+                Results = RunGamesRemote();
+            }
+
+            JResults = JsonConvert.DeserializeObject(Results);
+
+            //Do stuff with Results
+            //Go through evaluators
+            //Get metric being targeted from Results
+            //Apply evaluator type to results and desired value
+            //Add result, with weight, to finalResults
+
+            foreach (var Evaluator in Manager.GetParameters().JsonParams.evaluators)
+            {
+                string EvalType = Evaluator.type;
+                string Metric = Evaluator.metric;
+                double Target = Evaluator.target;
+                double Weight = Evaluator.weight;
+
+                MetricEvaluator Eval = null;
+
+                Eval = (MetricEvaluator)Activator.CreateInstance(Type.GetType(EvalType), new object[] { });
+
+                double EvalScore = 0;
+                string MetricType = Manager.GetParameters().JsonParams.metrics[Metric].type;
+                if (MetricType == "List")
+                {
+                    EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<List<double>>(), Target);
+                }
+
+                if (MetricType == "Double")
+                {
+                    EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<double>(), Target);
+                }
+
+                finalResult += EvalScore * Weight;
+
+            }
 
             return finalResult;
+        }
+
+        string RunGamesLocal()
+        {
+            try
+            {
+                var Simulator = new Process();
+
+                string Invoke = (string)Manager.GetParameters().GetParameter("string_Bridge_Local_Exe");
+
+                string EXE = Invoke.Substring(0, Invoke.IndexOf(' '));
+                string ARGS = Invoke.Substring(Invoke.IndexOf(' '));
+
+                ARGS = ARGS.Replace("%0", (string)Manager.GetParameters().GetParameter("string_SpecsFile"));
+                ARGS = ARGS.Replace("%1", rand.Next().ToString());
+                ARGS = ARGS.Replace("%2", string.Join(",", Vector));
+
+                ProcessStartInfo info = new ProcessStartInfo(EXE, ARGS); 
+                //info.WorkingDirectory = CompetDirectory;
+                info.UseShellExecute = false;
+                info.RedirectStandardInput = true;
+                info.RedirectStandardOutput = true;
+
+                Simulator.StartInfo = info;
+
+                Simulator.Start();
+
+                //Run stuff
+                string AllOutput = "";
+                while (!Simulator.StandardOutput.EndOfStream || !Simulator.HasExited)
+                {
+                    AllOutput += Simulator.StandardOutput.ReadLine();
+                    // do something with line
+                }
+
+                int pFrom = AllOutput.IndexOf("BEGIN METRICS") + "BEGIN METRICS".Length;
+                int pTo = AllOutput.IndexOf("END METRICS");
+                AllOutput = AllOutput.Substring(pFrom, pTo - pFrom);
+
+                Simulator.Close();
+                
+                //Simulator.Kill();
+
+                return AllOutput;
+            } catch(Exception e)
+            {
+                return null;
+            }
+        }
+
+        string RunGamesRemote()
+        {
+            return null;
         }
 
         public override T Crossover<T>(T b)

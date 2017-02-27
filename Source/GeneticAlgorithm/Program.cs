@@ -1,4 +1,5 @@
 ﻿using GeneticAlgorithm.GeneticAlgorithm;
+using Newtonsoft.Json;
 using SharpGenetics.BaseClasses;
 using System;
 using System.Collections.Generic;
@@ -89,8 +90,12 @@ namespace GeneticAlgorithm
                                     DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
 
                                     // Deserialize the data and read it from the instance.
-                                    RunManager =
-                                        (GPRunManager<BalanceGA, int, double>)ser.ReadObject(reader, true);
+                                    RunManager = (GPRunManager<BalanceGA, int, double>)ser.ReadObject(reader, true);
+
+                                    //string Json = File.ReadAllText(BackupFilename + ".json");
+                                    //RunManager = JsonConvert.DeserializeObject<GPRunManager<BalanceGA, int, double>>(Json);
+                                    //RunManager = new GPRunManager<BalanceGA, int, double>(ParamFile, tests, RandomSeed * Run);
+                                    //JsonConvert.PopulateObject(Json, RunManager);
 
                                     //RunManager.ReloadParameters();
 
@@ -143,6 +148,16 @@ namespace GeneticAlgorithm
                                     {
                                         serializer.WriteObject(w, RunManager);
                                     }
+
+                                    //JSON
+                                    /*JsonSerializer jserializer = new JsonSerializer();
+                                    jserializer.NullValueHandling = NullValueHandling.Ignore;
+                                    
+                                    using(StreamWriter sw = new StreamWriter(filename + ".json"))
+                                    using(JsonWriter writer = new JsonTextWriter(sw))
+                                    {
+                                        jserializer.Serialize(writer, RunManager);
+                                    }*/
 
                                     Console.WriteLine("Saving to file done");
 
