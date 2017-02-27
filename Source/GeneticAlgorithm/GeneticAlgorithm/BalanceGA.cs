@@ -1,5 +1,7 @@
 ﻿using GeneticAlgorithm.Evaluators;
+using GeneticAlgorithm.RemoteControl;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SharpGenetics.BaseClasses;
 using SharpGenetics.Logging;
 using System;
@@ -103,7 +105,8 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 Results = RunGamesLocal();
             } else
             {
-                Results = RunGamesRemote();
+                var P = Manager.GetParameters().JsonParams.bridge;
+                Results = RunGamesRemote((string)P.server,(int)P.port,(string)P.username,(string)P.password);
             }
 
             JResults = JsonConvert.DeserializeObject(Results);
@@ -141,6 +144,8 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
             }
 
+            //TODO add parameter minimising / maximising
+
             return finalResult;
         }
 
@@ -174,7 +179,6 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 while (!Simulator.StandardOutput.EndOfStream || !Simulator.HasExited)
                 {
                     AllOutput += Simulator.StandardOutput.ReadLine();
-                    // do something with line
                 }
 
                 int pFrom = AllOutput.IndexOf("BEGIN METRICS") + "BEGIN METRICS".Length;
@@ -192,9 +196,43 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             }
         }
 
-        string RunGamesRemote()
+        string RunGamesRemote(string HostName, int Port, string Username, string Password)
         {
-            return null;
+            try
+            {
+                dynamic JsonMessage = new JObject(Manager.GetParameters().JsonParams);
+
+                int i = 0;
+                foreach(var Param in JsonMessage.parameters)
+                {
+                    Param.Add("value", Vector[i]);
+                    i++;
+                }
+
+                JsonMessage.Add("randomseed", rand.Next());
+
+                RPCClient rpcClient = null;
+                while (rpcClient == null)
+                {
+                    try
+                    {
+                        rpcClient = new RPCClient(HostName, Port, Username, Password);
+                    }
+                    catch
+                    {
+                        rpcClient = null;
+                    }
+                }
+                var response = rpcClient.CallRunGame(JsonMessage.ToString());
+
+                rpcClient.Close();
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public override T Crossover<T>(T b)
