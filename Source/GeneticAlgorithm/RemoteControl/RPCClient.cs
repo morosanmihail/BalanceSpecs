@@ -15,19 +15,22 @@ namespace GeneticAlgorithm.RemoteControl
         private string replyQueueName;
         private QueueingBasicConsumer consumer;
 
-        public RPCClient(string Host = "localhost", int Port = 0, string Username = "", string Password = "")
+        public RPCClient(string Host = "localhost", int Port = 5672, string Username = "", string Password = "")
         {
             var factory = new ConnectionFactory()
             {
                 HostName = Host,
                 Port = Port,
-                //UserName = Username,
-                //Password = Password
             };
-            if (Username == "")
-                Username = null;
-            if (Password == "")
-                Password = null;
+            if (Username != "")
+            {
+                factory.UserName = Username;
+            }
+            
+            if (Password != "")
+            {
+                factory.Password = Password;
+            }
 
             factory.RequestedHeartbeat = 30;
             connection = factory.CreateConnection();
