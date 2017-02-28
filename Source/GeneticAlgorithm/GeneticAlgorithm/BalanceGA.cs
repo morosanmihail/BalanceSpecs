@@ -54,16 +54,16 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
         List<double> GenerateData()
         {
-            int Length = (int)(double)Manager.GetParameters().GetParameter("Par_Length");
             List<double> data = new List<double>();
 
-            List<double> RangeMax = (List<double>)Manager.GetParameters().GetParameter("Params_MaxRange");
-            List<double> RangeMin = (List<double>)Manager.GetParameters().GetParameter("Params_MinRange");
-            List<int> Accuracy = (List<int>)Manager.GetParameters().GetParameter("Params_Accuracy");
+            dynamic Params = Manager.GetParameters().JsonParams.parameters;
 
-            for (int i = 0; i < Length; i++)
+            foreach (var P in Params)
             {
-                data.Add(GetValInRange(RangeMin[i], RangeMax[i], Accuracy[i]));
+                if ((int)P.enabled == 1)
+                { 
+                    data.Add(GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy));
+                }
             }
 
             return data;
@@ -110,41 +110,56 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             }
 
             JResults = JsonConvert.DeserializeObject(Results);
-
-            //Do stuff with Results
-            //Go through evaluators
-            //Get metric being targeted from Results
-            //Apply evaluator type to results and desired value
-            //Add result, with weight, to finalResults
-
+            
             foreach (var Evaluator in Manager.GetParameters().JsonParams.evaluators)
             {
-                string EvalType = Evaluator.type;
-                string Metric = Evaluator.metric;
-                double Target = Evaluator.target;
-                double Weight = Evaluator.weight;
-
-                MetricEvaluator Eval = null;
-
-                Eval = (MetricEvaluator)Activator.CreateInstance(Type.GetType(EvalType), new object[] { });
-
-                double EvalScore = 0;
-                string MetricType = Manager.GetParameters().JsonParams.metrics[Metric].type;
-                if (MetricType == "List")
+                if ((int)Evaluator.enabled == 1)
                 {
-                    EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<List<double>>(), Target);
+                    string EvalType = Evaluator.type;
+                    string Metric = Evaluator.metric;
+                    double Target = Evaluator.target;
+                    double Weight = Evaluator.weight;
+
+                    MetricEvaluator Eval = null;
+
+                    Eval = (MetricEvaluator)Activator.CreateInstance(Type.GetType(EvalType), new object[] { });
+
+                    double EvalScore = 0;
+                    string MetricType = Manager.GetParameters().JsonParams.metrics[Metric].type;
+                    if (MetricType == "List")
+                    {
+                        EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<List<double>>(), Target);
+                    }
+
+                    if (MetricType == "Double")
+                    {
+                        EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<double>(), Target);
+                    }
+
+                    finalResult += EvalScore * Weight;
                 }
-
-                if (MetricType == "Double")
-                {
-                    EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<double>(), Target);
-                }
-
-                finalResult += EvalScore * Weight;
-
             }
+            
+            dynamic Params = Manager.GetParameters().JsonParams.parameters;
 
-            //TODO add parameter minimising / maximising
+            int i = 0;
+            foreach (var P in Params)
+            {
+                if ((int)P.enabled == 1)
+                {
+                    if ((string)P.minimise == "minimise")
+                    {
+                        finalResult += Math.Abs(Vector[i]) * (double)P.weight;
+                    }
+
+                    if((string)P.minimise == "maximise")
+                    {
+                        //TODO
+                    }
+
+                    i++;
+                }
+            }
 
             return finalResult;
         }
@@ -205,8 +220,11 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 int i = 0;
                 foreach(var Param in JsonMessage.parameters)
                 {
-                    Param.Add("value", Vector[i]);
-                    i++;
+                    if ((int)Param.enabled == 1)
+                    {
+                        Param.Add("value", Vector[i]);
+                        i++;
+                    }
                 }
 
                 JsonMessage.Add("randomseed", rand.Next());
@@ -270,23 +288,26 @@ namespace GeneticAlgorithm.GeneticAlgorithm
         {
             var newData = new List<double>(Vector);
 
-            List<double> RangeMax = (List<double>)Manager.GetParameters().GetParameter("Params_MaxRange");
-            List<double> RangeMin = (List<double>)Manager.GetParameters().GetParameter("Params_MinRange");
-            List<int> Accuracy = (List<int>)Manager.GetParameters().GetParameter("Params_Accuracy");
-
             double MutationChance = (double)Manager.GetParameters().GetParameter("extra_MutationChance");
-            
-            for (int i = 0; i < Vector.Count; i++)
+
+            dynamic Params = Manager.GetParameters().JsonParams.parameters;
+
+            int i = 0;
+            foreach (var P in Params)
             {
-                double MutateRange = (double)(RangeMax[i] - RangeMin[i]) / Accuracy[i];
-                if (rand.Next(0, 100) <= MutationChance * 100)
+                if ((int)P.enabled == 1)
                 {
-                    double Shift = Math.Round(rand.NextDouble(-MutateRange, MutateRange), (int)Math.Log10(Accuracy[i]));
-                    newData[i] += Shift;
-                    if (newData[i] > RangeMax[i])
-                        newData[i] = RangeMax[i];
-                    if (newData[i] < RangeMin[i])
-                        newData[i] = RangeMin[i];
+                    double MutateRange = (double)((double)P.rangeMax - (double)P.rangeMin) / (double)P.rangeAccuracy;
+                    if (rand.Next(0, 100) <= MutationChance * 100)
+                    {
+                        double Shift = Math.Round(rand.NextDouble(-MutateRange, MutateRange), (int)Math.Log10((double)P.rangeAccuracy));
+                        newData[i] += Shift;
+                        if (newData[i] > (double)P.rangeMax)
+                            newData[i] = (double)P.rangeMax;
+                        if (newData[i] < (double)P.rangeMin)
+                            newData[i] = (double)P.rangeMin;
+                    }
+                    i++;
                 }
             }
 
