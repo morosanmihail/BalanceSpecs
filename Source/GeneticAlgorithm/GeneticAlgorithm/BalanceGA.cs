@@ -60,7 +60,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
             foreach (var P in Params)
             {
-                if ((int)P.enabled == 1)
+                if ((bool)P.enabled == true)
                 { 
                     data.Add(GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy));
                 }
@@ -113,7 +113,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             
             foreach (var Evaluator in Manager.GetParameters().JsonParams.evaluators)
             {
-                if ((int)Evaluator.enabled == 1)
+                if ((bool)Evaluator.enabled == true)
                 {
                     string EvalType = Evaluator.type;
                     string Metric = Evaluator.metric;
@@ -145,7 +145,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             int i = 0;
             foreach (var P in Params)
             {
-                if ((int)P.enabled == 1)
+                if ((bool)P.enabled == true)
                 {
                     if ((string)P.minimise == "minimise")
                     {
@@ -220,7 +220,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 int i = 0;
                 foreach(var Param in JsonMessage.parameters)
                 {
-                    if ((int)Param.enabled == 1)
+                    if ((bool)Param.enabled == true)
                     {
                         Param.Add("value", Vector[i]);
                         i++;
@@ -295,7 +295,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             int i = 0;
             foreach (var P in Params)
             {
-                if ((int)P.enabled == 1)
+                if ((bool)P.enabled == true)
                 {
                     double MutateRange = (double)((double)P.rangeMax - (double)P.rangeMin) / (double)P.rangeAccuracy;
                     if (rand.Next(0, 100) <= MutationChance * 100)

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MahApps.Metro.Controls;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace BalanceSpecsGUI
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {
