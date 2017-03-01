@@ -125,7 +125,10 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                     Eval = (MetricEvaluator)Activator.CreateInstance(Type.GetType(EvalType), new object[] { });
 
                     double EvalScore = 0;
-                    string MetricType = Manager.GetParameters().JsonParams.metrics[Metric].type;
+
+                    JToken MetricTypeT = Manager.GetParameters().JsonParams.SelectToken("$.metrics[?(@.name == '" + Metric + "')]");
+
+                    string MetricType = MetricTypeT.Value<string>("type"); //Manager.GetParameters().JsonParams.metrics[Metric].type;
                     if (MetricType == "List")
                     {
                         EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<List<double>>(), Target);

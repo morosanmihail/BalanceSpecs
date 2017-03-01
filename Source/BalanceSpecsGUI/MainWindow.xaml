@@ -5,11 +5,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:BalanceSpecsGUI"
         mc:Ignorable="d"
         Title="Balance Specs GUI" Height="371.569" Width="882.843">
     <Controls:MetroWindow.Resources>
         <w:MethodToValueConverter x:Key="MethodToValueConverter"/>
+        <x:Array Type="{x:Type sys:String}" x:Key="AvailableMetricTypes">
+            <sys:String>Double</sys:String>
+            <sys:String>List</sys:String>
+        </x:Array>
     </Controls:MetroWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -50,7 +55,7 @@
                     <StackPanel Orientation="Vertical">
                         <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="298" ItemsSource="{Binding parameters, Mode=TwoWay}" DisplayMemberPath="name"/>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="Add" Click="Button_Click_1"/>
+                            <Button Content="Add" Click="AddParameterButtonClick"/>
                             <Button Content="Remove"/>
                         </StackPanel>
                     </StackPanel>
@@ -72,11 +77,40 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Metrics">
-
+            <TabItem Header="Metrics" Name="MetricsTab">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                    <StackPanel Orientation="Vertical">
+                        <ListBox x:Name="MetricsList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="298" ItemsSource="{Binding metrics}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="2">
+                                        <TextBlock Padding="5,0,5,0" Text="{Binding name}" />
+                                        <Controls:SplitButton Width="120" ItemsSource="{StaticResource AvailableMetricTypes}" SelectedValue="{Binding type.Value, Mode=TwoWay}">
+                                        </Controls:SplitButton>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewMetricName" Width="150"/>
+                            <Button Content="Add" Click="AddMetricButtonClick"/>
+                            <Button Content="Remove"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Evaluators">
-
+                <ListBox x:Name="TestList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="298" ItemsSource="{Binding evaluators}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <UniformGrid Columns="2">
+                                <TextBlock Padding="5,0,5,0" Text="{Binding name}" />
+                                <Controls:SplitButton Width="120" ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
+                                </Controls:SplitButton>
+                            </UniformGrid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </TabItem>
             <TabItem Header="Custom Data">
 
