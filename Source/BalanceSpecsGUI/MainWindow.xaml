@@ -7,6 +7,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:BalanceSpecsGUI"
+        xmlns:conv="clr-namespace:BalanceSpecsGUI.Converters"
         mc:Ignorable="d"
         Title="Balance Specs GUI" Height="371.569" Width="882.843">
     <Controls:MetroWindow.Resources>
@@ -15,6 +16,10 @@
             <sys:String>Double</sys:String>
             <sys:String>List</sys:String>
         </x:Array>
+        <ObjectDataProvider x:Key="EvaluatorTypes"
+                ObjectType="{x:Type conv:ReturnEvaluatorTypes}"
+                MethodName="GetTypes" >
+        </ObjectDataProvider>
     </Controls:MetroWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -103,17 +108,41 @@
                 <ListBox x:Name="TestList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="298" ItemsSource="{Binding evaluators}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <UniformGrid Columns="2">
+                            <UniformGrid Columns="6">
                                 <TextBlock Padding="5,0,5,0" Text="{Binding name}" />
                                 <Controls:SplitButton Width="120" ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
                                 </Controls:SplitButton>
+                                <Controls:SplitButton Width="120" ItemsSource="{Binding Source={StaticResource EvaluatorTypes}}" DisplayMemberPath="Name" SelectedValuePath="AssemblyQualifiedName" SelectedValue="{Binding type.Value, Mode=TwoWay}"/>
+                                <TextBox Text="{Binding target}"/>
+                                <TextBox Text="{Binding weight}"/>
+                                <Controls:ToggleSwitch IsChecked="{Binding enabled.Value}" OnLabel="Enabled" OffLabel="Disabled"/>
                             </UniformGrid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
             </TabItem>
             <TabItem Header="Custom Data">
+                <StackPanel Orientation="Vertical" Margin="0,0,0,0">
+                    <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding custom}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <UniformGrid Columns="2">
+                                    <TextBlock Padding="5,0,5,0" Text="{Binding Name}" />
 
+                                    <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Value.Value, Mode=TwoWay}" VerticalAlignment="Top" Width="120"/>
+                                </UniformGrid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewCustomData" Width="150"/>
+                        <Button Content="Add" Click="AddCustomButtonClick"/>
+                        <Button Content="Remove"/>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Bridge">
+                
             </TabItem>
         </Controls:MetroTabControl>
 

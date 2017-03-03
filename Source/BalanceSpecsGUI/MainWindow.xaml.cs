@@ -39,7 +39,7 @@ namespace BalanceSpecsGUI
         {
             dynamic JsonO = this.DataContext;
 
-            MessageBox.Show(JsonO.metrics.ToString());
+            MessageBox.Show(JsonO.evaluators.ToString());
         }
 
         private void AddParameterButtonClick(object sender, RoutedEventArgs e)
@@ -66,6 +66,13 @@ namespace BalanceSpecsGUI
             {
                 await this.ShowMessageAsync("Error", "A metric with the same name already exists!");
             }
+        }
+
+        private void AddCustomButtonClick(object sender, RoutedEventArgs e)
+        {
+            dynamic JsonO = this.DataContext;
+
+            JsonO.custom[NewCustomData.Text] = "";
         }
     }
 }
