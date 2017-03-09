@@ -115,7 +115,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             {
                 if ((bool)Evaluator.enabled == true)
                 {
-                    string EvalType = Evaluator.type;
+                    string EvalType = "GeneticAlgorithm.Evaluators." + Evaluator.type + ", GeneticAlgorithm";
                     string Metric = Evaluator.metric;
                     double Target = Evaluator.target;
                     double Weight = Evaluator.weight;

@@ -12,9 +12,19 @@
         Title="Balance Specs GUI" Height="371.569" Width="882.843">
     <Controls:MetroWindow.Resources>
         <w:MethodToValueConverter x:Key="MethodToValueConverter"/>
+        <w:ConnectionTypeToBoolConverter x:Key="ConnectionTypeToBoolConverter"/>
         <x:Array Type="{x:Type sys:String}" x:Key="AvailableMetricTypes">
             <sys:String>Double</sys:String>
             <sys:String>List</sys:String>
+        </x:Array>
+        <x:Array Type="{x:Type sys:String}" x:Key="AvailableBridgeOptions">
+            <sys:String>local</sys:String>
+            <sys:String>remote</sys:String>
+        </x:Array>
+        <x:Array Type="{x:Type sys:String}" x:Key="ParameterMinimisations">
+            <sys:String>ignore</sys:String>
+            <sys:String>maximise</sys:String>
+            <sys:String>minimise</sys:String>
         </x:Array>
         <ObjectDataProvider x:Key="EvaluatorTypes"
                 ObjectType="{x:Type conv:ReturnEvaluatorTypes}"
@@ -41,45 +51,76 @@
                 <MenuItem Header="Load Run In Progress"></MenuItem>
             </MenuItem>
         </Menu>
-        <Controls:MetroTabControl Grid.Row="1">
+        
+        <Controls:MetroTabControl Grid.Row="1" TabStripPlacement="Left">
             <TabItem Header="GA Parameters">
-                <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding gaparams}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <UniformGrid Columns="2">
-                                <TextBlock Padding="5,0,5,0" Text="{Binding Name}" />
-                                
-                                <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Value.Value, Mode=TwoWay}" VerticalAlignment="Top" Width="120"/>
-                            </UniformGrid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <StackPanel>
+                    <ListBox HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding gaparams}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <UniformGrid Columns="2">
+                                    <TextBlock Padding="5,0,5,0" Text="{Binding Name}" />
+
+                                    <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Value.Value, Mode=TwoWay}" VerticalAlignment="Top" Width="150"/>
+                                </UniformGrid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBox Controls:TextBoxHelper.Watermark="Folder To Save Results" Text="" Width="200" Name="ResultsPath"/>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Game Parameters">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                     <StackPanel Orientation="Vertical">
-                        <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="298" ItemsSource="{Binding parameters, Mode=TwoWay}" DisplayMemberPath="name"/>
+                        <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" ItemsSource="{Binding parameters, Mode=TwoWay}" DisplayMemberPath="name"/>
                         <StackPanel Orientation="Horizontal">
+                            <TextBox Controls:TextBoxHelper.Watermark="Name" Text="" Width="120" Name="NewParameterName"/>
                             <Button Content="Add" Click="AddParameterButtonClick"/>
                             <Button Content="Remove"/>
                         </StackPanel>
                     </StackPanel>
+                    <Grid DataContext="{Binding SelectedItem, ElementName=ParametersList}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Vertical" DataContext="{Binding SelectedItem, ElementName=ParametersList}">
-                        <StackPanel HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="160" Orientation="Horizontal">
-                            <TextBlock Text="Name" Width="80"/>
-                            <TextBox TextWrapping="NoWrap" Text="{Binding name, FallbackValue='noname', Mode=TwoWay}" Height="23" Width="80"/>
-                        </StackPanel>
-                        <StackPanel HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="160" Orientation="Horizontal">
-                            <TextBlock Text="Range Min" Width="80"/>
-                            <TextBox TextWrapping="Wrap" Text="{Binding rangeMin, FallbackValue=0, Mode=TwoWay}" Height="23" Width="80"/>
-                        </StackPanel>
-                        <StackPanel HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="160" Orientation="Horizontal">
-                            <TextBlock Text="Enabled" Width="80"/>
-                            <CheckBox Content="Enabled" IsChecked="{Binding enabled.Value, Mode=TwoWay}"></CheckBox>
-                        </StackPanel>
-                        <Button Content="Test" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-                    </StackPanel>
+                        <TextBlock Text="Name" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                        <TextBox TextWrapping="Wrap" Text="{Binding name, FallbackValue='noname', Mode=TwoWay}" Width="150" Height="23" Grid.Row="1" Grid.Column="1"/>
+
+                        <TextBlock Text="Range Min" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                        <TextBox TextWrapping="Wrap" Text="{Binding rangeMin, FallbackValue=0, Mode=TwoWay}" Height="23" Width="150" Grid.Row="2" Grid.Column="1"/>
+                        
+                        <TextBlock Text="Range Max" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+                        <TextBox TextWrapping="Wrap" Text="{Binding rangeMax, FallbackValue=0, Mode=TwoWay}" Height="23" Width="150" Grid.Row="3" Grid.Column="1"/>
+
+                        <TextBlock Text="Decimal Accuracy" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+                        <TextBox TextWrapping="Wrap" Text="{Binding rangeAccuracy, FallbackValue=10, Mode=TwoWay}" Height="23" Width="150" Grid.Row="4" Grid.Column="1"/>
+
+                        <TextBlock Text="Fitness Importance (Weight)" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+                        <TextBox TextWrapping="Wrap" Text="{Binding weight, FallbackValue=0, Mode=TwoWay}" Height="23" Width="150" Grid.Row="5" Grid.Column="1"/>
+
+                        <Controls:ToggleSwitch OnLabel="Enabled" OffLabel="Disabled" IsChecked="{Binding enabled.Value, Mode=TwoWay}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+                        <TextBlock Text="Minimise Value" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+                        <Controls:SplitButton Grid.Row="6" Grid.Column="1" Width="150" ItemsSource="{StaticResource ParameterMinimisations}" SelectedValue="{Binding minimise.Value, Mode=TwoWay}">
+                        </Controls:SplitButton>
+
+                        <Button Content="Test" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.Row="7" Grid.Column="1"/>
+                    </Grid>
+                    
                 </StackPanel>
             </TabItem>
             <TabItem Header="Metrics" Name="MetricsTab">
@@ -105,21 +146,29 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Evaluators">
-                <ListBox x:Name="TestList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="298" ItemsSource="{Binding evaluators}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <UniformGrid Columns="6">
-                                <TextBlock Padding="5,0,5,0" Text="{Binding name}" />
-                                <Controls:SplitButton Width="120" ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
-                                </Controls:SplitButton>
-                                <Controls:SplitButton Width="120" ItemsSource="{Binding Source={StaticResource EvaluatorTypes}}" DisplayMemberPath="Name" SelectedValuePath="AssemblyQualifiedName" SelectedValue="{Binding type.Value, Mode=TwoWay}"/>
-                                <TextBox Text="{Binding target}"/>
-                                <TextBox Text="{Binding weight}"/>
-                                <Controls:ToggleSwitch IsChecked="{Binding enabled.Value}" OnLabel="Enabled" OffLabel="Disabled"/>
-                            </UniformGrid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <StackPanel>
+                    <ListBox x:Name="TestList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding evaluators}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <UniformGrid Columns="6">
+                                    <TextBlock Padding="5,0,5,0" Text="{Binding name}" />
+                                    <Controls:SplitButton Width="120" ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
+                                    </Controls:SplitButton>
+                                    <Controls:SplitButton Width="120" ItemsSource="{Binding Source={StaticResource EvaluatorTypes}}" SelectedValue="{Binding type.Value, Mode=TwoWay}"/>
+                                    <TextBox Text="{Binding target, Mode=TwoWay}"/>
+                                    <TextBox Text="{Binding weight, Mode=TwoWay}"/>
+                                    <Controls:ToggleSwitch IsChecked="{Binding enabled.Value, Mode=TwoWay}" OnLabel="Enabled" OffLabel="Disabled"/>
+                                </UniformGrid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewEvaluatorName" Width="150"/>
+                        <Button Content="Add" Click="AddEvaluatorButtonClick"/>
+                        <Button Content="Remove"/>
+                    </StackPanel>
+                </StackPanel>
+                
             </TabItem>
             <TabItem Header="Custom Data">
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
@@ -142,7 +191,36 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Bridge">
-                
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Connection Type" FontWeight="Bold" FontSize="20"/>
+                    <Controls:ToggleSwitch OnLabel="Remote" OffLabel="Local" IsChecked="{Binding bridge.type.Value, Converter={StaticResource ConnectionTypeToBoolConverter}, Mode=TwoWay}">
+                    </Controls:ToggleSwitch>
+
+                    <GroupBox Header="Remote Connection">
+                        <UniformGrid Columns="2">
+                            <TextBlock Padding="5,0,5,0" Text="Server" />
+                            <TextBox HorizontalAlignment="Left" Width="170" Height="23" TextWrapping="Wrap" Text="{Binding bridge.server, Mode=TwoWay}" Tag="{Binding bridge.type}" VerticalAlignment="Top" />
+                            <TextBlock Padding="5,0,5,0" Text="Port" />
+                            <TextBox HorizontalAlignment="Left" Width="170" Height="23" TextWrapping="Wrap" Text="{Binding bridge.port, Mode=TwoWay}" Tag="{Binding bridge.type}" VerticalAlignment="Top" />
+                            <TextBlock Padding="5,0,5,0" Text="Username" />
+                            <TextBox HorizontalAlignment="Left" Width="170" Height="23" TextWrapping="Wrap" Text="{Binding bridge.username, Mode=TwoWay}" Tag="{Binding bridge.type}" VerticalAlignment="Top" />
+                            <TextBlock Padding="5,0,5,0" Text="Password" />
+                            <TextBox HorizontalAlignment="Left" Width="170" Height="23" Text="{Binding bridge.password, Mode=TwoWay}"/>
+
+                        </UniformGrid>
+                        
+                    </GroupBox>
+
+                    <GroupBox Header="Local Connection">
+                        <UniformGrid Columns="2">
+                            <TextBlock Padding="5,0,5,0" Text="Executable" />
+                            <TextBox HorizontalAlignment="Left" Width="170" Height="23" TextWrapping="NoWrap" Text="{Binding bridge.executable, Mode=TwoWay}" Tag="{Binding bridge.type}" VerticalAlignment="Top" />
+
+                        </UniformGrid>
+
+                    </GroupBox>
+
+                </StackPanel>
             </TabItem>
         </Controls:MetroTabControl>
 

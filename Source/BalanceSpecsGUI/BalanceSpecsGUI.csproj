@@ -71,6 +71,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\ConnectionTypeToBoolConverter.cs" />
     <Compile Include="Converters\MethodToValueConverter.cs" />
     <Compile Include="Converters\ReturnEvaluatorTypes.cs" />
     <Compile Include="MainWindow.xaml.cs">

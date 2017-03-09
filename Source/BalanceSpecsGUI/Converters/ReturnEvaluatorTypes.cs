@@ -10,7 +10,7 @@ namespace BalanceSpecsGUI.Converters
 {
     public static class ReturnEvaluatorTypes
     {
-        public static List<Type> GetTypes()
+        public static List<string> GetTypes()
         {
             Assembly cA = Assembly.GetAssembly(typeof(MetricEvaluator));
 
@@ -18,7 +18,9 @@ namespace BalanceSpecsGUI.Converters
 
             var list2 = list.Where(t => t.GetInterfaces().Contains(typeof(MetricEvaluator)) && !t.IsAbstract && t.IsPublic).ToList();
 
-            return list2;
+            var list3 = list2.Select(p => p.Name).ToList();
+
+            return list3;
         }
     }
 }

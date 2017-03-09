@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls.Dialogs;
+using BalanceSpecsGUI.Converters;
 
 namespace BalanceSpecsGUI
 {
@@ -42,11 +43,19 @@ namespace BalanceSpecsGUI
             MessageBox.Show(JsonO.evaluators.ToString());
         }
 
-        private void AddParameterButtonClick(object sender, RoutedEventArgs e)
+        private async void AddParameterButtonClick(object sender, RoutedEventArgs e)
         {
             dynamic JsonO = this.DataContext;
 
-            JsonO.parameters.Add(new JObject(new JProperty("name","Something"), new JProperty("rangeMax",4)));
+            string Name = NewParameterName.Text.Trim();
+
+            if(Name.Length < 1)
+            {
+                await this.ShowMessageAsync("Error", "Empty names are not allowed!");
+                return;
+            }
+
+            JsonO.parameters.Add(new JObject(new JProperty("name",Name), new JProperty("enabled",true), new JProperty("minimise","ignore")));
         }
 
         private async void AddMetricButtonClick(object sender, RoutedEventArgs e)
@@ -65,6 +74,26 @@ namespace BalanceSpecsGUI
             } catch(Exception ex)
             {
                 await this.ShowMessageAsync("Error", "A metric with the same name already exists!");
+            }
+        }
+
+        private async void AddEvaluatorButtonClick(object sender, RoutedEventArgs e)
+        {
+            dynamic JsonO = this.DataContext;
+
+            if (NewEvaluatorName.Text.Trim().Length < 1)
+            {
+                await this.ShowMessageAsync("Error", "Empty names are not allowed!");
+                return;
+            }
+
+            try
+            {
+                JsonO.evaluators.Add(new JObject(new JProperty("name", NewEvaluatorName.Text), new JProperty("enabled",true), new JProperty("type", ReturnEvaluatorTypes.GetTypes()[0])));
+            }
+            catch (Exception ex)
+            {
+                await this.ShowMessageAsync("Error", "An evaluator with the same name already exists!");
             }
         }
 
