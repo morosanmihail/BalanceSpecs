@@ -1,33 +1,54 @@
 ﻿using GeneticAlgorithm.GeneticAlgorithm;
+using GeneticAlgorithm.Helpers;
+using PropertyChanged;
 using SharpGenetics.BaseClasses;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
 namespace GeneticAlgorithm.GAController
 {
+    [ImplementPropertyChanged]
     public class GAController
     {
-        bool isStarted = false;
+        public bool isStarted { get; set; }
 
         object ThreadLock = new object();
 
-        GPRunManager<BalanceGA, int, double> RunManager = null;
+        Thread GAThread = null;
+
+        public GPRunManager<BalanceGA, int, double> RunManager = null;
+        
+        public ObservableCollection<double> BestFitnessOverTime
+        {
+            get;set;
+        }
 
         string ResultsFolder = "";
         int GensToRun = 0;
 
-        public GAController()
+        string Folder;
+        int GenToRun;
+        int RandomSeed;
+        string JSONFile;
+
+        public GAController(string Folder, int GenToRun, int RandomSeed, string JSONFile)
         {
-
+            isStarted = false;
+            BestFitnessOverTime = new AsyncObservableCollection<double>();
+            this.Folder = Folder;
+            this.GenToRun = GenToRun;
+            this.RandomSeed = RandomSeed;
+            this.JSONFile = JSONFile;
         }
-
-
+        
         public bool StartOrPauseRun()
         {
             lock (ThreadLock)
@@ -39,8 +60,24 @@ namespace GeneticAlgorithm.GAController
             if(isStarted)
             {
                 //check if thread exists
+                if(GAThread != null && !GAThread.IsAlive)
+                {
+                    GAThread = null;
+                }
+
                 //if not, create it
                 //if yes, it will do its thing
+                if(GAThread == null)
+                {
+                    GAThread = new Thread(new ThreadStart(ThreadCode));
+                    StartThread();
+                } else
+                {
+                    GAThread.Resume();
+                }
+            } else
+            {
+                GAThread.Suspend();
             }
 
             return isStarted;
@@ -53,10 +90,14 @@ namespace GeneticAlgorithm.GAController
             lock(ThreadLock)
             {
                 isStarted = false;
+                if(GAThread != null)
+                {
+                    GAThread.Abort();
+                }
             }
         }
 
-        private void StartThread(string Folder, int GenToRun, int RandomSeed, string JSONFile)
+        private void StartThread()
         {
             GensToRun = GenToRun;
 
@@ -92,7 +133,7 @@ namespace GeneticAlgorithm.GAController
             }
             else
             {
-                string TempPath = Path.GetTempFileName();
+                string TempPath = Path.GetTempFileName() + ".json";
                 File.WriteAllText(TempPath, JSONFile);
 
                 List<GenericTest<int, double>> tests = new List<GenericTest<int, double>>();
@@ -102,6 +143,8 @@ namespace GeneticAlgorithm.GAController
             }
 
             ResultsFolder = Folder;
+
+            GAThread.Start();
         }
 
         private void ThreadCode()
@@ -110,13 +153,17 @@ namespace GeneticAlgorithm.GAController
             {
                 lock (ThreadLock)
                 {
-                    if(isStarted)
+                    if(isStarted && RunManager != null)
                     {
                         int res = RunManager.StartRun(1);
+
+                        //BestFitnessOverTime = RunManager.Populations[0].RunMetrics.BestFitnesses;
 
                         int c = 0;
                         foreach (BalanceGA FN in RunManager.GetBestMembers())
                         {
+                            BestFitnessOverTime.Add(FN.Fitness);
+
                             Console.WriteLine("Population " + c + " - " + FN + " - " + FN.Fitness);
                             c++;
                         }
@@ -140,6 +187,8 @@ namespace GeneticAlgorithm.GAController
                     }
                 }
             }
+
+            isStarted = false;
         }
     }
 }

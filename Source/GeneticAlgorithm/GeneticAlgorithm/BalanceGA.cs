@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace GeneticAlgorithm.GeneticAlgorithm
 {
     [DataContract]
-    class BalanceGA : PopulationMember
+    public class BalanceGA : PopulationMember
     {
         PopulationManager<BalanceGA, int, double> Manager;
 

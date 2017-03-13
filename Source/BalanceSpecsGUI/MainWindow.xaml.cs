@@ -19,6 +19,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls.Dialogs;
 using BalanceSpecsGUI.Converters;
+using GeneticAlgorithm.GAController;
+using BalanceSpecsGUI.Windows;
 
 namespace BalanceSpecsGUI
 {
@@ -34,6 +36,13 @@ namespace BalanceSpecsGUI
             JObject JsonO = JObject.Parse(File.ReadAllText(@"F:\GitHub\PacMan-CSharp\Bridges\MsPacman.json"));
 
             this.DataContext = JsonO;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -102,6 +111,16 @@ namespace BalanceSpecsGUI
             dynamic JsonO = this.DataContext;
 
             JsonO.custom[NewCustomData.Text] = "";
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            //Start run
+            GAController GAController = new GAController("Results/Test", 5, 24, this.DataContext.ToString());
+
+            GARun GARunWindow = new GARun();
+            GARunWindow.DataContext = GAController;
+            GARunWindow.Show();
         }
     }
 }

@@ -46,7 +46,7 @@
                 <MenuItem Header="Exit"></MenuItem>
             </MenuItem>
             <MenuItem Header="Run">
-                <MenuItem Header="Evolve Current Configuration"></MenuItem>
+                <MenuItem Header="Evolve Current Configuration" Click="MenuItem_Click"></MenuItem>
                 <MenuItem Header="Test With No Changes"></MenuItem>
                 <MenuItem Header="Load Run In Progress"></MenuItem>
             </MenuItem>
