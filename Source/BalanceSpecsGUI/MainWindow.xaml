@@ -72,7 +72,7 @@
             <TabItem Header="Game Parameters">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                     <StackPanel Orientation="Vertical">
-                        <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" ItemsSource="{Binding parameters, Mode=TwoWay}" DisplayMemberPath="name"/>
+                        <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="220" ItemsSource="{Binding parameters, Mode=TwoWay}" DisplayMemberPath="name"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBox Controls:TextBoxHelper.Watermark="Name" Text="" Width="120" Name="NewParameterName"/>
                             <Button Content="Add" Click="AddParameterButtonClick"/>

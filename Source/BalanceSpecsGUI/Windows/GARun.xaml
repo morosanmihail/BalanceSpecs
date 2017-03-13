@@ -3,14 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph"
         xmlns:local="clr-namespace:BalanceSpecsGUI.Windows"
         mc:Ignorable="d"
-        Title="GARun" Height="313.445" Width="552.101">
+        Title="GARun" Height="313.445" Width="578.992">
     <Grid>
-        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Height="262" Margin="10,10,0,0" VerticalAlignment="Top" Width="130" ItemsSource="{Binding BestFitnessOverTime}"/>
-        <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="153,22,0,0" VerticalAlignment="Top"/>
-        <Button Content="Start / Pause" HorizontalAlignment="Left" Margin="153,53,0,0" VerticalAlignment="Top" Width="115" Click="Button_Click"/>
-        <Button Content="Kill Run" HorizontalAlignment="Left" Margin="153,85,0,0" VerticalAlignment="Top" Width="115" Click="Button_Click_1"/>
+        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,41,0,74" Width="115" ItemsSource="{Binding BestFitnessOverTime}"/>
+        <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,10,0,0" VerticalAlignment="Top"/>
+        <Button Content="Start / Pause" HorizontalAlignment="Left" Margin="10,0,0,42" Width="115" Click="Button_Click" Height="27" VerticalAlignment="Bottom"/>
+        <Button Content="Kill Run" HorizontalAlignment="Left" Margin="10,0,0,10" Width="115" Click="Button_Click_1" Height="27" VerticalAlignment="Bottom"/>
 
+        <WindowsFormsHost DockPanel.Dock="Right" VerticalAlignment="Stretch" Name="windowsFormsHost1" Margin="130,0,10,10">
+            <zed:ZedGraphControl x:Name="graph" Width="400" Height="400" />
+        </WindowsFormsHost>
+        <Label x:Name="IsRunningLabel_Copy" Content="Running:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
