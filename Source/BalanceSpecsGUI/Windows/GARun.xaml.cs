@@ -39,9 +39,7 @@ namespace BalanceSpecsGUI.Windows
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var GAC = this.DataContext as GAController;
-
-            GAC.ZGC = graph;
-
+            
             GAC.StartOrPauseRun();
         }
 

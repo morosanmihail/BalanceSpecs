@@ -3,19 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph"
         xmlns:local="clr-namespace:BalanceSpecsGUI.Windows"
+        xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
         mc:Ignorable="d"
         Title="GARun" Height="313.445" Width="578.992">
     <Grid>
-        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,41,0,74" Width="115" ItemsSource="{Binding BestFitnessOverTime}"/>
+        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,41,0,74" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
         <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,10,0,0" VerticalAlignment="Top"/>
         <Button Content="Start / Pause" HorizontalAlignment="Left" Margin="10,0,0,42" Width="115" Click="Button_Click" Height="27" VerticalAlignment="Bottom"/>
         <Button Content="Kill Run" HorizontalAlignment="Left" Margin="10,0,0,10" Width="115" Click="Button_Click_1" Height="27" VerticalAlignment="Bottom"/>
-
-        <WindowsFormsHost DockPanel.Dock="Right" VerticalAlignment="Stretch" Name="windowsFormsHost1" Margin="130,0,10,10">
-            <zed:ZedGraphControl x:Name="graph" Width="400" Height="400" />
-        </WindowsFormsHost>
+        <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" Name="oxyPlot" Margin="130,0,10,10">
+            <oxy:Plot.Series>
+                <oxy:LineSeries Title="Best Fitness" DataFieldX="Generation" DataFieldY="Value"
+                        ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}"
+                        StrokeThickness="2" Color="Blue" />
+                <oxy:LineSeries Title="Average Fitness" DataFieldX="Generation" DataFieldY="Value"
+                        ItemsSource="{Binding RunManager.Populations[0].RunMetrics.AverageFitnesses}"
+                        StrokeThickness="2" Color="Green" />
+            </oxy:Plot.Series>
+        </oxy:Plot>
+        
         <Label x:Name="IsRunningLabel_Copy" Content="Running:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
