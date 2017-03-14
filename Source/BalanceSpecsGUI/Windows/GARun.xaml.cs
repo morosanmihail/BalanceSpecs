@@ -1,4 +1,7 @@
 ﻿using GeneticAlgorithm.GAController;
+using MahApps.Metro.Controls;
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -19,7 +22,7 @@ namespace BalanceSpecsGUI.Windows
     /// <summary>
     /// Interaction logic for GARun.xaml
     /// </summary>
-    public partial class GARun : Window
+    public partial class GARun
     {
         public GARun()
         {
@@ -48,6 +51,42 @@ namespace BalanceSpecsGUI.Windows
             var GAC = this.DataContext as GAController;
 
             GAC.KillRun();
+        }
+
+        private void ManualSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var GAC = this.DataContext as GAController;
+
+            string Filename = "";
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "XML file (*.xml)|*.xml";
+            
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Filename = saveFileDialog.FileName;
+
+                GAC.SaveRunGAToFile(Filename);
+            }
+        }
+
+        private void AutosaveLocationTextbox_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new CommonOpenFileDialog();
+            dlg.Title = "Choose Autosave location";
+            dlg.IsFolderPicker = true;
+            dlg.AllowNonFileSystemItems = true;
+            dlg.EnsureFileExists = false;
+            dlg.EnsurePathExists = true;
+            dlg.EnsureReadOnly = false;
+            dlg.EnsureValidNames = true;
+            dlg.Multiselect = false;
+            dlg.ShowPlacesList = true;
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                AutosaveLocationTextbox.Text = dlg.FileName;
+            }
         }
     }
 }

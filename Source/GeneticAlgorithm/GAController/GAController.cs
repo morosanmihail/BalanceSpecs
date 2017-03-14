@@ -26,35 +26,28 @@ namespace GeneticAlgorithm.GAController
 
         Thread GAThread = null;
 
+        public bool IsAutosaving { get; set; }
+
+        public bool IsNotAutosaving { get { return !IsAutosaving; } }
+
+        public string AutosaveLocation { get; set; }
+
         public GPRunManager<BalanceGA, int, double> RunManager { get; set; }
 
-        /*public ObservableCollection<DataPoint> BestFitnessOverTime
-        {
-            get
-            {
-                if(RunManager != null && RunManager.Populations.Count > 0 && RunManager.Populations[0].RunMetrics.BestFitnesses != null)
-                    return new AsyncObservableCollection<DataPoint>(RunManager.Populations[0].RunMetrics.BestFitnesses.Select((value,index) => new DataPoint(index,value)));
-                return null;
-            }
-        }*/
-
-        string ResultsFolder = "";
+        public int GenerationsToRun { get; set; }
         int GensToRun = 0;
-
-        string Folder;
-        int GenToRun;
+        
         int RandomSeed;
         string JSONFile;
 
-        public GAController(string Folder, int GenToRun, int RandomSeed, string JSONFile)
+        public GAController(int RandomSeed, string JSONFile)
         {
             isStarted = false;
-            //BestFitnessOverTime = new AsyncObservableCollection<double>();
-            this.Folder = Folder;
-            this.GenToRun = GenToRun;
             this.RandomSeed = RandomSeed;
             this.JSONFile = JSONFile;
             RunManager = null;
+            GenerationsToRun = 1;
+            AutosaveLocation = "";
         }
 
         public bool StartOrPauseRun()
@@ -106,41 +99,47 @@ namespace GeneticAlgorithm.GAController
 
         private void StartThread()
         {
-            GensToRun = GenToRun;
-
-            if (Directory.Exists(Folder))
+            //TODO figure out situations where autosave is off and the run resets from the last autosave regardless
+            bool FromScratch = true;
+            if (Directory.Exists(AutosaveLocation))
             {
-                var rawentries = Directory.GetFiles(Folder, "*.xml");
+                var rawentries = Directory.GetFiles(AutosaveLocation, "*.xml");
 
-                var entries = rawentries.OrderBy(t => t);
-
-                var BackupFilename = entries.Last();
-
-                FileStream fs = new FileStream(BackupFilename, FileMode.Open);
-
-                XmlDictionaryReader reader =
-                    XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());
-                DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
-
-                // Deserialize the data and read it from the instance.
-                RunManager = (GPRunManager<BalanceGA, int, double>)ser.ReadObject(reader, true);
-
-                reader.Close();
-                fs.Close();
-
-                if (rawentries.Count() < GenToRun)
+                if (rawentries.Count() > 0)
                 {
-                    GensToRun = GenToRun - entries.Count();
-                }
-                else
-                {
-                    //Done!
-                    //DoRun = false;
+                    var entries = rawentries.OrderBy(t => t);
 
-                    GensToRun = 0;
+                    var BackupFilename = entries.Last();
+
+                    FileStream fs = new FileStream(BackupFilename, FileMode.Open);
+
+                    XmlDictionaryReader reader =
+                        XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());
+                    DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
+
+                    // Deserialize the data and read it from the instance.
+                    RunManager = (GPRunManager<BalanceGA, int, double>)ser.ReadObject(reader, true);
+
+                    reader.Close();
+                    fs.Close();
+
+                    if (rawentries.Count() < GenerationsToRun)
+                    {
+                        GensToRun = GenerationsToRun - entries.Count();
+                    }
+                    else
+                    {
+                        //Done!
+                        //DoRun = false;
+
+                        GensToRun = 0;
+                    }
+
+                    FromScratch = false;
                 }
             }
-            else
+
+            if (FromScratch)
             {
                 string TempPath = Path.GetTempFileName() + ".json";
                 File.WriteAllText(TempPath, JSONFile);
@@ -151,9 +150,20 @@ namespace GeneticAlgorithm.GAController
                 RunManager.InitRun();
             }
 
-            ResultsFolder = Folder;
-
             GAThread.Start();
+        }
+
+        public void SaveRunGAToFile(string Filename)
+        {
+            var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
+
+            var settings = new XmlWriterSettings { Indent = true };
+
+            //serializer.WriteObject(stream, RunManager);
+            using (var w = XmlWriter.Create(Filename, settings))
+            {
+                serializer.WriteObject(w, RunManager);
+            }
         }
 
         private void ThreadCode()
@@ -176,32 +186,15 @@ namespace GeneticAlgorithm.GAController
                     if (GensToRun > 0)
                     {
                         int res = RunManager.StartRun(1);
-
-                        int c = 0;
-                        foreach (BalanceGA FN in RunManager.GetBestMembers())
+                        
+                        if (IsAutosaving)
                         {
-                            //BestFitnessOverTime.Add(FN.Fitness);
+                            Directory.CreateDirectory(AutosaveLocation);
 
-                            Console.WriteLine("Population " + c + " - " + FN + " - " + FN.Fitness);
-                            c++;
+                            string filename = AutosaveLocation + "/Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + ".xml";
+
+                            SaveRunGAToFile(filename);
                         }
-
-                        //if autosave
-                        Directory.CreateDirectory(ResultsFolder);
-
-                        string filename = ResultsFolder + "/Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + ".xml";
-
-                        var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
-
-                        var settings = new XmlWriterSettings { Indent = true };
-
-                        //serializer.WriteObject(stream, RunManager);
-                        using (var w = XmlWriter.Create(filename, settings))
-                        {
-                            serializer.WriteObject(w, RunManager);
-                        }
-
-                        Console.WriteLine("Saving to file done");
                     }
 
                 }
