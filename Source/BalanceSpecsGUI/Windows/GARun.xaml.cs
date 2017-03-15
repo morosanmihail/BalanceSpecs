@@ -27,17 +27,15 @@ namespace BalanceSpecsGUI.Windows
         public GARun()
         {
             InitializeComponent();
-            //((INotifyCollectionChanged)ProgressListBox.Items).CollectionChanged += ListView_CollectionChanged;
         }
 
-        /*private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
-            if ((e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Reset) && ProgressListBox.Items.Count > 0)
-            {
-                // scroll the new item into view   
-                ProgressListBox.ScrollIntoView(ProgressListBox.Items.GetItemAt(ProgressListBox.Items.Count-1));
-            }
-        }*/
+            var GAC = this.DataContext as GAController;
+            GAC.KillRun();
+
+            base.OnClosed(e);
+        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

@@ -147,6 +147,8 @@ namespace GeneticAlgorithm.GAController
                 List<GenericTest<int, double>> tests = new List<GenericTest<int, double>>();
                 RunManager = new GPRunManager<BalanceGA, int, double>(TempPath, tests, RandomSeed);
 
+                GensToRun = GenerationsToRun;
+
                 RunManager.InitRun();
             }
 
