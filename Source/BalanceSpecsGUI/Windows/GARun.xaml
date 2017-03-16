@@ -9,7 +9,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="Genetic Algorithm Progress" Height="313.445" Width="752.836">
+        Title="Genetic Algorithm Progress" Height="313.445" Width="752.836" Closing="MetroWindow_ClosingAsync">
     <Grid>
         <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,41,0,112" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
         <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,10,0,0" VerticalAlignment="Top"/>

@@ -1,5 +1,6 @@
 ﻿using GeneticAlgorithm.GAController;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
@@ -22,7 +23,7 @@ namespace BalanceSpecsGUI.Windows
     /// <summary>
     /// Interaction logic for GARun.xaml
     /// </summary>
-    public partial class GARun
+    public partial class GARun : MetroWindow
     {
         public GARun()
         {
@@ -84,6 +85,20 @@ namespace BalanceSpecsGUI.Windows
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 AutosaveLocationTextbox.Text = dlg.FileName;
+            }
+        }
+
+        private void MetroWindow_ClosingAsync(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var GAC = this.DataContext as GAController;
+
+            if (GAC.isStarted)
+            {
+                MessageBoxResult result = MessageBox.Show("Run is still in progress. Are you sure you want to close?", "Warning", MessageBoxButton.YesNo);
+                if (result != MessageBoxResult.Yes)
+                {
+                    e.Cancel = true;
+                }
             }
         }
     }
