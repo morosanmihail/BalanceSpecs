@@ -37,13 +37,11 @@ namespace GeneticAlgorithm.GAController
         public int GenerationsToRun { get; set; }
         int GensToRun = 0;
         
-        int RandomSeed;
         string JSONFile;
 
-        public GAController(int RandomSeed, string JSONFile)
+        public GAController(string JSONFile)
         {
             isStarted = false;
-            this.RandomSeed = RandomSeed;
             this.JSONFile = JSONFile;
             RunManager = null;
             GenerationsToRun = 1;
@@ -145,7 +143,7 @@ namespace GeneticAlgorithm.GAController
                 File.WriteAllText(TempPath, JSONFile);
 
                 List<GenericTest<int, double>> tests = new List<GenericTest<int, double>>();
-                RunManager = new GPRunManager<BalanceGA, int, double>(TempPath, tests, RandomSeed);
+                RunManager = new GPRunManager<BalanceGA, int, double>(TempPath, tests);
 
                 GensToRun = GenerationsToRun;
 

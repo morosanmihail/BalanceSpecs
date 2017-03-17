@@ -33,7 +33,7 @@ namespace BalanceSpecsGUI
         {
             InitializeComponent();
 
-            JObject JsonO = JObject.Parse(File.ReadAllText(@"F:\GitHub\PacMan-CSharp\Bridges\MsPacman.json"));
+            JObject JsonO = JObject.Parse(File.ReadAllText(@"E:\GitHub\PacMan-CSharp\Bridges\MsPacman.json"));
 
             this.DataContext = JsonO;
         }
@@ -116,7 +116,7 @@ namespace BalanceSpecsGUI
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             //Start run
-            GAController GAController = new GAController(24, this.DataContext.ToString());
+            GAController GAController = new GAController(this.DataContext.ToString());
 
             GARun GARunWindow = new GARun();
             GARunWindow.DataContext = GAController;
