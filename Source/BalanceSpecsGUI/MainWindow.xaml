@@ -54,19 +54,40 @@
         
         <Controls:MetroTabControl Grid.Row="1" TabStripPlacement="Left">
             <TabItem Header="GA Parameters">
-                <StackPanel>
-                    <ListBox HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding gaparams}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <UniformGrid Columns="2">
-                                    <TextBlock Padding="5,0,5,0" Text="{Binding Name}" />
+                <UniformGrid Columns="3">
+                    <TextBlock Text="Max Generations" VerticalAlignment="Center" />
+                    <Label />
+                    <TextBox Height="23" TextWrapping="Wrap" Text="{Binding gaparams.Par_MaxGenerations.Value, Mode=TwoWay}" Width="150"/>
 
-                                    <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Value.Value, Mode=TwoWay}" VerticalAlignment="Top" Width="150"/>
-                                </UniformGrid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </StackPanel>
+                    <TextBlock Text="Population Size" VerticalAlignment="Center"/>
+                    <Slider Minimum="1" Maximum="500" LargeChange="10" SmallChange="1" Value="{Binding gaparams.Par_MaxPopMembers, FallbackValue='10', Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                    <TextBox TextWrapping="Wrap" Text="{Binding gaparams.Par_MaxPopMembers, FallbackValue='10', Mode=TwoWay}" Width="150" Height="23"/>
+                    
+                    <TextBlock Text="Random Seed" VerticalAlignment="Center"/>
+                    <Label />
+                    <TextBox TextWrapping="Wrap" Text="{Binding gaparams.Par_Seed.Value, FallbackValue='1337', Mode=TwoWay}" Width="150" Height="23"/>
+
+                    <TextBlock Text="Elitism Ratio" VerticalAlignment="Center"/>
+                    <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding gaparams.Par_KeepEliteRatio, FallbackValue='0.15', Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
+                    <TextBox TextWrapping="Wrap" Text="{Binding gaparams.Par_KeepEliteRatio, FallbackValue='0.15', Mode=TwoWay}" Width="150" Height="23"/>
+
+                    <TextBlock Text="Mutation Ratio" VerticalAlignment="Center"/>
+                    <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding gaparams.Par_MutateRatio, FallbackValue='0.15', Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
+                    <TextBox TextWrapping="Wrap" Text="{Binding gaparams.Par_MutateRatio, FallbackValue='0.35', Mode=TwoWay}" Width="150" Height="23"/>
+
+                    <TextBlock Text="Crossover Ratio" VerticalAlignment="Center"/>
+                    <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding gaparams.Par_CrossoverRatio, FallbackValue='0.15', Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
+                    <TextBox TextWrapping="Wrap" Text="{Binding gaparams.Par_CrossoverRatio, FallbackValue='0.35', Mode=TwoWay}" Width="150" Height="23"/>
+
+                    <TextBlock Text="Tournament Size" VerticalAlignment="Center"/>
+                    <Slider Minimum="1" Maximum="{Binding gaparams.Par_MaxPopMembers.Value, Mode=OneWay}" LargeChange="2" SmallChange="1" Value="{Binding gaparams.Par_TournamentSize, FallbackValue='2', Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
+                    <TextBox TextWrapping="Wrap" Text="{Binding gaparams.Par_TournamentSize, FallbackValue='3', Mode=TwoWay}" Width="150" Height="23"/>
+
+                    <TextBlock Text="Parameter Mutation Chance" VerticalAlignment="Center"/>
+                    <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding gaparams.extra_MutationChance, FallbackValue='0.15', Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
+                    <TextBox TextWrapping="Wrap" Text="{Binding gaparams.extra_MutationChance, FallbackValue='0.5', Mode=TwoWay}" Width="150" Height="23"/>
+
+                </UniformGrid>
             </TabItem>
             <TabItem Header="Game Parameters">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0">

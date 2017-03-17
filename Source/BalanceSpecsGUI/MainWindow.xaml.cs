@@ -49,7 +49,7 @@ namespace BalanceSpecsGUI
         {
             dynamic JsonO = this.DataContext;
 
-            MessageBox.Show(JsonO.evaluators.ToString());
+            MessageBox.Show(JsonO.gaparams.ToString());
         }
 
         private async void AddParameterButtonClick(object sender, RoutedEventArgs e)
