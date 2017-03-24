@@ -1,0 +1,36 @@
+{
+	"name": "(Empty)",
+	"parameters": [
+		
+	],
+	"metrics": [
+		
+	],
+	"evaluators": [
+		
+	],
+	"gaparams": {
+		"Par_MaxGenerations": 100000,
+		"Par_GenCountBeforeRefresh": 0,
+		"Par_IslandClusters": 1,
+		"Par_MaxPopMembers": 20,
+		"Par_Seed": 10002,
+		"Par_KeepEliteRatio": 0.15,
+		"Par_KeepRandRatio": 0.0,
+		"Par_MutateRatio": 0.5,
+		"Par_CrossoverRatio": 0.25,
+		"Par_TournamentSize": 6,
+		"extra_MutationChance": 0.5,
+	},
+	"bridge": {
+		"type": "remote",
+		"server": "localhost",
+		"port": "5672",
+		"username": "",
+		"password": "",
+		//"type": "local",
+		"executable": "file.exe \"%0\" \"%1\" \"%2\"", //%0 = path to this json, %1 = randseed, %2 = params
+	},
+	"custom": {
+	}
+}

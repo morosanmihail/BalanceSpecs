@@ -21,6 +21,9 @@ using MahApps.Metro.Controls.Dialogs;
 using BalanceSpecsGUI.Converters;
 using GeneticAlgorithm.GAController;
 using BalanceSpecsGUI.Windows;
+using System.Reflection;
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace BalanceSpecsGUI
 {
@@ -33,9 +36,7 @@ namespace BalanceSpecsGUI
         {
             InitializeComponent();
 
-            JObject JsonO = JObject.Parse(File.ReadAllText(@"E:\GitHub\PacMan-CSharp\Bridges\MsPacman.json"));
-
-            this.DataContext = JsonO;
+            NewButton_Click(null, null);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -43,6 +44,26 @@ namespace BalanceSpecsGUI
             base.OnClosed(e);
 
             Application.Current.Shutdown();
+        }
+
+        private void NewButton_Click(object sender, RoutedEventArgs e)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "BalanceSpecsGUI.Resources.EmptyBFF.json";
+
+            string result = "";
+
+            //var auxList = System.Reflection.Assembly.GetExecutingAssembly().GetManifes‌​tResourceNames();
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                result = reader.ReadToEnd();
+            }
+
+            JObject JsonO = JObject.Parse(result);
+
+            this.DataContext = JsonO;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -121,6 +142,50 @@ namespace BalanceSpecsGUI
             GARun GARunWindow = new GARun();
             GARunWindow.DataContext = GAController;
             GARunWindow.Show();
+        }
+
+        private void SaveAsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "BFF JSON|*.json";
+            saveFileDialog1.Title = "Save the Balance File Format";
+            saveFileDialog1.ShowDialog();
+
+            // If the file name is not an empty string open it for saving.  
+            if (saveFileDialog1.FileName != "")
+            {
+                var JsonO = this.DataContext as JObject;
+
+                File.WriteAllText(saveFileDialog1.FileName, JsonConvert.SerializeObject(JsonO));
+            }
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            var dlg = new CommonOpenFileDialog();
+            dlg.Title = "Choose BFF file";
+            dlg.IsFolderPicker = false;
+            dlg.AllowNonFileSystemItems = true;
+            dlg.EnsureFileExists = true;
+            dlg.EnsurePathExists = true;
+            dlg.EnsureReadOnly = false;
+            dlg.EnsureValidNames = true;
+            dlg.Multiselect = false;
+            dlg.ShowPlacesList = true;
+            dlg.Filters.Add(new CommonFileDialogFilter("Balance File Format", "bff,json"));
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var JsonO = JObject.Parse(File.ReadAllText(dlg.FileName));
+
+                this.DataContext = JsonO;
+            }
+
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            this.ShowMessageAsync("Error", "Not implemented yet");
         }
     }
 }
