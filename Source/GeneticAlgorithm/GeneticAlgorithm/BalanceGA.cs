@@ -86,7 +86,8 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
                 if (this.UpdatedAtGeneration < CurrentGeneration)
                 {
-                    Fitness = RunGames(CurrentGeneration);
+                    //Fitness = RunGames(CurrentGeneration);
+                    ObjectivesFitness = RunGames(CurrentGeneration);
                     this.UpdatedAtGeneration = CurrentGeneration;
                 }
             }
@@ -94,9 +95,10 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             return this.Fitness;
         }
 
-        double RunGames(int CurrentGeneration)
+        List<double> RunGames(int CurrentGeneration)
         {
-            double finalResult = 0;
+            //double finalResult = 0;
+            List<double> finalResults = new List<double>();
 
             dynamic JResults = null;
             
@@ -110,7 +112,8 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             }
 
             JResults = JsonConvert.DeserializeObject(Results);
-            
+
+            //int index = 0;
             foreach (var Evaluator in Manager.GetParameters().JsonParams.evaluators)
             {
                 if ((bool)Evaluator.enabled == true)
@@ -139,7 +142,9 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                         EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<double>(), Target);
                     }
 
-                    finalResult += EvalScore * Weight;
+                    finalResults.Add(EvalScore * Weight);
+
+                    //finalResult += EvalScore * Weight;
                 }
             }
             
@@ -152,7 +157,8 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 {
                     if ((string)P.minimise == "minimise")
                     {
-                        finalResult += Math.Abs(Vector[i]) * (double)P.weight;
+                        //finalResult += Math.Abs(Vector[i]) * (double)P.weight;
+                        finalResults.Add(Math.Abs(Vector[i]) * (double)P.weight);
                     }
 
                     if((string)P.minimise == "maximise")
@@ -164,7 +170,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 }
             }
 
-            return finalResult;
+            return finalResults;
         }
 
         string RunGamesLocal()
