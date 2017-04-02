@@ -18,7 +18,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
     [DataContract]
     public class BalanceGA : PopulationMember
     {
-        PopulationManager<BalanceGA, int, double> Manager;
+        PopulationManager<BalanceGA, List<double>, List<double>> Manager;
 
         [DataMember]
         public String CreatedBy = "";
@@ -26,7 +26,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
         [DataMember]
         public string Results = "";
 
-        public BalanceGA(PopulationManager<BalanceGA, int, double> Manager, List<double> root = null, CRandom rand = null)
+        public BalanceGA(PopulationManager<BalanceGA, List<double>, List<double>> Manager, List<double> root = null, CRandom rand = null)
         {
             UpdatedAtGeneration = -1;
 
@@ -49,7 +49,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
         public override void ReloadParameters<T, I, O>(PopulationManager<T, I, O> Manager)
         {
-            this.Manager = Manager as PopulationManager<BalanceGA, int, double>;
+            this.Manager = Manager as PopulationManager<BalanceGA, List<double>, List<double>>;
         }
 
         List<double> GenerateData()

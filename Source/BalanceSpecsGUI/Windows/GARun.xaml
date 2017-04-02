@@ -32,5 +32,8 @@
             <iconPacks:PackIconModern Width="14" Height="14" Kind="Folder" />
         </Button>
         <Controls:NumericUpDown Maximum="100" Minimum="1" Value="{Binding GenerationsToRun}" HorizontalAlignment="Left" Margin="10,0,0,74" Width="115" Height="48" VerticalAlignment="Bottom" Controls:TextBoxHelper.Watermark="Generations" Controls:TextBoxHelper.UseFloatingWatermark="True"/>
+        <Border BorderBrush="Black" BorderThickness="1" Margin="0,81,10,42" HorizontalAlignment="Right" Width="143">
+            <Label x:Name="BestSolutionLabel" Content="Best solution so far:"/>
+        </Border>
     </Grid>
 </Controls:MetroWindow>

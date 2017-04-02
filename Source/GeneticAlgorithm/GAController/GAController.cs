@@ -32,7 +32,7 @@ namespace GeneticAlgorithm.GAController
 
         public string AutosaveLocation { get; set; }
 
-        public GPRunManager<BalanceGA, int, double> RunManager { get; set; }
+        public GPRunManager<BalanceGA, List<double>, List<double>> RunManager { get; set; }
 
         public int GenerationsToRun { get; set; }
         int GensToRun = 0;
@@ -113,10 +113,10 @@ namespace GeneticAlgorithm.GAController
 
                     XmlDictionaryReader reader =
                         XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());
-                    DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
+                    DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
 
                     // Deserialize the data and read it from the instance.
-                    RunManager = (GPRunManager<BalanceGA, int, double>)ser.ReadObject(reader, true);
+                    RunManager = (GPRunManager<BalanceGA, List<double>, List<double>>)ser.ReadObject(reader, true);
 
                     reader.Close();
                     fs.Close();
@@ -142,8 +142,8 @@ namespace GeneticAlgorithm.GAController
                 string TempPath = Path.GetTempFileName() + ".json";
                 File.WriteAllText(TempPath, JSONFile);
 
-                List<GenericTest<int, double>> tests = new List<GenericTest<int, double>>();
-                RunManager = new GPRunManager<BalanceGA, int, double>(TempPath, tests);
+                List<GenericTest<List<double>, List<double>>> tests = new List<GenericTest<List<double>, List<double>>>();
+                RunManager = new GPRunManager<BalanceGA, List<double>, List<double>>(TempPath, tests);
 
                 GensToRun = GenerationsToRun;
 
@@ -155,7 +155,7 @@ namespace GeneticAlgorithm.GAController
 
         public void SaveRunGAToFile(string Filename)
         {
-            var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
+            var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
 
             var settings = new XmlWriterSettings { Indent = true };
 

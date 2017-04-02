@@ -97,6 +97,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\JValueToDoubleConverter.cs" />
+    <Compile Include="Converters\ReturnPredictorTypes.cs" />
     <Compile Include="Windows\GARun.xaml.cs">
       <DependentUpon>GARun.xaml</DependentUpon>
     </Compile>
@@ -158,6 +159,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\SharpGenetics\SharpGenetics\SharpGenetics\SharpGenetics.csproj">
+      <Project>{A1EABC5C-8F98-44A3-BB8F-2B465095882E}</Project>
+      <Name>SharpGenetics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GeneticAlgorithm\GeneticAlgorithm.csproj">
       <Project>{3E1B11F7-D69D-41CE-B311-6D6E6BB58FE9}</Project>
       <Name>GeneticAlgorithm</Name>
