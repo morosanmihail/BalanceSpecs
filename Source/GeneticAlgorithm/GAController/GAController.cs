@@ -99,6 +99,9 @@ namespace GeneticAlgorithm.GAController
         {
             //TODO figure out situations where autosave is off and the run resets from the last autosave regardless
             bool FromScratch = true;
+
+            GensToRun = GenerationsToRun;
+
             if (IsAutosaving && Directory.Exists(AutosaveLocation))
             {
                 var rawentries = Directory.GetFiles(AutosaveLocation, "*.xml");
