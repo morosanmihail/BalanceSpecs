@@ -99,7 +99,7 @@ namespace GeneticAlgorithm.GAController
         {
             //TODO figure out situations where autosave is off and the run resets from the last autosave regardless
             bool FromScratch = true;
-            if (Directory.Exists(AutosaveLocation))
+            if (IsAutosaving && Directory.Exists(AutosaveLocation))
             {
                 var rawentries = Directory.GetFiles(AutosaveLocation, "*.xml");
 
@@ -137,7 +137,7 @@ namespace GeneticAlgorithm.GAController
                 }
             }
 
-            if (FromScratch)
+            if (FromScratch && RunManager == null)
             {
                 string TempPath = Path.GetTempFileName() + ".json";
                 File.WriteAllText(TempPath, JSONFile);
