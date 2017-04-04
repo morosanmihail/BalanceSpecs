@@ -97,6 +97,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\JValueToDoubleConverter.cs" />
+    <Compile Include="Converters\PredictorTypeConverter.cs" />
     <Compile Include="Converters\ReturnPredictorTypes.cs" />
     <Compile Include="Windows\GARun.xaml.cs">
       <DependentUpon>GARun.xaml</DependentUpon>

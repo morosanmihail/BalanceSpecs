@@ -9,12 +9,14 @@
         xmlns:local="clr-namespace:BalanceSpecsGUI"
         xmlns:conv="clr-namespace:BalanceSpecsGUI.Converters"
         xmlns:p="clr-namespace:BalanceSpecsGUI.Properties"
+                      xmlns:sharpgen="clr-namespace:SharpGenetics.Predictor;assembly=SharpGenetics"
         mc:Ignorable="d"
         Title="Balance Specs GUI" Height="456.118" Width="1060.84">
     <Controls:MetroWindow.Resources>
         <w:MethodToValueConverter x:Key="MethodToValueConverter"/>
         <w:JValueToDoubleConverter x:Key="JValueToDoubleConverter"/>
         <w:ConnectionTypeToBoolConverter x:Key="ConnectionTypeToBoolConverter"/>
+        <w:PredictorConverter x:Key="PredictorConverter"/>
         <x:Array Type="{x:Type sys:String}" x:Key="AvailableMetricTypes">
             <sys:String>Double</sys:String>
             <sys:String>List</sys:String>
@@ -103,8 +105,16 @@
                             <UniformGrid Columns="3">
 
                                 <TextBlock Text="Predictor" VerticalAlignment="Center"/>
-                                <Controls:SplitButton ItemsSource="{Binding Source={StaticResource PredictorTypes}}" SelectedValue="{Binding gaparams.string_PredictorType.Value, Mode=TwoWay}">
+                                <Controls:SplitButton Name="PredictorType" ItemsSource="{Binding Source={StaticResource PredictorTypes}}" SelectedValue="{Binding gaparams.string_PredictorType.Value, Mode=TwoWay}">
                                 </Controls:SplitButton>
+
+                                <ListBox>
+                                    <ListBox.ItemsSource>
+                                        <MultiBinding Converter="{StaticResource PredictorConverter}">
+                                            <Binding Path="SelectedValue" ElementName="PredictorType"></Binding>
+                                        </MultiBinding>
+                                    </ListBox.ItemsSource>
+                                </ListBox>
                             </UniformGrid>
                         </Border>
                     </StackPanel>
