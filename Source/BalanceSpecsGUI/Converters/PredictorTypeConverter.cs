@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
+using SharpGenetics.Helpers;
 
 namespace BalanceSpecsGUI.Converters
 {
     public class NameValuePair
     {
         public dynamic Value { get; set; }
-        public string Name { get; set; }
-        public NameValuePair(string N, dynamic V)
+        public ImportantParameterAttribute Name { get; set; }
+        public NameValuePair(ImportantParameterAttribute N, dynamic V)
         {
             Name = N;
             Value = V;
@@ -30,17 +31,18 @@ namespace BalanceSpecsGUI.Converters
 
             if (values[0] is string)
             {
-                var ParamNames = PredictorHelper.GetParametersRequired((string)values[0]);
+                var Params = PredictorHelper.GetParametersRequired((string)values[0]);
                 List<NameValuePair> JObjects = new List<NameValuePair>();
 
-                foreach(var ParamName in ParamNames)
+                foreach(var Param in Params)
                 {
+                    var ParamName = Param.ParameterName;
                     if (MainWindow.JSONFile.gaparams[ParamName] == null)
                     {
                         //Add it first
-                        MainWindow.JSONFile.gaparams[ParamName] = "0";
+                        MainWindow.JSONFile.gaparams[ParamName] = Param.Default;
                     } 
-                    JObjects.Add(new NameValuePair(ParamName, MainWindow.JSONFile.gaparams[ParamName]));
+                    JObjects.Add(new NameValuePair(Param, MainWindow.JSONFile.gaparams[ParamName]));
                 }
 
                 return JObjects;

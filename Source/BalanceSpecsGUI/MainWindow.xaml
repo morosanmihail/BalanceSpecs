@@ -11,7 +11,7 @@
         xmlns:p="clr-namespace:BalanceSpecsGUI.Properties"
                       xmlns:sharpgen="clr-namespace:SharpGenetics.Predictor;assembly=SharpGenetics"
         mc:Ignorable="d"
-        Title="Balance Specs GUI" Height="456.118" Width="1060.84">
+        Title="Balance Specs GUI" Height="691.964" Width="1060.84">
     <Controls:MetroWindow.Resources>
         <w:MethodToValueConverter x:Key="MethodToValueConverter"/>
         <w:JValueToDoubleConverter x:Key="JValueToDoubleConverter"/>
@@ -121,9 +121,12 @@
                                     </ListBox.ItemsSource>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <UniformGrid Columns="2">
-                                                <Label Content="{Binding Name}"/>
-                                                <TextBox Text="{Binding Value.Value}"/>
+                                            <UniformGrid Columns="3">
+                                                <Label Content="{Binding Name.FriendlyName}"/>
+
+                                                <Label/>
+
+                                                <TextBox Text="{Binding Value.Value, FallbackValue='1', Mode=TwoWay}"/>
                                             </UniformGrid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
