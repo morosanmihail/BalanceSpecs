@@ -32,6 +32,8 @@ namespace BalanceSpecsGUI
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        public static dynamic JSONFile = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -64,6 +66,7 @@ namespace BalanceSpecsGUI
             JObject JsonO = JObject.Parse(result);
 
             this.DataContext = JsonO;
+            JSONFile = JsonO;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -179,6 +182,7 @@ namespace BalanceSpecsGUI
                 var JsonO = JObject.Parse(File.ReadAllText(dlg.FileName));
 
                 this.DataContext = JsonO;
+                JSONFile = JsonO;
             }
 
         }
