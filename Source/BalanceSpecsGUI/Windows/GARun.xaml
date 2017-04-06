@@ -11,8 +11,9 @@
         mc:Ignorable="d"
         Title="Genetic Algorithm Progress" Height="313.445" Width="752.836" Closing="MetroWindow_ClosingAsync">
     <Grid>
-        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,41,0,112" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
+        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,41,0,127" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
         <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="GenLabel" Content="{Binding RunManager.CurrentGen}" HorizontalAlignment="Left" Margin="102,10,0,0" VerticalAlignment="Top"/>
         <Button Content="Start / Pause" HorizontalAlignment="Left" Margin="10,0,0,42" Width="115" Click="Button_Click" Height="27" VerticalAlignment="Bottom"/>
         <Button Content="Kill Run" HorizontalAlignment="Left" Margin="10,0,0,10" Width="115" Click="Button_Click_1" Height="27" VerticalAlignment="Bottom"/>
         <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot" Margin="130,0,158,10">
@@ -32,8 +33,19 @@
             <iconPacks:PackIconModern Width="14" Height="14" Kind="Folder" />
         </Button>
         <Controls:NumericUpDown Maximum="100" Minimum="1" Value="{Binding GenerationsToRun}" HorizontalAlignment="Left" Margin="10,0,0,74" Width="115" Height="48" VerticalAlignment="Bottom" Controls:TextBoxHelper.Watermark="Generations" Controls:TextBoxHelper.UseFloatingWatermark="True"/>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="0,81,10,42" HorizontalAlignment="Right" Width="143">
-            <Label x:Name="BestSolutionLabel" Content="Best solution so far:"/>
+        <Border BorderBrush="Black" BorderThickness="1" Margin="0,81,10,42" HorizontalAlignment="Right" Width="143" DataContext="{Binding RunManager.BestIndividualSoFar}">
+
+            <ScrollViewer>
+                <StackPanel>
+                    
+                    <Label x:Name="BestSolutionLabel" Content="Best solution so far:"/>
+                    <Label Content="{Binding Path=Fitness}"/>
+                    <Label Content="Fitnesses:"/>
+                    <ListBox ItemsSource="{Binding ObjectivesFitness}"></ListBox>
+                    <Label Content="Parameters:"/>
+                    <ListBox ItemsSource="{Binding Vector}"/>
+                </StackPanel>
+            </ScrollViewer>
         </Border>
     </Grid>
 </Controls:MetroWindow>
