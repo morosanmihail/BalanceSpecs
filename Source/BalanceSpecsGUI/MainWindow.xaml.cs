@@ -88,7 +88,7 @@ namespace BalanceSpecsGUI
                 return;
             }
 
-            JsonO.parameters.Add(new JObject(new JProperty("name",Name), new JProperty("enabled",true), new JProperty("minimise","ignore")));
+            JsonO.parameters.Add(new JObject(new JProperty("name",Name), new JProperty("enabled",true), new JProperty("minimise","ignore"), new JProperty("custom",new JObject())));
         }
 
         private async void AddMetricButtonClick(object sender, RoutedEventArgs e)
@@ -137,6 +137,15 @@ namespace BalanceSpecsGUI
             JsonO.custom[NewCustomData.Text] = "";
         }
 
+        private void AddParamCustomButtonClick(object sender, RoutedEventArgs e)
+        {
+            dynamic JsonO = (sender as FrameworkElement).DataContext;
+            if (JsonO != null)
+            {
+                JsonO[NewParamCustomData.Text] = "";
+            }
+        }
+        
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             //Start run
