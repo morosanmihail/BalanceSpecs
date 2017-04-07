@@ -95,6 +95,21 @@ namespace GeneticAlgorithm.GAController
             isStarted = false;
         }
 
+        public void LoadRunFromFile(string Filename)
+        {
+            FileStream fs = new FileStream(Filename, FileMode.Open);
+
+            XmlDictionaryReader reader =
+                XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());
+            DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
+
+            // Deserialize the data and read it from the instance.
+            RunManager = (GPRunManager<BalanceGA, List<double>, List<double>>)ser.ReadObject(reader, true);
+
+            reader.Close();
+            fs.Close();
+        }
+
         private void StartThread()
         {
             //TODO figure out situations where autosave is off and the run resets from the last autosave regardless
@@ -112,17 +127,7 @@ namespace GeneticAlgorithm.GAController
 
                     var BackupFilename = entries.Last();
 
-                    FileStream fs = new FileStream(BackupFilename, FileMode.Open);
-
-                    XmlDictionaryReader reader =
-                        XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());
-                    DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
-
-                    // Deserialize the data and read it from the instance.
-                    RunManager = (GPRunManager<BalanceGA, List<double>, List<double>>)ser.ReadObject(reader, true);
-
-                    reader.Close();
-                    fs.Close();
+                    LoadRunFromFile(BackupFilename);
 
                     if (rawentries.Count() < GenerationsToRun)
                     {

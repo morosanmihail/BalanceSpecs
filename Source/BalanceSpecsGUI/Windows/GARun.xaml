@@ -9,14 +9,14 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="Genetic Algorithm Progress" Height="313.445" Width="752.836" Closing="MetroWindow_ClosingAsync">
+        Title="Genetic Algorithm Progress" Height="449.445" Width="827.836" Closing="MetroWindow_ClosingAsync">
     <Grid>
-        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,41,0,127" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
-        <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,10,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="GenLabel" Content="{Binding RunManager.CurrentGen}" HorizontalAlignment="Left" Margin="102,10,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,81,0,127" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
+        <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,50,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="GenLabel" Content="{Binding RunManager.CurrentGen}" HorizontalAlignment="Left" Margin="102,50,0,0" VerticalAlignment="Top"/>
         <Button Content="Start / Pause" HorizontalAlignment="Left" Margin="10,0,0,42" Width="115" Click="Button_Click" Height="27" VerticalAlignment="Bottom"/>
         <Button Content="Kill Run" HorizontalAlignment="Left" Margin="10,0,0,10" Width="115" Click="Button_Click_1" Height="27" VerticalAlignment="Bottom"/>
-        <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot" Margin="130,0,158,10">
+        <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot" Margin="130,50,158,10">
             <oxy:LineSeries Title="Best Fitness" DataFieldX="Generation" DataFieldY="Value"
                         ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}"
                         StrokeThickness="2" Color="Blue" />
@@ -25,7 +25,7 @@
                         StrokeThickness="2" Color="Green" />
         </oxy:Plot>
 
-        <Label x:Name="IsRunningLabel_Copy" Content="Running:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="IsRunningLabel_Copy" Content="Running:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
         <Custom:ToggleSwitch Height="40" Margin="0,10,10,0" VerticalAlignment="Top" OnLabel="Autosave" OffLabel="No Autosave" IsChecked="{Binding IsAutosaving, Mode=TwoWay}" FontSize="11" HorizontalAlignment="Right" Width="143" />
         <TextBox x:Name="AutosaveLocationTextbox" Controls:TextBoxHelper.Watermark="Autosave Location" Height="23" Margin="0,50,37,0" Text="{Binding AutosaveLocation, Mode=TwoWay}" VerticalAlignment="Top" HorizontalAlignment="Right" Width="116"/>
         <Button x:Name="ManualSaveButton" Content="Manual Save" Margin="0,0,10,10" HorizontalAlignment="Right" Width="143" Click="ManualSaveButton_Click" Height="27" VerticalAlignment="Bottom"/>
@@ -37,7 +37,7 @@
 
             <ScrollViewer>
                 <StackPanel>
-                    
+
                     <Label x:Name="BestSolutionLabel" Content="Best solution so far:"/>
                     <Label Content="{Binding Path=Fitness}"/>
                     <Label Content="Fitnesses:"/>
@@ -47,5 +47,8 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
+        <ToolBar Height="50" Margin="2,0,158,0" VerticalAlignment="Top">
+            <Button Content="Load Run In Progress" Height="45" VerticalAlignment="Top" Width="138" Click="LoadExistingRun_Click"/>
+        </ToolBar>
     </Grid>
 </Controls:MetroWindow>

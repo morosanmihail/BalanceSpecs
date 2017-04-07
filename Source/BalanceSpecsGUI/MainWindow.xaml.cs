@@ -46,6 +46,8 @@ namespace BalanceSpecsGUI
             base.OnClosed(e);
 
             Application.Current.Shutdown();
+
+            Environment.Exit(0);
         }
 
         private void NewButton_Click(object sender, RoutedEventArgs e)

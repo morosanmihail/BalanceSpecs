@@ -101,5 +101,28 @@ namespace BalanceSpecsGUI.Windows
                 }
             }
         }
+
+        private void LoadExistingRun_Click(object sender, RoutedEventArgs e)
+        {
+            var GAC = this.DataContext as GAController;
+
+            var dlg = new CommonOpenFileDialog();
+            dlg.Title = "Choose XML file";
+            dlg.IsFolderPicker = false;
+            dlg.AllowNonFileSystemItems = true;
+            dlg.EnsureFileExists = true;
+            dlg.EnsurePathExists = true;
+            dlg.EnsureReadOnly = false;
+            dlg.EnsureValidNames = true;
+            dlg.Multiselect = false;
+            dlg.ShowPlacesList = true;
+            dlg.Filters.Add(new CommonFileDialogFilter("Balance File Format", "xml"));
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                GAC.LoadRunFromFile(dlg.FileName);
+            }
+
+        }
     }
 }
