@@ -83,6 +83,10 @@
                     <StackPanel>
                         <TextBlock Text="Genetic Algorithm Parameters" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
                         <Button Content="Test" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.Row="7" Grid.Column="1"/>
+                        <UniformGrid Columns="2">
+                            <Label Content="Load Preset:"></Label>
+                            <Controls:DropDownButton />
+                        </UniformGrid>
                         <UniformGrid Columns="3">
                             <TextBlock Text="Max Generations" VerticalAlignment="Center" />
                             <Label />
@@ -249,12 +253,12 @@
                     <TextBlock Text="Game Metrics and Balance Quality Evaluators" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
                     <TextBlock Text="Metrics" FontSize="16" FontWeight="Bold"/>
                     <StackPanel Orientation="Vertical">
-                        <ListBox x:Name="MetricsList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="298" ItemsSource="{Binding metrics}">
+                        <ListBox x:Name="MetricsList" Margin="0,0,10,0" VerticalAlignment="Top" ItemsSource="{Binding metrics}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <UniformGrid Columns="2">
-                                        <TextBlock Padding="5,0,5,0" Text="{Binding name}" />
-                                        <Controls:SplitButton Width="120" ItemsSource="{StaticResource AvailableMetricTypes}" SelectedValue="{Binding type.Value, Mode=TwoWay}">
+                                        <TextBox Text="{Binding name}" VerticalContentAlignment="Center" />
+                                        <Controls:SplitButton ItemsSource="{StaticResource AvailableMetricTypes}" SelectedValue="{Binding type.Value, Mode=TwoWay}">
                                         </Controls:SplitButton>
                                     </UniformGrid>
                                 </DataTemplate>
@@ -269,16 +273,31 @@
 
                     <Label/>
                     <TextBlock Text="Evaluators" FontSize="16" FontWeight="Bold"/>
-                    <ListBox x:Name="TestList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding evaluators}">
+                    <ListBox x:Name="TestList" Margin="0,0,10,0" VerticalAlignment="Top" ItemsSource="{Binding evaluators}">
+                        <ListBox.Template>
+                            <ControlTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <UniformGrid Columns="6">
+                                        <Label Content="Name"></Label>
+                                        <Label Content="Metric"></Label>
+                                        <Label Content="Evaluator"></Label>
+                                        <Label Content="Desired Value"></Label>
+                                        <Label Content="Weight"></Label>
+                                        <Label Content="Enabled"></Label>
+                                    </UniformGrid>
+                                    <ItemsPresenter></ItemsPresenter>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </ListBox.Template>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <UniformGrid Columns="6">
-                                    <TextBlock Padding="5,0,5,0" Text="{Binding name}" />
-                                    <Controls:SplitButton Width="120" ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
+                                    <TextBox Text="{Binding name}" VerticalContentAlignment="Center" />
+                                    <Controls:SplitButton ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
                                     </Controls:SplitButton>
-                                    <Controls:SplitButton Width="120" ItemsSource="{Binding Source={StaticResource EvaluatorTypes}}" SelectedValue="{Binding type.Value, Mode=TwoWay}"/>
-                                    <TextBox Text="{Binding target, Mode=TwoWay}"/>
-                                    <TextBox Text="{Binding weight, Mode=TwoWay}"/>
+                                    <Controls:SplitButton ItemsSource="{Binding Source={StaticResource EvaluatorTypes}}" SelectedValue="{Binding type.Value, Mode=TwoWay}"/>
+                                    <TextBox Text="{Binding target, Mode=TwoWay}" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding weight, Mode=TwoWay}" VerticalContentAlignment="Center"/>
                                     <Controls:ToggleSwitch IsChecked="{Binding enabled.Value, Mode=TwoWay}" OnLabel="Enabled" OffLabel="Disabled"/>
                                 </UniformGrid>
                             </DataTemplate>
