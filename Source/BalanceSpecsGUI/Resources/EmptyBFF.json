@@ -33,7 +33,8 @@
 		"server": "localhost",
 		"port": "5672",
 		"username": "",
-		"password": "",
+    "password": "",
+    "queuename": "rpc_queue",
 		//"type": "local",
 		"executable": "file.exe \"%0\" \"%1\" \"%2\"", //%0 = path to this json, %1 = randseed, %2 = params
 	},

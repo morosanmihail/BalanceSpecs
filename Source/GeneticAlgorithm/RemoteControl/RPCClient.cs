@@ -14,9 +14,12 @@ namespace GeneticAlgorithm.RemoteControl
         private IModel channel;
         private string replyQueueName;
         private QueueingBasicConsumer consumer;
+        private string QueueName;
 
-        public RPCClient(string Host = "localhost", int Port = 5672, string Username = "", string Password = "")
+        public RPCClient(string QueueName, string Host = "localhost", int Port = 5672, string Username = "", string Password = "")
         {
+            this.QueueName = QueueName;
+
             var factory = new ConnectionFactory()
             {
                 HostName = Host,
@@ -51,7 +54,7 @@ namespace GeneticAlgorithm.RemoteControl
 
             var messageBytes = Encoding.UTF8.GetBytes(message);
             channel.BasicPublish(exchange: "",
-                                 routingKey: "rpc_queue",
+                                 routingKey: QueueName,
                                  basicProperties: props,
                                  body: messageBytes);
 

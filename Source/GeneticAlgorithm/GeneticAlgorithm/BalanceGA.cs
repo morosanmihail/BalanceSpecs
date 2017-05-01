@@ -61,7 +61,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             foreach (var P in Params)
             {
                 if ((bool)P.enabled == true)
-                { 
+                {
                     data.Add(GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy));
                 }
             }
@@ -101,14 +101,14 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             List<double> finalResults = new List<double>();
 
             dynamic JResults = null;
-            
-            if((string)Manager.GetParameters().GetParameter("string_Bridge_Type") == "local")
+
+            if ((string)Manager.GetParameters().GetParameter("string_Bridge_Type") == "local")
             {
                 Results = RunGamesLocal();
-            } else
+            }
+            else
             {
-                var P = Manager.GetParameters().JsonParams.bridge;
-                Results = RunGamesRemote((string)P.server,(int)P.port,(string)P.username,(string)P.password);
+                Results = RunGamesRemote();
             }
 
             JResults = JsonConvert.DeserializeObject(Results);
@@ -147,7 +147,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                     //finalResult += EvalScore * Weight;
                 }
             }
-            
+
             dynamic Params = Manager.GetParameters().JsonParams.parameters;
 
             int i = 0;
@@ -161,7 +161,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                         finalResults.Add(Math.Abs(Vector[i]) * (double)P.weight);
                     }
 
-                    if((string)P.minimise == "maximise")
+                    if ((string)P.minimise == "maximise")
                     {
                         //TODO
                     }
@@ -188,7 +188,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 ARGS = ARGS.Replace("%1", rand.Next().ToString());
                 ARGS = ARGS.Replace("%2", string.Join(",", Vector));
 
-                ProcessStartInfo info = new ProcessStartInfo(EXE, ARGS); 
+                ProcessStartInfo info = new ProcessStartInfo(EXE, ARGS);
                 //info.WorkingDirectory = CompetDirectory;
                 info.UseShellExecute = false;
                 info.RedirectStandardInput = true;
@@ -210,24 +210,25 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 AllOutput = AllOutput.Substring(pFrom, pTo - pFrom);
 
                 Simulator.Close();
-                
+
                 //Simulator.Kill();
 
                 return AllOutput;
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return null;
             }
         }
 
-        string RunGamesRemote(string HostName, int Port, string Username, string Password)
+        string RunGamesRemote()
         {
             try
             {
                 dynamic JsonMessage = new JObject(Manager.GetParameters().JsonParams);
 
                 int i = 0;
-                foreach(var Param in JsonMessage.parameters)
+                foreach (var Param in JsonMessage.parameters)
                 {
                     if ((bool)Param.enabled == true)
                     {
@@ -239,17 +240,20 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 JsonMessage.Add("randomseed", rand.Next());
 
                 RPCClient rpcClient = null;
+
+                var P = Manager.GetParameters().JsonParams.bridge;
                 while (rpcClient == null)
                 {
                     try
                     {
-                        rpcClient = new RPCClient(HostName, Port, Username, Password);
+                        rpcClient = new RPCClient((string)P.queuename, (string)P.server, (int)P.port, (string)P.username, (string)P.password);
                     }
                     catch
                     {
                         rpcClient = null;
                     }
                 }
+
                 var response = rpcClient.CallRunGame(JsonMessage.ToString());
 
                 rpcClient.Close();
@@ -278,7 +282,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             {
 
                 int p1 = rand.Next(Length - 1);
-                int p2 = rand.Next(p1+1, Length);
+                int p2 = rand.Next(p1 + 1, Length);
 
                 for (int i = p1; i < p2; i++)
                 {
