@@ -90,7 +90,7 @@ namespace BalanceSpecsGUI
                 return;
             }
 
-            JsonO.parameters.Add(new JObject(new JProperty("name",Name), new JProperty("enabled",true), new JProperty("minimise","ignore"), new JProperty("custom",new JObject())));
+            JsonO.parameters.Add(new JObject(new JProperty("name",Name), new JProperty("enabled",true), new JProperty("listsize",1), new JProperty("minimise","ignore"), new JProperty("custom",new JObject())));
         }
 
         private async void AddMetricButtonClick(object sender, RoutedEventArgs e)

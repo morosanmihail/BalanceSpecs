@@ -62,7 +62,11 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             {
                 if ((bool)P.enabled == true)
                 {
-                    data.Add(GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy));
+                    int ListSize = P.listsize != null ? (int)P.listsize : 1;
+                    for (int i = 0; i < ListSize; i++)
+                    {
+                        data.Add(GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy));
+                    }
                 }
             }
 
@@ -150,23 +154,27 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
             dynamic Params = Manager.GetParameters().JsonParams.parameters;
 
-            int i = 0;
+            int x = 0;
             foreach (var P in Params)
             {
                 if ((bool)P.enabled == true)
                 {
-                    if ((string)P.minimise == "minimise")
+                    int ListSize = P.listsize != null ? (int)P.listsize : 1;
+                    for (int i = 0; i < ListSize; i++)
                     {
-                        //finalResult += Math.Abs(Vector[i]) * (double)P.weight;
-                        finalResults.Add(Math.Abs(Vector[i]) * (double)P.weight);
-                    }
+                        if ((string)P.minimise == "minimise")
+                        {
+                            //finalResult += Math.Abs(Vector[i]) * (double)P.weight;
+                            finalResults.Add(Math.Abs(Vector[x]) * (double)P.weight);
+                        }
 
-                    if ((string)P.minimise == "maximise")
-                    {
-                        //TODO
-                    }
+                        if ((string)P.minimise == "maximise")
+                        {
+                            //TODO
+                        }
 
-                    i++;
+                        x++;
+                    }
                 }
             }
 
@@ -227,13 +235,22 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             {
                 dynamic JsonMessage = new JObject(Manager.GetParameters().JsonParams);
 
-                int i = 0;
+                int x = 0;
                 foreach (var Param in JsonMessage.parameters)
                 {
                     if ((bool)Param.enabled == true)
                     {
-                        Param.Add("value", Vector[i]);
-                        i++;
+                        int ListSize = Param.listsize != null ? (int)Param.listsize : 1;
+
+                        if(ListSize == 1)
+                        {
+                            Param.Add("value", Vector[x]);
+                        } else
+                        {
+                            Param.Add("value", new JArray(Vector.GetRange(x, ListSize)));
+                        }
+
+                        x++;
                     }
                 }
 
@@ -305,22 +322,28 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
             dynamic Params = Manager.GetParameters().JsonParams.parameters;
 
-            int i = 0;
+            int x = 0;
             foreach (var P in Params)
             {
                 if ((bool)P.enabled == true)
                 {
+                    int ListSize = P.listsize != null ? (int)P.listsize : 1;
+
                     double MutateRange = (double)((double)P.rangeMax - (double)P.rangeMin) / (double)P.rangeAccuracy;
-                    if (rand.Next(0, 100) <= MutationChance * 100)
+
+                    for (int i = 0; i < ListSize; i++)
                     {
-                        double Shift = Math.Round(rand.NextDouble(-MutateRange, MutateRange), (int)Math.Log10((double)P.rangeAccuracy));
-                        newData[i] += Shift;
-                        if (newData[i] > (double)P.rangeMax)
-                            newData[i] = (double)P.rangeMax;
-                        if (newData[i] < (double)P.rangeMin)
-                            newData[i] = (double)P.rangeMin;
+                        if (rand.Next(0, 100) <= MutationChance * 100)
+                        {
+                            double Shift = Math.Round(rand.NextDouble(-MutateRange, MutateRange), (int)Math.Log10((double)P.rangeAccuracy));
+                            newData[x] += Shift;
+                            if (newData[x] > (double)P.rangeMax)
+                                newData[x] = (double)P.rangeMax;
+                            if (newData[x] < (double)P.rangeMin)
+                                newData[x] = (double)P.rangeMin;
+                        }
+                        x++;
                     }
-                    i++;
                 }
             }
 
