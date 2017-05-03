@@ -159,13 +159,14 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             {
                 if ((bool)P.enabled == true)
                 {
+                    double ParamFitness = 0;
+
                     int ListSize = P.listsize != null ? (int)P.listsize : 1;
                     for (int i = 0; i < ListSize; i++)
                     {
                         if ((string)P.minimise == "minimise")
                         {
-                            //finalResult += Math.Abs(Vector[i]) * (double)P.weight;
-                            finalResults.Add(Math.Abs(Vector[x]) * (double)P.weight);
+                            ParamFitness += Math.Abs(Vector[x]) * (double)P.weight;
                         }
 
                         if ((string)P.minimise == "maximise")
@@ -175,6 +176,8 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
                         x++;
                     }
+
+                    finalResults.Add(ParamFitness);
                 }
             }
 
