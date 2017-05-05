@@ -144,11 +144,11 @@
                                         </ListBox.ItemsSource>
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <UniformGrid Columns="3">
-                                                    <TextBlock Text="{Binding Name.FriendlyName}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                                                <UniformGrid Columns="2">
+                                                    <TextBlock Text="{Binding Name.FriendlyName}" VerticalAlignment="Center" Width="Auto" TextWrapping="WrapWithOverflow"/>
 
-                                                    <Label/>
-                                                    <!--     <Slider Name="{Binding Name.Name}" Minimum="{Binding Name.RangeMin}" Maximum="{Binding Name.RangeMax}" Value="{Binding Value.Value, Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
+                                                    <!-- <Label/>
+                                                        <Slider Name="{Binding Name.Name}" Minimum="{Binding Name.RangeMin}" Maximum="{Binding Name.RangeMax}" Value="{Binding Value.Value, Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
 -->
                                                     <TextBox Text="{Binding Value.Value, FallbackValue='1', Mode=TwoWay}" Width="150"/> 
 
@@ -172,7 +172,6 @@
                         <TextBlock Text="Game Parameters to Balance" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                             <StackPanel Orientation="Vertical">
-
                                 <TextBlock Text="Parameters" FontSize="14" FontWeight="Bold"/>
                                 <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="220" ItemsSource="{Binding parameters, Mode=TwoWay}" DisplayMemberPath="name"/>
                                 <StackPanel Orientation="Horizontal">
@@ -319,13 +318,24 @@
             <TabItem Header="Custom Data">
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
                     <TextBlock Text="Custom Properties to Send to Game" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <ListBox HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding custom}">
+                    <ListBox Margin="0,0,0,0" ItemsSource="{Binding custom}">
+                        <ListBox.Template>
+                            <ControlTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <UniformGrid Columns="2">
+                                        <Label Content="Name"></Label>
+                                        <Label Content="Value"></Label>
+                                    </UniformGrid>
+                                    <ItemsPresenter></ItemsPresenter>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </ListBox.Template>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <UniformGrid Columns="2">
-                                    <TextBlock Padding="5,0,5,0" Text="{Binding Name}" />
+                                    <TextBlock Padding="0,0,0,0" Text="{Binding Name}" />
 
-                                    <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Value.Value, Mode=TwoWay}" VerticalAlignment="Top" Width="120"/>
+                                    <TextBox TextWrapping="Wrap" Text="{Binding Value.Value, Mode=TwoWay}" Margin="5,0,10,0"/>
                                 </UniformGrid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
