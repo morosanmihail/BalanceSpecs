@@ -24,6 +24,7 @@ using BalanceSpecsGUI.Windows;
 using System.Reflection;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using SharpGenetics.Predictor;
 
 namespace BalanceSpecsGUI
 {
@@ -194,6 +195,10 @@ namespace BalanceSpecsGUI
 
                 this.DataContext = JsonO;
                 JSONFile = JsonO;
+                if (JSONFile.gaparams.extra_use_predictor != null && JSONFile.gaparams.extra_use_predictor.Value == true)
+                {
+                    PredictorHelper.ApplyPredictorPropertiesToJsonDynamicAndReturnObjects(JSONFile, (string)JSONFile.gaparams.string_PredictorType);
+                }
             }
 
         }

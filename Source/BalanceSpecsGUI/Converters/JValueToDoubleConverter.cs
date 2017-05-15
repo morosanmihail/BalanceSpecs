@@ -23,7 +23,8 @@ namespace BalanceSpecsGUI.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return double.Parse(value.ToString());
+            return value;
+            //return double.Parse(value.ToString());
         }
     }
 }
