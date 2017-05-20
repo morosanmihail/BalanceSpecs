@@ -197,11 +197,17 @@ namespace GeneticAlgorithm.GAController
                         
                         if (IsAutosaving)
                         {
-                            Directory.CreateDirectory(AutosaveLocation);
+                            try
+                            {
+                                Directory.CreateDirectory(AutosaveLocation);
 
-                            string filename = AutosaveLocation + "/Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + ".xml";
+                                string filename = Path.Combine(AutosaveLocation, "Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + ".xml");
 
-                            SaveRunGAToFile(filename);
+                                SaveRunGAToFile(filename);
+                            } catch(Exception e)
+                            {
+
+                            }
                         }
                     }
 
