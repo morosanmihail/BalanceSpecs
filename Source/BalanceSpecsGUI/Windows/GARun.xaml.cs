@@ -71,6 +71,8 @@ namespace BalanceSpecsGUI.Windows
 
         private void AutosaveLocationTextbox_Click(object sender, RoutedEventArgs e)
         {
+            var GAC = this.DataContext as GAController;
+
             var dlg = new CommonOpenFileDialog();
             dlg.Title = "Choose Autosave location";
             dlg.IsFolderPicker = true;
@@ -84,7 +86,9 @@ namespace BalanceSpecsGUI.Windows
 
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                AutosaveLocationTextbox.Text = dlg.FileName;
+                GAC.AutosaveLocation = dlg.FileName;
+                GAC.IsAutosaving = true;
+                //AutosaveLocationTextbox.Text = dlg.FileName;
             }
         }
 
@@ -104,8 +108,6 @@ namespace BalanceSpecsGUI.Windows
 
         private void LoadExistingRun_Click(object sender, RoutedEventArgs e)
         {
-            var GAC = this.DataContext as GAController;
-
             var dlg = new CommonOpenFileDialog();
             dlg.Title = "Choose XML file";
             dlg.IsFolderPicker = false;
@@ -120,9 +122,18 @@ namespace BalanceSpecsGUI.Windows
 
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                GAC.LoadRunFromFile(dlg.FileName);
+                GAController GAController = new GAController("");
+                GAController.LoadRunFromFile(dlg.FileName);
+                DataContext = GAController;
             }
 
+        }
+
+        private void LoadConfiguration_Click(object sender, RoutedEventArgs e)
+        {
+            GAController GAController = new GAController(MainWindow.JSONFile.ToString());
+            
+            DataContext = GAController;
         }
     }
 }

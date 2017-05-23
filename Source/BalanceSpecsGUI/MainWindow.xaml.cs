@@ -152,10 +152,7 @@ namespace BalanceSpecsGUI
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             //Start run
-            GAController GAController = new GAController(this.DataContext.ToString());
-
             GARun GARunWindow = new GARun();
-            GARunWindow.DataContext = GAController;
             GARunWindow.Show();
         }
 

@@ -41,7 +41,7 @@ namespace GeneticAlgorithm.GAController
 
         public GAController(string JSONFile)
         {
-            isStarted = false;
+            KillRun();
             this.JSONFile = JSONFile;
             RunManager = null;
             GenerationsToRun = 1;
@@ -87,12 +87,19 @@ namespace GeneticAlgorithm.GAController
         public void KillRun()
         {
             //kill thread
-
-            if (GAThread != null)
+            try
             {
-                GAThread.Abort();
+                if (GAThread != null)
+                {
+                    GAThread.Abort();
+                }
             }
-            isStarted = false;
+            catch { }
+            finally
+            {
+                isStarted = false;
+                GAThread = null;
+            }
         }
 
         public void LoadRunFromFile(string Filename)
