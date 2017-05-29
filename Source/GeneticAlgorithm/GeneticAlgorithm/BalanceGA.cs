@@ -108,11 +108,11 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
             if ((string)Manager.GetParameters().GetParameter("string_Bridge_Type") == "local")
             {
-                Results = RunGamesLocal();
+                Results = RunGamesLocal(Manager.GetParameters().JsonParams, Vector, rand.Next());
             }
             else
             {
-                Results = RunGamesRemote();
+                Results = RunGamesRemote(Manager.GetParameters().JsonParams, Vector, rand.Next());
             }
 
             JResults = JsonConvert.DeserializeObject(Results);
@@ -184,20 +184,22 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             return finalResults;
         }
 
-        string RunGamesLocal()
+        public static string RunGamesLocal(dynamic JsonParams, List<double> Vector, double RandSeed)
         {
             try
             {
                 var Simulator = new Process();
 
-                string Invoke = (string)Manager.GetParameters().GetParameter("string_Bridge_Local_Exe");
+                //string Invoke = (string)Manager.GetParameters().GetParameter("string_Bridge_Local_Exe");
+                string Invoke = (string)JsonParams.bridge.executable;
 
                 string EXE = Invoke.Substring(0, Invoke.IndexOf(' '));
                 string ARGS = Invoke.Substring(Invoke.IndexOf(' '));
 
-                ARGS = ARGS.Replace("%0", (string)Manager.GetParameters().GetParameter("string_SpecsFile"));
-                ARGS = ARGS.Replace("%1", rand.Next().ToString());
-                ARGS = ARGS.Replace("%2", string.Join(",", Vector));
+                //TODO FIX
+                //ARGS = ARGS.Replace("%0", (string)Manager.GetParameters().GetParameter("string_SpecsFile"));
+                ARGS = ARGS.Replace("%1", RandSeed.ToString());
+                ARGS = ARGS.Replace("%2", string.Join(",", Vector)); //TODO also check for Null vector
 
                 ProcessStartInfo info = new ProcessStartInfo(EXE, ARGS);
                 //info.WorkingDirectory = CompetDirectory;
@@ -232,11 +234,12 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             }
         }
 
-        string RunGamesRemote()
+        public static string RunGamesRemote(dynamic JsonParams, List<double> Vector, double RandSeed)
         {
             try
             {
-                dynamic JsonMessage = new JObject(Manager.GetParameters().JsonParams);
+                //dynamic JsonMessage = new JObject(Manager.GetParameters().JsonParams);
+                dynamic JsonMessage = new JObject(JsonParams);
 
                 int x = 0;
                 foreach (var Param in JsonMessage.parameters)
@@ -247,21 +250,21 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
                         if(ListSize == 1)
                         {
-                            Param.Add("value", Vector[x]);
+                            Param.Add("value", Vector != null ? Vector[x] : 0);
                         } else
                         {
-                            Param.Add("value", new JArray(Vector.GetRange(x, ListSize)));
+                            Param.Add("value", Vector != null ? new JArray(Vector.GetRange(x, ListSize)) : new JArray(new double[ListSize]));
                         }
 
                         x++;
                     }
                 }
 
-                JsonMessage.Add("randomseed", rand.Next());
+                JsonMessage.Add("randomseed", RandSeed);
 
                 RPCClient rpcClient = null;
 
-                var P = Manager.GetParameters().JsonParams.bridge;
+                var P = JsonParams.bridge;
                 while (rpcClient == null)
                 {
                     try

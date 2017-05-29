@@ -229,5 +229,12 @@ namespace BalanceSpecsGUI
         {
             this.ShowMessageAsync("Error", "Not implemented yet");
         }
+
+        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        {
+            var ResultsWindow = new SingleRunResults(this.DataContext, null, 42);
+
+            ResultsWindow.Show();
+        }
     }
 }

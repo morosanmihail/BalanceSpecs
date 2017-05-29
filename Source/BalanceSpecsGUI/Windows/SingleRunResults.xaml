@@ -1,0 +1,15 @@
+﻿<Window x:Class="BalanceSpecsGUI.Windows.SingleRunResults"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BalanceSpecsGUI.Windows"
+        mc:Ignorable="d"
+        Title="SingleRunResults" Height="271.429" Width="523.529">
+    <Grid>
+        <Label Content="Running: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="{Binding Running}" HorizontalAlignment="Left" Margin="75,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Margin="10,41,10,10" TextWrapping="Wrap" Text="{Binding Results}"/>
+
+    </Grid>
+</Window>
