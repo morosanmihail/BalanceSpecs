@@ -11,11 +11,9 @@
         mc:Ignorable="d"
         Title="Genetic Algorithm Progress" Height="449.445" Width="827.836" Closing="MetroWindow_ClosingAsync">
     <Grid>
-        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,81,0,127" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
+        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,81,0,10" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
         <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,50,0,0" VerticalAlignment="Top"/>
         <Label x:Name="GenLabel" Content="{Binding RunManager.CurrentGen}" HorizontalAlignment="Left" Margin="102,50,0,0" VerticalAlignment="Top"/>
-        <Button Content="Start / Pause" HorizontalAlignment="Left" Margin="10,0,0,42" Width="115" Click="Button_Click" Height="27" VerticalAlignment="Bottom"/>
-        <Button Content="Kill Run" HorizontalAlignment="Left" Margin="10,0,0,10" Width="115" Click="Button_Click_1" Height="27" VerticalAlignment="Bottom"/>
         <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot" Margin="130,50,158,10">
             <oxy:LineSeries Title="Best Fitness" DataFieldX="Generation" DataFieldY="Value"
                         ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}"
@@ -32,7 +30,6 @@
         <Button Margin="0,50,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="27" Height="26" Click="AutosaveLocationTextbox_Click">
             <iconPacks:PackIconModern Width="14" Height="14" Kind="Folder" />
         </Button>
-        <Controls:NumericUpDown Maximum="100" Minimum="1" Value="{Binding GenerationsToRun}" HorizontalAlignment="Left" Margin="10,0,0,74" Width="115" Height="48" VerticalAlignment="Bottom" Controls:TextBoxHelper.Watermark="Generations" Controls:TextBoxHelper.UseFloatingWatermark="True"/>
         <Border BorderBrush="Black" BorderThickness="1" Margin="0,115,10,42" HorizontalAlignment="Right" Width="143" DataContext="{Binding RunManager.BestIndividualSoFar}">
 
             <ScrollViewer>
@@ -48,8 +45,9 @@
             </ScrollViewer>
         </Border>
         <ToolBar Height="50" Margin="2,0,158,0" VerticalAlignment="Top">
-            <Button Content="Start with Main Configuration" Height="45" VerticalAlignment="Top" Width="168" Click="LoadConfiguration_Click"/>
-            <Button Content="Load Run In Progress" Height="45" VerticalAlignment="Top" Width="168" Click="LoadExistingRun_Click"/>
+            <Controls:NumericUpDown Maximum="100" Minimum="1" Value="{Binding GenerationsToRun}" HorizontalAlignment="Left" Width="135" Height="50" VerticalAlignment="Center" Controls:TextBoxHelper.Watermark="Generations" Controls:TextBoxHelper.UseFloatingWatermark="True"/>
+            <Button Content="Start / Pause" HorizontalAlignment="Left" Width="115" Click="Button_Click" Height="30" VerticalAlignment="Center"/>
+            <Button Content="Kill Run" HorizontalAlignment="Left" Width="115" Click="Button_Click_1" Height="30" VerticalAlignment="Center"/>
         </ToolBar>
         <Label Content="{Binding AutosaveLocation, Mode=OneWay}" Margin="0,84,115,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="38"/>
     </Grid>

@@ -73,6 +73,7 @@
             </MenuItem>
             <MenuItem Header="Run">
                 <MenuItem Header="Evolve Current Configuration" Click="MenuItem_Click"></MenuItem>
+                <MenuItem Header="Load Run in Progress" Click="MenuItemProgress_Click"></MenuItem>
                 <MenuItem Header="Test Game With Custom Configuration"></MenuItem>
             </MenuItem>
         </Menu>

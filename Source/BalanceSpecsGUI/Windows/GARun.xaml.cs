@@ -25,15 +25,21 @@ namespace BalanceSpecsGUI.Windows
     /// </summary>
     public partial class GARun : MetroWindow
     {
-        public GARun()
+        public GARun(GAController Controller)
         {
             InitializeComponent();
+
+            this.DataContext = Controller;
         }
 
         protected override void OnClosed(EventArgs e)
         {
             var GAC = this.DataContext as GAController;
-            GAC.KillRun();
+
+            if (GAC != null)
+            {
+                GAC.KillRun();
+            }
 
             base.OnClosed(e);
         }
@@ -96,7 +102,7 @@ namespace BalanceSpecsGUI.Windows
         {
             var GAC = this.DataContext as GAController;
 
-            if (GAC.isStarted)
+            if (GAC != null && GAC.isStarted)
             {
                 MessageBoxResult result = MessageBox.Show("Run is still in progress. Are you sure you want to close?", "Warning", MessageBoxButton.YesNo);
                 if (result != MessageBoxResult.Yes)
@@ -104,36 +110,6 @@ namespace BalanceSpecsGUI.Windows
                     e.Cancel = true;
                 }
             }
-        }
-
-        private void LoadExistingRun_Click(object sender, RoutedEventArgs e)
-        {
-            var dlg = new CommonOpenFileDialog();
-            dlg.Title = "Choose XML file";
-            dlg.IsFolderPicker = false;
-            dlg.AllowNonFileSystemItems = true;
-            dlg.EnsureFileExists = true;
-            dlg.EnsurePathExists = true;
-            dlg.EnsureReadOnly = false;
-            dlg.EnsureValidNames = true;
-            dlg.Multiselect = false;
-            dlg.ShowPlacesList = true;
-            dlg.Filters.Add(new CommonFileDialogFilter("Balance File Format", "xml"));
-
-            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                GAController GAController = new GAController("");
-                GAController.LoadRunFromFile(dlg.FileName);
-                DataContext = GAController;
-            }
-
-        }
-
-        private void LoadConfiguration_Click(object sender, RoutedEventArgs e)
-        {
-            GAController GAController = new GAController(MainWindow.JSONFile.ToString());
-            
-            DataContext = GAController;
         }
     }
 }

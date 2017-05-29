@@ -151,9 +151,34 @@ namespace BalanceSpecsGUI
         
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            //Start run
-            GARun GARunWindow = new GARun();
+            GAController GAController = new GAController(JSONFile.ToString());
+
+            GARun GARunWindow = new GARun(GAController);
             GARunWindow.Show();
+        }
+
+        private void MenuItemProgress_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new CommonOpenFileDialog();
+            dlg.Title = "Choose XML file";
+            dlg.IsFolderPicker = false;
+            dlg.AllowNonFileSystemItems = true;
+            dlg.EnsureFileExists = true;
+            dlg.EnsurePathExists = true;
+            dlg.EnsureReadOnly = false;
+            dlg.EnsureValidNames = true;
+            dlg.Multiselect = false;
+            dlg.ShowPlacesList = true;
+            dlg.Filters.Add(new CommonFileDialogFilter("Balance File Format", "xml"));
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                GAController GAController = new GAController("");
+                GAController.LoadRunFromFile(dlg.FileName);
+                
+                GARun GARunWindow = new GARun(GAController);
+                GARunWindow.Show();
+            }
         }
 
         private void SaveAsButton_Click(object sender, RoutedEventArgs e)
