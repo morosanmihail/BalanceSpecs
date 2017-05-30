@@ -56,7 +56,7 @@ namespace GeneticAlgorithm.GAController
         {
             get
             {
-                if(RunManager != null)
+                if(RunManager != null && RunManager.Populations.Count > 0)
                 {
                     var X = new List<DataPoint>();
                     for(int i = 0; i<RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)

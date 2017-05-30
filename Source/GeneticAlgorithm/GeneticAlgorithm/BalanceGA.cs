@@ -101,11 +101,6 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
         List<double> RunGames(int CurrentGeneration)
         {
-            //double finalResult = 0;
-            List<double> finalResults = new List<double>();
-
-            dynamic JResults = null;
-
             if ((string)Manager.GetParameters().GetParameter("string_Bridge_Type") == "local")
             {
                 Results = RunGamesLocal(Manager.GetParameters().JsonParams, Vector, rand.Next());
@@ -115,10 +110,17 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 Results = RunGamesRemote(Manager.GetParameters().JsonParams, Vector, rand.Next());
             }
 
-            JResults = JsonConvert.DeserializeObject(Results);
+            return EvaluateResults(Manager.GetParameters().JsonParams, Results, Vector);
+        }
+
+        public static List<double> EvaluateResults(dynamic JsonParams, string Results, List<double> Vector)
+        {
+            List<double> finalResults = new List<double>();
+
+            dynamic JResults = JsonConvert.DeserializeObject(Results);
 
             //int index = 0;
-            foreach (var Evaluator in Manager.GetParameters().JsonParams.evaluators)
+            foreach (var Evaluator in JsonParams.evaluators)
             {
                 if ((bool)Evaluator.enabled == true)
                 {
@@ -133,7 +135,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
                     double EvalScore = 0;
 
-                    JToken MetricTypeT = Manager.GetParameters().JsonParams.SelectToken("$.metrics[?(@.name == '" + Metric + "')]");
+                    JToken MetricTypeT = JsonParams.SelectToken("$.metrics[?(@.name == '" + Metric + "')]");
 
                     string MetricType = MetricTypeT.Value<string>("type"); //Manager.GetParameters().JsonParams.metrics[Metric].type;
                     if (MetricType == "List")
@@ -152,12 +154,12 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 }
             }
 
-            dynamic Params = Manager.GetParameters().JsonParams.parameters;
+            dynamic Params = JsonParams.parameters;
 
             int x = 0;
             foreach (var P in Params)
             {
-                if ((bool)P.enabled == true)
+                if ((bool)P.enabled == true && (string)P.minimise != "ignore")
                 {
                     double ParamFitness = 0;
 

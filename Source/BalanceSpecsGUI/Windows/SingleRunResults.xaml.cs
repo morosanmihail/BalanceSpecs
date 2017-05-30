@@ -27,7 +27,11 @@ namespace BalanceSpecsGUI.Windows
             var Context = new SingleRunResultsContext(JsonParams, Vector, RandSeed);
 
             this.DataContext = Context;
+        }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var Context = this.DataContext as SingleRunResultsContext;
             Context.StartRun();
         }
     }
