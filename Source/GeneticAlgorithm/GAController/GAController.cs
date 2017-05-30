@@ -1,5 +1,6 @@
 ﻿using GeneticAlgorithm.GeneticAlgorithm;
 using GeneticAlgorithm.Helpers;
+using Newtonsoft.Json;
 using OxyPlot;
 using PropertyChanged;
 using SharpGenetics.BaseClasses;
@@ -38,6 +39,7 @@ namespace GeneticAlgorithm.GAController
         int GensToRun = 0;
         
         string JSONFile;
+        dynamic JSONParams;
 
         public GAController(string JSONFile)
         {
@@ -46,6 +48,49 @@ namespace GeneticAlgorithm.GAController
             RunManager = null;
             GenerationsToRun = 1;
             AutosaveLocation = "";
+
+            JSONParams = JsonConvert.DeserializeObject(JSONFile);
+        }
+
+        public List<DataPoint> ParetoFront
+        {
+            get
+            {
+                if(RunManager != null)
+                {
+                    var X = new List<DataPoint>();
+                    for(int i = 0; i<RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)
+                    {
+                        X.Add(new DataPoint(RunManager.Populations[0].RunMetrics.TotalFitnessCalculations[i].Value, RunManager.Populations[0].RunMetrics.BestFitnesses[i].Value));
+                    }
+                    return X;
+                } else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public List<string> EnabledParameters
+        {
+            get
+            {
+                if(JSONFile != null)
+                {
+                    var X = new List<string>();
+                    foreach(var P in JSONParams.parameters)
+                    {
+                        if(P.enabled.Value == true)
+                        {
+                            X.Add((string)P.name);
+                        }
+                    }
+                    return X;
+                } else
+                {
+                    return null;
+                }
+            }
         }
 
         public bool StartOrPauseRun()
@@ -115,6 +160,8 @@ namespace GeneticAlgorithm.GAController
 
             reader.Close();
             fs.Close();
+
+            JSONParams = RunManager.Parameters.JsonParams;
         }
 
         private void StartThread()

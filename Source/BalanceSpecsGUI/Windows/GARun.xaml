@@ -14,14 +14,26 @@
         <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,81,0,10" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
         <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,50,0,0" VerticalAlignment="Top"/>
         <Label x:Name="GenLabel" Content="{Binding RunManager.CurrentGen}" HorizontalAlignment="Left" Margin="102,50,0,0" VerticalAlignment="Top"/>
-        <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot" Margin="130,50,158,10">
-            <oxy:LineSeries Title="Best Fitness" DataFieldX="Generation" DataFieldY="Value"
+        <TabControl DockPanel.Dock="Right" VerticalAlignment="Stretch" Margin="130,50,158,10">
+            <TabItem Header="Fitness / Generation">
+                <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot" Margin="0,0,0,0">
+                    <oxy:LineSeries Title="Best Fitness" DataFieldX="Generation" DataFieldY="Value"
                         ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}"
                         StrokeThickness="2" Color="Blue" />
-            <oxy:LineSeries Title="Average Fitness" DataFieldX="Generation" DataFieldY="Value"
+                    <oxy:LineSeries Title="Average Fitness" DataFieldX="Generation" DataFieldY="Value"
                         ItemsSource="{Binding RunManager.Populations[0].RunMetrics.AverageFitnesses}"
                         StrokeThickness="2" Color="Green" />
-        </oxy:Plot>
+                </oxy:Plot>
+            </TabItem>
+            <TabItem Header="Pareto Front">
+                <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot2" Margin="0,0,0,0">
+                    <oxy:LineSeries Title="Best Fitness" DataFieldX="x" DataFieldY="y"
+                        ItemsSource="{Binding ParetoFront}"
+                        StrokeThickness="2" Color="Blue" />
+                </oxy:Plot>
+            </TabItem>
+        </TabControl>
+        
 
         <Label x:Name="IsRunningLabel_Copy" Content="Running:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
         <Custom:ToggleSwitch Height="40" Margin="0,10,10,0" VerticalAlignment="Top" OnLabel="Autosave" OffLabel="No Autosave" IsChecked="{Binding IsAutosaving, Mode=TwoWay}" FontSize="11" HorizontalAlignment="Right" Width="143" />
@@ -30,17 +42,20 @@
         <Button Margin="0,50,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="27" Height="26" Click="AutosaveLocationTextbox_Click">
             <iconPacks:PackIconModern Width="14" Height="14" Kind="Folder" />
         </Button>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="0,115,10,42" HorizontalAlignment="Right" Width="143" DataContext="{Binding RunManager.BestIndividualSoFar}">
+        <Border BorderBrush="Black" BorderThickness="1" Margin="0,115,10,42" HorizontalAlignment="Right" Width="143">
 
             <ScrollViewer>
                 <StackPanel>
 
                     <Label x:Name="BestSolutionLabel" Content="Best solution so far:"/>
-                    <Label Content="{Binding Path=Fitness}"/>
+                    <Label Content="{Binding Path=RunManager.BestIndividualSoFar.Fitness}"/>
                     <Label Content="Fitnesses:"/>
-                    <ListBox ItemsSource="{Binding ObjectivesFitness}"></ListBox>
+                    <ListBox ItemsSource="{Binding RunManager.BestIndividualSoFar.ObjectivesFitness}"></ListBox>
                     <Label Content="Parameters:"/>
-                    <ListBox ItemsSource="{Binding Vector}"/>
+                    <UniformGrid Columns="2">
+                        <ListBox ItemsSource="{Binding EnabledParameters}"/>
+                        <ListBox ItemsSource="{Binding RunManager.BestIndividualSoFar.Vector}"/>
+                    </UniformGrid>
                 </StackPanel>
             </ScrollViewer>
         </Border>
