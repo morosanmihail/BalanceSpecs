@@ -20,11 +20,11 @@ namespace BalanceSpecsGUI.Windows
     /// </summary>
     public partial class SingleRunResults : Window
     {
-        public SingleRunResults(dynamic JsonParams, List<double> Vector, double RandSeed)
+        public SingleRunResults(dynamic JsonParams, double RandSeed)
         {
             InitializeComponent();
 
-            var Context = new SingleRunResultsContext(JsonParams, Vector, RandSeed);
+            var Context = new SingleRunResultsContext(JsonParams, RandSeed);
 
             this.DataContext = Context;
         }

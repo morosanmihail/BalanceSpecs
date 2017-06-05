@@ -232,7 +232,7 @@ namespace BalanceSpecsGUI
 
         private void MenuItem_Click_3(object sender, RoutedEventArgs e)
         {
-            var ResultsWindow = new SingleRunResults(this.DataContext, null, 42);
+            var ResultsWindow = new SingleRunResults(this.DataContext, 42);
 
             ResultsWindow.Show();
         }

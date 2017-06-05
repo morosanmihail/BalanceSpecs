@@ -253,68 +253,69 @@
             </TabItem>
 
             <TabItem Header="Evaluators">
-                <StackPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Visible">
+                    <StackPanel>
 
-                    <TextBlock Text="Game Metrics and Balance Quality Evaluators" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <TextBlock Text="Metrics" FontSize="16" FontWeight="Bold"/>
-                    <StackPanel Orientation="Vertical">
-                        <ListBox x:Name="MetricsList" Margin="0,0,10,0" VerticalAlignment="Top" ItemsSource="{Binding metrics}">
+                        <TextBlock Text="Game Metrics and Balance Quality Evaluators" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBlock Text="Metrics" FontSize="16" FontWeight="Bold"/>
+                        <StackPanel Orientation="Vertical">
+                            <ListBox x:Name="MetricsList" Margin="0,0,10,0" VerticalAlignment="Top" ItemsSource="{Binding metrics}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <UniformGrid Columns="2">
+                                            <TextBox Text="{Binding name}" VerticalContentAlignment="Center" />
+                                            <Controls:SplitButton ItemsSource="{StaticResource AvailableMetricTypes}" SelectedValue="{Binding type.Value, Mode=TwoWay}">
+                                            </Controls:SplitButton>
+                                        </UniformGrid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewMetricName" Width="150"/>
+                                <Button Content="Add" Click="AddMetricButtonClick"/>
+                                <Button Content="Remove"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Label/>
+                        <TextBlock Text="Evaluators" FontSize="16" FontWeight="Bold"/>
+                        <ListBox x:Name="TestList" Margin="0,0,10,0" VerticalAlignment="Top" ItemsSource="{Binding evaluators}">
+                            <ListBox.Template>
+                                <ControlTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <UniformGrid Columns="6">
+                                            <Label Content="Name"></Label>
+                                            <Label Content="Metric"></Label>
+                                            <Label Content="Evaluator"></Label>
+                                            <Label Content="Desired Value"></Label>
+                                            <Label Content="Weight"></Label>
+                                            <Label Content="Enabled"></Label>
+                                        </UniformGrid>
+                                        <ItemsPresenter></ItemsPresenter>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </ListBox.Template>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <UniformGrid Columns="2">
+                                    <UniformGrid Columns="6">
                                         <TextBox Text="{Binding name}" VerticalContentAlignment="Center" />
-                                        <Controls:SplitButton ItemsSource="{StaticResource AvailableMetricTypes}" SelectedValue="{Binding type.Value, Mode=TwoWay}">
+                                        <Controls:SplitButton ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
                                         </Controls:SplitButton>
+                                        <Controls:SplitButton ItemsSource="{Binding Source={StaticResource EvaluatorTypes}}" SelectedValue="{Binding type.Value, Mode=TwoWay}"/>
+                                        <TextBox Text="{Binding target, Mode=TwoWay}" VerticalContentAlignment="Center"/>
+                                        <TextBox Text="{Binding weight, Mode=TwoWay}" VerticalContentAlignment="Center"/>
+                                        <Controls:ToggleSwitch IsChecked="{Binding enabled.Value, Mode=TwoWay}" OnLabel="Enabled" OffLabel="Disabled"/>
                                     </UniformGrid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                         <StackPanel Orientation="Horizontal">
-                            <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewMetricName" Width="150"/>
-                            <Button Content="Add" Click="AddMetricButtonClick"/>
+                            <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewEvaluatorName" Width="150"/>
+                            <Button Content="Add" Click="AddEvaluatorButtonClick"/>
                             <Button Content="Remove"/>
                         </StackPanel>
                     </StackPanel>
-
-                    <Label/>
-                    <TextBlock Text="Evaluators" FontSize="16" FontWeight="Bold"/>
-                    <ListBox x:Name="TestList" Margin="0,0,10,0" VerticalAlignment="Top" ItemsSource="{Binding evaluators}">
-                        <ListBox.Template>
-                            <ControlTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <UniformGrid Columns="6">
-                                        <Label Content="Name"></Label>
-                                        <Label Content="Metric"></Label>
-                                        <Label Content="Evaluator"></Label>
-                                        <Label Content="Desired Value"></Label>
-                                        <Label Content="Weight"></Label>
-                                        <Label Content="Enabled"></Label>
-                                    </UniformGrid>
-                                    <ItemsPresenter></ItemsPresenter>
-                                </StackPanel>
-                            </ControlTemplate>
-                        </ListBox.Template>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <UniformGrid Columns="6">
-                                    <TextBox Text="{Binding name}" VerticalContentAlignment="Center" />
-                                    <Controls:SplitButton ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
-                                    </Controls:SplitButton>
-                                    <Controls:SplitButton ItemsSource="{Binding Source={StaticResource EvaluatorTypes}}" SelectedValue="{Binding type.Value, Mode=TwoWay}"/>
-                                    <TextBox Text="{Binding target, Mode=TwoWay}" VerticalContentAlignment="Center"/>
-                                    <TextBox Text="{Binding weight, Mode=TwoWay}" VerticalContentAlignment="Center"/>
-                                    <Controls:ToggleSwitch IsChecked="{Binding enabled.Value, Mode=TwoWay}" OnLabel="Enabled" OffLabel="Disabled"/>
-                                </UniformGrid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewEvaluatorName" Width="150"/>
-                        <Button Content="Add" Click="AddEvaluatorButtonClick"/>
-                        <Button Content="Remove"/>
-                    </StackPanel>
-                </StackPanel>
-
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Custom Data">
                 <StackPanel Orientation="Vertical" Margin="0,0,0,0">
