@@ -69,6 +69,8 @@ namespace GeneticAlgorithm.GAController
                     return null;
                 }
             }
+
+            set { }
         }
 
         public List<string> EnabledParameters
@@ -158,10 +160,15 @@ namespace GeneticAlgorithm.GAController
             // Deserialize the data and read it from the instance.
             RunManager = (GPRunManager<BalanceGA, List<double>, List<double>>)ser.ReadObject(reader, true);
 
+            ParetoFront = new List<DataPoint>();
+
             reader.Close();
             fs.Close();
 
             JSONParams = RunManager.Parameters.JsonParams;
+
+            IsAutosaving = true;
+            AutosaveLocation = Path.GetDirectoryName(Filename);
         }
 
         private void StartThread()
@@ -211,6 +218,8 @@ namespace GeneticAlgorithm.GAController
 
                 RunManager.InitRun();
             }
+            
+            ParetoFront = new List<DataPoint>();
 
             GAThread.Start();
         }
