@@ -63,6 +63,7 @@
     <Compile Include="Evaluators\AverageEvaluator.cs" />
     <Compile Include="Evaluators\MedianEvaluator.cs" />
     <Compile Include="Evaluators\MetricEvaluator.cs" />
+    <Compile Include="Evaluators\StandardDeviationEvaluator.cs" />
     <Compile Include="GAController\GAController.cs" />
     <Compile Include="GeneticAlgorithm\BalanceGA.cs" />
     <Compile Include="Program.cs" />
