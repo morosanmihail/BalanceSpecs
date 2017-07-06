@@ -1,13 +1,7 @@
 ﻿using SharpGenetics.Predictor;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Globalization;
-using Newtonsoft.Json.Linq;
-using SharpGenetics.Helpers;
+using BalanceSpecsGUI.Windows;
 
 namespace BalanceSpecsGUI.Converters
 { 
