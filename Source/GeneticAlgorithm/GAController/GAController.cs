@@ -20,6 +20,18 @@ using System.Xml;
 
 namespace GeneticAlgorithm.GAController
 {
+    public class IndexName
+    {
+        public string Name;
+        public int Index;
+
+        public IndexName(string N, int I)
+        {
+            Name = N;
+            Index = I;
+        }
+    }
+
     [ImplementPropertyChanged]
     public class GAController
     {
@@ -39,7 +51,7 @@ namespace GeneticAlgorithm.GAController
 
         public int GenerationsToRun { get; set; }
         int GensToRun = 0;
-        
+
         string JSONFile;
         dynamic JSONParams;
 
@@ -50,6 +62,8 @@ namespace GeneticAlgorithm.GAController
             RunManager = null;
             GenerationsToRun = 1;
             AutosaveLocation = "";
+            HeatMapParameterIndexX = 0;
+            HeatMapParameterIndexY = 1;
 
             JSONParams = JsonConvert.DeserializeObject(JSONFile);
         }
@@ -58,15 +72,16 @@ namespace GeneticAlgorithm.GAController
         {
             get
             {
-                if(RunManager != null && RunManager.Populations.Count > 0)
+                if (RunManager != null && RunManager.Populations.Count > 0)
                 {
                     var X = new List<DataPoint>();
-                    for(int i = 0; i<RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)
+                    for (int i = 0; i < RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)
                     {
                         X.Add(new DataPoint(RunManager.Populations[0].RunMetrics.TotalFitnessCalculations[i].Value, RunManager.Populations[0].RunMetrics.BestFitnesses[i].Value));
                     }
                     return X;
-                } else
+                }
+                else
                 {
                     return null;
                 }
@@ -135,6 +150,37 @@ namespace GeneticAlgorithm.GAController
             }
         }
 
+        public int HeatMapParameterIndexX { get; set; }
+        public int HeatMapParameterIndexY { get; set; }
+
+        public List<IndexName> Parameters
+        {
+            get
+            {
+                List<IndexName> Res = new List<IndexName>();
+
+                dynamic Params = JSONParams.parameters;
+                int totalParams = 0;
+
+                foreach (var P in Params)
+                {
+                    if ((bool)P.enabled == true)
+                    {
+                        int ListSize = P.listsize != null ? (int)P.listsize : 1;
+
+                        if (ListSize == 1)
+                        {
+                            Res.Add(new IndexName((string)P.name, totalParams));
+                        }
+
+                        totalParams++;
+                    }
+                }
+
+                return Res;
+            }
+        }
+
         public ChartValues<HeatPoint> PredictionHeatMap
         {
             get
@@ -156,14 +202,14 @@ namespace GeneticAlgorithm.GAController
                         {
                             int ListSize = P.listsize != null ? (int)P.listsize : 1;
 
-                            if(ListSize == 1)
+                            if (ListSize == 1)
                             {
-                                if(paramsUsed == 0)
+                                if (totalParams == HeatMapParameterIndexX)
                                 {
                                     XMin = (double)P.rangeMin;
                                     XMax = (double)P.rangeMax;
-                                } 
-                                if(paramsUsed == 1)
+                                }
+                                if (totalParams == HeatMapParameterIndexY)
                                 {
                                     YMin = (double)P.rangeMin;
                                     YMax = (double)P.rangeMax;
@@ -175,14 +221,39 @@ namespace GeneticAlgorithm.GAController
                         }
                     }
 
-                    for(double i = XMin; i<XMax; i+= (XMax - XMin) / 10)
+
+                    if (HeatMapParameterIndexX == HeatMapParameterIndexY || HeatMapParameterIndexY >= totalParams || HeatMapParameterIndexX >= totalParams)
                     {
-                        for(double y = YMin; y < YMax; y+= (YMax - YMin) / 10)
+                        return null;
+                    }
+
+                    for (double i = XMin; i < XMax; i += (XMax - XMin) / 10)
+                    {
+                        for (double y = YMin; y < YMax; y += (YMax - YMin) / 10)
                         {
                             var Input = new List<double>();
-                            Input.Add(i);
-                            Input.Add(y);
-                            for(int w = 0;w<totalParams - 2;w++)
+
+                            for (int w = 0; w < Math.Min(HeatMapParameterIndexX, HeatMapParameterIndexY); w++)
+                            {
+                                Input.Add(0);
+                            }
+
+                            if (HeatMapParameterIndexY < HeatMapParameterIndexX)
+                                Input.Add(y);
+                            else
+                                Input.Add(i);
+
+                            for (int w = 0; w < Math.Abs(HeatMapParameterIndexY - HeatMapParameterIndexX) - 1; w++)
+                            {
+                                Input.Add(0);
+                            }
+
+                            if (HeatMapParameterIndexY < HeatMapParameterIndexX)
+                                Input.Add(i);
+                            else
+                                Input.Add(y);
+
+                            for (int w = Math.Max(HeatMapParameterIndexY, HeatMapParameterIndexX); w < totalParams - 1; w++)
                             {
                                 Input.Add(0);
                             }
@@ -193,7 +264,7 @@ namespace GeneticAlgorithm.GAController
                         }
                     }
 
-                    if(paramsUsed < 2)
+                    if (paramsUsed < 2)
                     {
                         return null;
                     }
@@ -211,18 +282,19 @@ namespace GeneticAlgorithm.GAController
         {
             get
             {
-                if(JSONFile != null)
+                if (JSONFile != null)
                 {
                     var X = new List<string>();
-                    foreach(var P in JSONParams.parameters)
+                    foreach (var P in JSONParams.parameters)
                     {
-                        if(P.enabled.Value == true)
+                        if (P.enabled.Value == true)
                         {
                             X.Add((string)P.name);
                         }
                     }
                     return X;
-                } else
+                }
+                else
                 {
                     return null;
                 }
@@ -352,7 +424,7 @@ namespace GeneticAlgorithm.GAController
 
                 RunManager.InitRun();
             }
-            
+
             ParetoFront = new List<DataPoint>();
 
             GAThread.Start();
@@ -391,7 +463,7 @@ namespace GeneticAlgorithm.GAController
                     if (GensToRun > 0)
                     {
                         int res = RunManager.StartRun(1);
-                        
+
                         if (IsAutosaving)
                         {
                             try
@@ -401,7 +473,8 @@ namespace GeneticAlgorithm.GAController
                                 string filename = Path.Combine(AutosaveLocation, "Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + ".xml");
 
                                 SaveRunGAToFile(filename);
-                            } catch(Exception e)
+                            }
+                            catch (Exception e)
                             {
 
                             }

@@ -60,13 +60,25 @@
             </TabItem>
 
             <TabItem Header="HeatMap">
-                <lvc:CartesianChart DataTooltip="{x:Null}">
-                    <lvc:CartesianChart.Series>
-                        <lvc:HeatSeries Values="{Binding PredictionHeatMap}" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
 
-                        </lvc:HeatSeries>
-                    </lvc:CartesianChart.Series>
-                </lvc:CartesianChart>
+                    <TextBox Text="{Binding HeatMapParameterIndexX}" Grid.Row="0"/>
+
+                    <TextBox Text="{Binding HeatMapParameterIndexY}" Grid.Row="1"/>
+                    
+                    <lvc:CartesianChart DataTooltip="{x:Null}" Grid.Row="2">
+                        <lvc:CartesianChart.Series>
+                            <lvc:HeatSeries Values="{Binding PredictionHeatMap}" >
+
+                            </lvc:HeatSeries>
+                        </lvc:CartesianChart.Series>
+                    </lvc:CartesianChart>
+                </Grid>
             </TabItem>
         </TabControl>
 
