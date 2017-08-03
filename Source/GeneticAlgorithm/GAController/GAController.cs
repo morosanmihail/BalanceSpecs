@@ -1,5 +1,7 @@
 ﻿using GeneticAlgorithm.GeneticAlgorithm;
 using GeneticAlgorithm.Helpers;
+using LiveCharts;
+using LiveCharts.Defaults;
 using Newtonsoft.Json;
 using OxyPlot;
 using PropertyChanged;
@@ -71,6 +73,138 @@ namespace GeneticAlgorithm.GAController
             }
 
             set { }
+        }
+
+        public ChartValues<ObservablePoint> ParetoFront2
+        {
+            get
+            {
+                if (RunManager != null && RunManager.Populations.Count > 0)
+                {
+                    var X = new ChartValues<ObservablePoint>();
+                    for (int i = 0; i < RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)
+                    {
+                        X.Add(new ObservablePoint(RunManager.Populations[0].RunMetrics.TotalFitnessCalculations[i].Value, RunManager.Populations[0].RunMetrics.BestFitnesses[i].Value));
+                    }
+                    return X;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public ChartValues<double> BestFitnesses2
+        {
+            get
+            {
+                if (RunManager != null && RunManager.Populations.Count > 0)
+                {
+                    var X = new ChartValues<double>();
+                    for (int i = 0; i < RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)
+                    {
+                        X.Add(RunManager.Populations[0].RunMetrics.BestFitnesses[i].Value);
+                    }
+                    return X;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public ChartValues<double> AverageFitnesses2
+        {
+            get
+            {
+                if (RunManager != null && RunManager.Populations.Count > 0)
+                {
+                    var X = new ChartValues<double>();
+                    for (int i = 0; i < RunManager.Populations[0].RunMetrics.AverageFitnesses.Count; i++)
+                    {
+                        X.Add(RunManager.Populations[0].RunMetrics.AverageFitnesses[i].Value);
+                    }
+                    return X;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public ChartValues<HeatPoint> PredictionHeatMap
+        {
+            get
+            {
+                if (RunManager != null && RunManager.Populations.Count > 0 && RunManager.Populations[0].UsePredictor)
+                {
+                    var X = new ChartValues<HeatPoint>();
+
+                    dynamic Params = JSONParams.parameters;
+
+                    double XMin = 0, XMax = 0;
+                    double YMin = 0, YMax = 0;
+
+                    int paramsUsed = 0;
+                    int totalParams = 0;
+                    foreach (var P in Params)
+                    {
+                        if ((bool)P.enabled == true)
+                        {
+                            int ListSize = P.listsize != null ? (int)P.listsize : 1;
+
+                            if(ListSize == 1)
+                            {
+                                if(paramsUsed == 0)
+                                {
+                                    XMin = (double)P.rangeMin;
+                                    XMax = (double)P.rangeMax;
+                                } 
+                                if(paramsUsed == 1)
+                                {
+                                    YMin = (double)P.rangeMin;
+                                    YMax = (double)P.rangeMax;
+                                }
+
+                                paramsUsed++;
+                            }
+                            totalParams++;
+                        }
+                    }
+
+                    for(double i = XMin; i<XMax; i+= (XMax - XMin) / 10)
+                    {
+                        for(double y = YMin; y < YMax; y+= (YMax - YMin) / 10)
+                        {
+                            var Input = new List<double>();
+                            Input.Add(i);
+                            Input.Add(y);
+                            for(int w = 0;w<totalParams - 2;w++)
+                            {
+                                Input.Add(0);
+                            }
+
+                            var Prediction = RunManager.Populations[0].Predictor.Predict(Input);
+
+                            X.Add(new HeatPoint(i, y, Prediction.Sum()));
+                        }
+                    }
+
+                    if(paramsUsed < 2)
+                    {
+                        return null;
+                    }
+
+                    return X;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         public List<string> EnabledParameters

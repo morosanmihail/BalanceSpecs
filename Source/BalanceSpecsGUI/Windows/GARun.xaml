@@ -8,6 +8,7 @@
         xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="BalanceSpecsGUI.Windows.GARun"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="Genetic Algorithm Progress" Height="449.445" Width="827.836" Closing="MetroWindow_ClosingAsync">
     <Grid>
@@ -32,8 +33,43 @@
                         StrokeThickness="2" Color="Blue" />
                 </oxy:Plot>
             </TabItem>
+
+            <TabItem Header="Pareto 2">
+                <lvc:CartesianChart>
+                    <lvc:CartesianChart.Series>
+                        <lvc:LineSeries Values="{Binding ParetoFront2}" />
+                    </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.DataTooltip>
+                        <!--The Selection mode property should be done automatically in future versions-->
+                        <lvc:DefaultTooltip SelectionMode="OnlySender"></lvc:DefaultTooltip>
+                    </lvc:CartesianChart.DataTooltip>
+                </lvc:CartesianChart>
+            </TabItem>
+
+            <TabItem Header="Fitness 2">
+                <lvc:CartesianChart>
+                    <lvc:CartesianChart.Series>
+                        <lvc:LineSeries Values="{Binding BestFitnesses2}" LineSmoothness="0" />
+                        <lvc:LineSeries Values="{Binding AverageFitnesses2}" LineSmoothness="0" />
+                    </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.DataTooltip>
+                        <!--The Selection mode property should be done automatically in future versions-->
+                        <lvc:DefaultTooltip SelectionMode="OnlySender"></lvc:DefaultTooltip>
+                    </lvc:CartesianChart.DataTooltip>
+                </lvc:CartesianChart>
+            </TabItem>
+
+            <TabItem Header="HeatMap">
+                <lvc:CartesianChart DataTooltip="{x:Null}">
+                    <lvc:CartesianChart.Series>
+                        <lvc:HeatSeries Values="{Binding PredictionHeatMap}" >
+
+                        </lvc:HeatSeries>
+                    </lvc:CartesianChart.Series>
+                </lvc:CartesianChart>
+            </TabItem>
         </TabControl>
-        
+
 
         <Label x:Name="IsRunningLabel_Copy" Content="Running:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
         <Custom:ToggleSwitch Height="40" Margin="0,10,10,0" VerticalAlignment="Top" OnLabel="Autosave" OffLabel="No Autosave" IsChecked="{Binding IsAutosaving, Mode=TwoWay}" FontSize="11" HorizontalAlignment="Right" Width="143" />
