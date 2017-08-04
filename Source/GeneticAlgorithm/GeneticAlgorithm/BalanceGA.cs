@@ -45,6 +45,8 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 Vector = GenerateData();
                 CreatedBy = "Random";
             }
+
+            this.CreatedAtGeneration = Manager.GenerationsRun + 1;
         }
 
         public override void ReloadParameters<T, I, O>(PopulationManager<T, I, O> Manager)
@@ -80,18 +82,15 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
         public override double CalculateFitness<T, Y>(int CurrentGeneration, params GenericTest<T, Y>[] values)
         {
-            int RecalculateAfterAGeneration = 0; //TODO
-            if (this.Fitness < 0 || RecalculateAfterAGeneration > 0)
+            //TODO check if prediction is on
+            if (this.Fitness < 0 || Manager.RecalculateAfterAGeneration)
             {
-                if (Fitness < 0)
-                {
-                    this.CreatedAtGeneration = CurrentGeneration;
-                }
-
                 if (this.UpdatedAtGeneration < CurrentGeneration)
                 {
-                    //Fitness = RunGames(CurrentGeneration);
+                    this.Evaluations++;
+
                     ObjectivesFitness = RunGames(CurrentGeneration);
+
                     this.UpdatedAtGeneration = CurrentGeneration;
                 }
             }
@@ -101,16 +100,61 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
         List<double> RunGames(int CurrentGeneration)
         {
+            string NewResults = "";
             if ((string)Manager.GetParameters().GetParameter("string_Bridge_Type") == "local")
             {
-                Results = RunGamesLocal(Manager.GetParameters().JsonParams, Vector, rand.Next());
+                NewResults = RunGamesLocal(Manager.GetParameters().JsonParams, Vector, rand.Next());
             }
             else
             {
-                Results = RunGamesRemote(Manager.GetParameters().JsonParams, Vector, rand.Next());
+                NewResults = RunGamesRemote(Manager.GetParameters().JsonParams, Vector, rand.Next());
             }
 
-            return EvaluateResults(Manager.GetParameters().JsonParams, Results, Vector);
+            var JsonParams = Manager.GetParameters().JsonParams;
+
+            CombineResults(NewResults, JsonParams);
+
+            return EvaluateResults(JsonParams, Results, Vector);
+        }
+
+        void CombineResults(string NewResults, dynamic JsonParams)
+        {
+            if(Results.Length < 1)
+            {
+                Results = NewResults;
+                return;
+            }
+
+            var TotalEvals = this.Evaluations;
+
+            dynamic PrevRes = JsonConvert.DeserializeObject(Results);
+            dynamic NewRes = JsonConvert.DeserializeObject(NewResults);
+
+            foreach (var Evaluator in JsonParams.evaluators)
+            {
+                if ((bool)Evaluator.enabled == true)
+                {
+                    string Metric = Evaluator.metric;
+
+                    JToken MetricTypeT = JsonParams.SelectToken("$.metrics[?(@.name == '" + Metric + "')]");
+
+                    string MetricType = MetricTypeT.Value<string>("type"); 
+                    if (MetricType == "List")
+                    {
+                        foreach(var X in NewRes.metrics[Metric])
+                        {
+                            PrevRes.metrics[Metric].Add(X);
+                        }
+                    }
+
+                    if (MetricType == "Double")
+                    {
+                        PrevRes.metrics[Metric] = ((double)PrevRes.metrics[Metric] * ((double)(TotalEvals - 1) / TotalEvals)) + ((double)NewRes.metrics[Metric] / TotalEvals);
+                    }
+                }
+            }
+
+            Results = PrevRes.ToString();
         }
 
         public static List<double> EvaluateResults(dynamic JsonParams, string Results, List<double> Vector)
@@ -137,7 +181,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
                     JToken MetricTypeT = JsonParams.SelectToken("$.metrics[?(@.name == '" + Metric + "')]");
 
-                    string MetricType = MetricTypeT.Value<string>("type"); //Manager.GetParameters().JsonParams.metrics[Metric].type;
+                    string MetricType = MetricTypeT.Value<string>("type"); 
                     if (MetricType == "List")
                     {
                         EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<List<double>>(), Target);
@@ -149,8 +193,6 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                     }
 
                     finalResults.Add(EvalScore * Weight);
-
-                    //finalResult += EvalScore * Weight;
                 }
             }
 

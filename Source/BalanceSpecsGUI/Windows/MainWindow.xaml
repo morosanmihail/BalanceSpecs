@@ -121,6 +121,11 @@
                             <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding extra_MutationChance, FallbackValue='0.15', Mode=TwoWay, Converter={StaticResource JValueToDoubleConverter}}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
                             <TextBox TextWrapping="Wrap" Text="{Binding extra_MutationChance, FallbackValue='0.5', Mode=TwoWay}" Width="150" Height="23"/>
 
+                            <TextBlock Text="Reevaluate Elite Individuals" VerticalAlignment="Center"/>
+                            <Controls:ToggleSwitch Content="" IsChecked="{Binding extra_recalculate_elite.Value, Mode=TwoWay}" Name="ReevaluateToggle">
+                            </Controls:ToggleSwitch>
+                            <TextBlock/>
+
                             <TextBlock Text="Use Predictor" VerticalAlignment="Center"/>
                             <Controls:ToggleSwitch Content="" IsChecked="{Binding extra_use_predictor.Value, Mode=TwoWay}" Name="UsePredictorToggle">
                             </Controls:ToggleSwitch>

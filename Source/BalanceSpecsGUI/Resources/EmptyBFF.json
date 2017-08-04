@@ -22,6 +22,7 @@
     "Par_TournamentSize": 6,
     "Par_MaxParallelThreads": 24,
     "extra_MutationChance": 0.5,
+    "extra_recalculate_elite": false,
     "extra_use_predictor": true,
     "string_PredictorType": "NeuralNetworkPredictor",
     "extra_Predictor_HiddenLayerCount": 18,
