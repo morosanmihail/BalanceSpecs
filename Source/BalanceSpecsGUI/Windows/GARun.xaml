@@ -67,16 +67,28 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <TextBox Text="{Binding HeatMapParameterIndexX}" Grid.Row="0"/>
+                    <!--<TextBox Text="{Binding HeatMapParameterIndexX}" Grid.Row="0"/>-->
 
-                    <TextBox Text="{Binding HeatMapParameterIndexY}" Grid.Row="1"/>
+                    <Controls:SplitButton Grid.Row="0" ItemsSource="{Binding Parameters}" SelectedIndex="{Binding HeatMapParameterIndexX, Mode=TwoWay}"/>
+                    <Controls:SplitButton Grid.Row="1" ItemsSource="{Binding Parameters}" SelectedIndex="{Binding HeatMapParameterIndexY, Mode=TwoWay}"/>
+
                     
                     <lvc:CartesianChart DataTooltip="{x:Null}" Grid.Row="2">
                         <lvc:CartesianChart.Series>
                             <lvc:HeatSeries Values="{Binding PredictionHeatMap}" >
-
+                                <lvc:HeatSeries.GradientStopCollection>
+                                    <GradientStop Offset="0" Color="Green"></GradientStop>
+                                    <GradientStop Offset="0.5" Color="White"></GradientStop>
+                                    <GradientStop Offset="1" Color="Red"></GradientStop>
+                                </lvc:HeatSeries.GradientStopCollection>
                             </lvc:HeatSeries>
                         </lvc:CartesianChart.Series>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="{Binding HeatMapParameterY}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="{Binding HeatMapParameterX}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
                     </lvc:CartesianChart>
                 </Grid>
             </TabItem>

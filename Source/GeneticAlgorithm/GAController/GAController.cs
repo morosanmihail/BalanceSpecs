@@ -30,6 +30,11 @@ namespace GeneticAlgorithm.GAController
             Name = N;
             Index = I;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     [ImplementPropertyChanged]
@@ -178,6 +183,22 @@ namespace GeneticAlgorithm.GAController
                 }
 
                 return Res;
+            }
+        }
+
+        public string HeatMapParameterX
+        {
+            get
+            {
+                return Parameters[HeatMapParameterIndexX].Name;
+            }
+        }
+
+        public string HeatMapParameterY
+        {
+            get
+            {
+                return Parameters[HeatMapParameterIndexY].Name;
             }
         }
 
