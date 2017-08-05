@@ -223,5 +223,12 @@ namespace BalanceSpecsGUI.Windows
 
             ResultsWindow.Show();
         }
+
+        private void MenuItem_Click_4(object sender, RoutedEventArgs e)
+        {
+            var SettingsWindow = new SettingsWindow();
+
+            SettingsWindow.Show();
+        }
     }
 }

@@ -120,6 +120,9 @@
     <Compile Include="Windows\GARun.xaml.cs">
       <DependentUpon>GARun.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SingleRunResults.xaml.cs">
       <DependentUpon>SingleRunResults.xaml</DependentUpon>
     </Compile>
@@ -147,6 +150,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\GARun.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

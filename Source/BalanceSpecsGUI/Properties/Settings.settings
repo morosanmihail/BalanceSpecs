@@ -8,5 +8,8 @@
     <Setting Name="PopSizeMax" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">500</Value>
     </Setting>
+    <Setting Name="ShowAdvanced" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
