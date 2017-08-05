@@ -115,46 +115,6 @@ namespace GeneticAlgorithm.GAController
             }
         }
 
-        public ChartValues<double> BestFitnesses2
-        {
-            get
-            {
-                if (RunManager != null && RunManager.Populations.Count > 0)
-                {
-                    var X = new ChartValues<double>();
-                    for (int i = 0; i < RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)
-                    {
-                        X.Add(RunManager.Populations[0].RunMetrics.BestFitnesses[i].Value);
-                    }
-                    return X;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        public ChartValues<double> AverageFitnesses2
-        {
-            get
-            {
-                if (RunManager != null && RunManager.Populations.Count > 0)
-                {
-                    var X = new ChartValues<double>();
-                    for (int i = 0; i < RunManager.Populations[0].RunMetrics.AverageFitnesses.Count; i++)
-                    {
-                        X.Add(RunManager.Populations[0].RunMetrics.AverageFitnesses[i].Value);
-                    }
-                    return X;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
         public int HeatMapParameterIndexX { get; set; }
         public int HeatMapParameterIndexY { get; set; }
 

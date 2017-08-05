@@ -113,6 +113,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\JValueToDoubleConverter.cs" />
+    <Compile Include="Converters\ListToChartValuesConverter.cs" />
     <Compile Include="Converters\PredictorTypeConverter.cs" />
     <Compile Include="Converters\ReturnPredictorTypes.cs" />
     <Compile Include="DataContexts\SingleRunResultsContext.cs" />

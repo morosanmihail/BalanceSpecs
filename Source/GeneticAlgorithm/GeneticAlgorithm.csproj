@@ -68,6 +68,7 @@
     <Compile Include="Evaluators\MetricEvaluator.cs" />
     <Compile Include="Evaluators\StandardDeviationEvaluator.cs" />
     <Compile Include="GAController\GAController.cs" />
+    <Compile Include="GAController\ListToChartValuesConverter.cs" />
     <Compile Include="GeneticAlgorithm\BalanceGA.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

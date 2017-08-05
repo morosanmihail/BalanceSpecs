@@ -4,19 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BalanceSpecsGUI.Windows"
+        xmlns:w="clr-namespace:BalanceSpecsGUI.Converters"
         xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
         xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="BalanceSpecsGUI.Windows.GARun"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-        mc:Ignorable="d"
+    mc:Ignorable="d"
         Title="Genetic Algorithm Progress" Height="449.445" Width="827.836" Closing="MetroWindow_ClosingAsync">
+    <Controls:MetroWindow.Resources>
+        <w:ListToChartValuesConverter x:Key="ListToChartValuesConverter"/> 
+    </Controls:MetroWindow.Resources>
     <Grid>
         <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,81,0,10" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
         <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,50,0,0" VerticalAlignment="Top"/>
         <Label x:Name="GenLabel" Content="{Binding RunManager.CurrentGen}" HorizontalAlignment="Left" Margin="102,50,0,0" VerticalAlignment="Top"/>
-        <TabControl DockPanel.Dock="Right" VerticalAlignment="Stretch" Margin="130,50,158,10">
-            <TabItem Header="Fitness / Generation">
+        <TabControl DockPanel.Dock="Right" VerticalAlignment="Stretch" Margin="130,50,158,10" TabStripPlacement="Left">
+            <TabItem Header="Fitness">
                 <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot" Margin="0,0,0,0">
                     <oxy:LineSeries Title="Best Fitness" DataFieldX="Generation" DataFieldY="Value"
                         ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}"
@@ -26,7 +30,7 @@
                         StrokeThickness="2" Color="Green" />
                 </oxy:Plot>
             </TabItem>
-            <TabItem Header="Pareto Front">
+            <TabItem Header="Pareto">
                 <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot2" Margin="0,0,0,0">
                     <oxy:LineSeries Title="Best Fitness" DataFieldX="x" DataFieldY="y"
                         ItemsSource="{Binding ParetoFront}"
@@ -49,11 +53,10 @@
             <TabItem Header="Fitness 2">
                 <lvc:CartesianChart>
                     <lvc:CartesianChart.Series>
-                        <lvc:LineSeries Values="{Binding BestFitnesses2}" LineSmoothness="0" />
-                        <lvc:LineSeries Values="{Binding AverageFitnesses2}" LineSmoothness="0" />
+                        <lvc:LineSeries Values="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses, Converter={StaticResource ListToChartValuesConverter}, Mode=OneWay}" LineSmoothness="0" />
+                        <lvc:LineSeries Values="{Binding RunManager.Populations[0].RunMetrics.AverageFitnesses, Converter={StaticResource ListToChartValuesConverter}, Mode=OneWay}" LineSmoothness="0" />
                     </lvc:CartesianChart.Series>
                     <lvc:CartesianChart.DataTooltip>
-                        <!--The Selection mode property should be done automatically in future versions-->
                         <lvc:DefaultTooltip SelectionMode="OnlySender"></lvc:DefaultTooltip>
                     </lvc:CartesianChart.DataTooltip>
                 </lvc:CartesianChart>
@@ -73,9 +76,9 @@
                     <Controls:SplitButton Grid.Row="1" ItemsSource="{Binding Parameters}" SelectedIndex="{Binding HeatMapParameterIndexY, Mode=TwoWay}"/>
 
                     
-                    <lvc:CartesianChart DataTooltip="{x:Null}" Grid.Row="2">
+                    <lvc:CartesianChart Grid.Row="2">
                         <lvc:CartesianChart.Series>
-                            <lvc:HeatSeries Values="{Binding PredictionHeatMap}" >
+                            <lvc:HeatSeries Values="{Binding PredictionHeatMap}" Name="PredictionHeatMap" Title="Prediction" DrawsHeatRange="True" >
                                 <lvc:HeatSeries.GradientStopCollection>
                                     <GradientStop Offset="0" Color="Green"></GradientStop>
                                     <GradientStop Offset="0.5" Color="White"></GradientStop>
@@ -83,6 +86,9 @@
                                 </lvc:HeatSeries.GradientStopCollection>
                             </lvc:HeatSeries>
                         </lvc:CartesianChart.Series>
+                        <lvc:CartesianChart.DataTooltip>
+                            <lvc:DefaultTooltip SelectionMode="OnlySender"></lvc:DefaultTooltip>
+                        </lvc:CartesianChart.DataTooltip>
                         <lvc:CartesianChart.AxisY>
                             <lvc:Axis Title="{Binding HeatMapParameterY}"></lvc:Axis>
                         </lvc:CartesianChart.AxisY>
