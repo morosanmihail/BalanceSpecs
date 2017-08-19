@@ -79,6 +79,14 @@
                 <MenuItem Header="Load Run in Progress" Click="MenuItemProgress_Click"></MenuItem>
                 <MenuItem Header="Test Game With Custom Configuration" Click="MenuItem_Click_3"></MenuItem>
             </MenuItem>
+            <MenuItem Header="Tools" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding}"/>
+                        <EventSetter Event="Click" Handler="ToolsMenuItem_Click"/>
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
         </Menu>
 
         <Controls:MetroTabControl Grid.Row="1" TabStripPlacement="Left">

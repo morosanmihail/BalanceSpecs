@@ -1,4 +1,5 @@
 ﻿using BalanceSpecsGUI.Converters;
+using BalanceSpecsGUI.Tools;
 using GeneticAlgorithm.GAController;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -182,6 +183,11 @@ namespace BalanceSpecsGUI.Windows
 
                 File.WriteAllText(saveFileDialog1.FileName, JsonConvert.SerializeObject(JsonO));
             }
+        }
+
+        private void ToolsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ExternalTool.RunTool((string)(sender as System.Windows.Controls.MenuItem).Header);
         }
 
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)

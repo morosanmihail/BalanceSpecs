@@ -117,6 +117,7 @@
     <Compile Include="Converters\PredictorTypeConverter.cs" />
     <Compile Include="Converters\ReturnPredictorTypes.cs" />
     <Compile Include="DataContexts\SingleRunResultsContext.cs" />
+    <Compile Include="Tools\ExternalTool.cs" />
     <Compile Include="Windows\GARun.xaml.cs">
       <DependentUpon>GARun.xaml</DependentUpon>
     </Compile>
