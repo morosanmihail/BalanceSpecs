@@ -17,24 +17,31 @@ using System.Windows.Shapes;
 namespace BalanceSpecsGUI.Windows
 {
     /// <summary>
-    /// Interaction logic for Settings.xaml
+    /// Interaction logic for AddToolForm.xaml
     /// </summary>
-    public partial class SettingsWindow : MetroWindow
+    public partial class AddToolForm : MetroWindow
     {
-        public SettingsWindow()
+        public AddToolForm()
         {
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.Save();
-        }
+            if(Properties.Settings.Default.Tools2 == null)
+            {
+                Properties.Settings.Default.Tools2 = new System.Collections.ObjectModel.ObservableCollection<ExternalTool>();
+            }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Tools2.Remove(ToolsInSettings.SelectedItem as ExternalTool);
-            //ToolsInSettings.ItemsSource.RemoveAt(ToolsInSettings.SelectedIndex);
+            var Tool = new ExternalTool();
+            Tool.PathToExe = PathToExecutable.Text;
+            Tool.Name = Name.Text;
+
+            Properties.Settings.Default.Tools2.Add(Tool);
+
+            Properties.Settings.Default.Save();
+
+            this.Close();
         }
     }
 }

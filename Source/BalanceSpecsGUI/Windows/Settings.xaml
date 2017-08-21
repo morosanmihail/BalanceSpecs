@@ -11,13 +11,24 @@
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Visible">
             <StackPanel>
-                <UniformGrid Columns="2" Margin="15,15,15,35">
+                <UniformGrid Columns="2" Margin="15,15,15,15">
                     <TextBlock Text="Show GA Settings Page" Height="35" VerticalAlignment="Center" TextAlignment="Center" FontSize="18"/>
                     <Controls:ToggleSwitch Content="" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=ShowAdvanced, Mode=TwoWay}" Name="UsePredictorToggle" Height="35">
                     </Controls:ToggleSwitch>
-
-                    <TextBlock Height="35"></TextBlock>
                 </UniformGrid>
+                <ListBox Name="ToolsInSettings" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools2, Mode=TwoWay}" Margin="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <UniformGrid Columns="3" Margin="5,5,5,5">
+                                <TextBlock Text="{Binding Name}" Margin="0,0,0,0"/>
+                                <TextBox Text="{Binding Name}" Width="100"/>
+                                <TextBox Text="{Binding PathToExe}" Width="100"/>
+                            </UniformGrid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button Content="Remove" Click="Button_Click_1"/>
             </StackPanel>
         </ScrollViewer>
 

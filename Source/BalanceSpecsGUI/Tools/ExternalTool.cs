@@ -1,14 +1,29 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BalanceSpecsGUI.Tools
 {
+    [ImplementPropertyChanged]
+    [DataContract]
     public class ExternalTool
     {
+        [DataMember]
+        public string PathToExe { get; set; }
+
+        [DataMember]
+        public string Name { get; set; }
+
+        public ExternalTool()
+        {
+
+        }
+
         public static void RunTool(string PathString)
         {
             //Go through each %X in PathString and do something

@@ -11,12 +11,8 @@
     <Setting Name="ShowAdvanced" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Tools" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;..\..\PacMan-CSharp\Binaries\NeuralNetworkRunToFile.exe %F&lt;/string&gt;
-  &lt;string&gt;..\..\PacMan-CSharp\Binaries\Pacman.Simulator.exe 3 %f&lt;/string&gt;
-&lt;/ArrayOfString&gt;</Value>
+    <Setting Name="Tools2" GenerateDefaultValueInCode="false" Type="System.Collections.ObjectModel.ObservableCollection&lt;BalanceSpecsGUI.Tools.ExternalTool&gt;" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

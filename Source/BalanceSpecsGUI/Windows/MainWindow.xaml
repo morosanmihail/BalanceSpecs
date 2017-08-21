@@ -77,16 +77,31 @@
             <MenuItem Header="Run">
                 <MenuItem Header="Evolve Current Configuration" Click="MenuItem_Click"></MenuItem>
                 <MenuItem Header="Load Run in Progress" Click="MenuItemProgress_Click"></MenuItem>
-                <MenuItem Header="Test Game With Custom Configuration" Click="MenuItem_Click_3"></MenuItem>
+                <MenuItem Header="Test Game With Custom Configuration" Click="MenuItem_Click_3">
+                </MenuItem>
             </MenuItem>
-            <MenuItem Header="Tools" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools}">
+            <!--<MenuItem Header="Tools" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools}">
                 <MenuItem.ItemContainerStyle>
                     <Style TargetType="MenuItem">
                         <Setter Property="Header" Value="{Binding}"/>
                         <EventSetter Event="Click" Handler="ToolsMenuItem_Click"/>
                     </Style>
                 </MenuItem.ItemContainerStyle>
+            </MenuItem>-->
+            <MenuItem Header="Tools">
+                <MenuItem Header="Add Tool to List" Click="MenuItem_Click_5"/>
+                <Separator/>
+                <MenuItem Header="Available Tools" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools2}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Padding" Value="5"/>
+                            <EventSetter Event="Click" Handler="ToolsMenuItem_Click"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
             </MenuItem>
+            
         </Menu>
 
         <Controls:MetroTabControl Grid.Row="1" TabStripPlacement="Left">

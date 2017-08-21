@@ -87,6 +87,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -117,7 +118,11 @@
     <Compile Include="Converters\PredictorTypeConverter.cs" />
     <Compile Include="Converters\ReturnPredictorTypes.cs" />
     <Compile Include="DataContexts\SingleRunResultsContext.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Tools\ExternalTool.cs" />
+    <Compile Include="Windows\AddToolForm.xaml.cs">
+      <DependentUpon>AddToolForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\GARun.xaml.cs">
       <DependentUpon>GARun.xaml</DependentUpon>
     </Compile>
@@ -127,6 +132,10 @@
     <Compile Include="Windows\SingleRunResults.xaml.cs">
       <DependentUpon>SingleRunResults.xaml</DependentUpon>
     </Compile>
+    <Page Include="Windows\AddToolForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

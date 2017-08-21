@@ -187,7 +187,7 @@ namespace BalanceSpecsGUI.Windows
 
         private void ToolsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ExternalTool.RunTool((string)(sender as System.Windows.Controls.MenuItem).Header);
+            ExternalTool.RunTool(((sender as System.Windows.Controls.MenuItem).DataContext as ExternalTool).PathToExe);
         }
 
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)
@@ -235,6 +235,13 @@ namespace BalanceSpecsGUI.Windows
             var SettingsWindow = new SettingsWindow();
 
             SettingsWindow.Show();
+        }
+
+        private void MenuItem_Click_5(object sender, RoutedEventArgs e)
+        {
+            var AddToToolsWindow = new AddToolForm();
+
+            AddToToolsWindow.ShowDialog();
         }
     }
 }

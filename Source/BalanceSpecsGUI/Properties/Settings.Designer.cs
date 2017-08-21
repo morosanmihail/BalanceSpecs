@@ -55,17 +55,12 @@ namespace BalanceSpecsGUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <string>..\..\PacMan-CSharp\Binaries\NeuralNetworkRunToFile.exe %F</string>
-  <string>..\..\PacMan-CSharp\Binaries\Pacman.Simulator.exe 3 %f</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection Tools {
+        public global::System.Collections.ObjectModel.ObservableCollection<BalanceSpecsGUI.Tools.ExternalTool> Tools2 {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["Tools"]));
+                return ((global::System.Collections.ObjectModel.ObservableCollection<BalanceSpecsGUI.Tools.ExternalTool>)(this["Tools2"]));
             }
             set {
-                this["Tools"] = value;
+                this["Tools2"] = value;
             }
         }
     }

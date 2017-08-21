@@ -1,0 +1,15 @@
+﻿<Controls:MetroWindow x:Class="BalanceSpecsGUI.Windows.AddToolForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BalanceSpecsGUI.Windows"
+        mc:Ignorable="d"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        Title="AddToolForm" Height="112.605" Width="300">
+    <StackPanel>
+        <TextBox x:Name="Name" Controls:TextBoxHelper.Watermark="Name" />
+        <TextBox x:Name="PathToExecutable" Controls:TextBoxHelper.Watermark="Path" />
+        <Button Content="Add" Click="Button_Click"/>
+    </StackPanel>
+</Controls:MetroWindow>
