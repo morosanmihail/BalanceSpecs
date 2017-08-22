@@ -172,6 +172,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                     string Metric = Evaluator.metric;
                     double Target = Evaluator.target;
                     double Weight = Evaluator.weight;
+                    double OptionalParam = Evaluator.optionalparam != null ? Evaluator.optionalparam : 0;
 
                     MetricEvaluator Eval = null;
 
@@ -184,12 +185,12 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                     string MetricType = MetricTypeT.Value<string>("type"); 
                     if (MetricType == "List")
                     {
-                        EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<List<double>>(), Target);
+                        EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<List<double>>(), Target, OptionalParam);
                     }
 
                     if (MetricType == "Double")
                     {
-                        EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<double>(), Target);
+                        EvalScore = Eval.Evaluate(JResults.metrics[Metric].ToObject<double>(), Target, OptionalParam);
                     }
 
                     finalResults.Add(EvalScore * Weight);

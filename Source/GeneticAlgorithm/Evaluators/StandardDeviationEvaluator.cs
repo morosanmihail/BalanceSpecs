@@ -8,7 +8,7 @@ namespace GeneticAlgorithm.Evaluators
 {
     public class StandardDeviationEvaluator : MetricEvaluator
     {
-        public double Evaluate(List<double> Metric, double Target)
+        public double Evaluate(List<double> Metric, double Target, double OptionalParam = 0)
         {
             double ret = 0;
             if (Metric.Count() > 0)
@@ -23,7 +23,7 @@ namespace GeneticAlgorithm.Evaluators
             return Math.Abs(ret - Target);
         }
 
-        public double Evaluate(double Metric, double Target)
+        public double Evaluate(double Metric, double Target, double OptionalParam = 0)
         {
             return Math.Abs(Metric - Target);
         }

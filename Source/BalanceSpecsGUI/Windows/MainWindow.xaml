@@ -314,11 +314,12 @@
                             <ListBox.Template>
                                 <ControlTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <UniformGrid Columns="6">
+                                        <UniformGrid Columns="7">
                                             <Label Content="Name"></Label>
                                             <Label Content="Metric"></Label>
                                             <Label Content="Evaluator"></Label>
                                             <Label Content="Desired Value"></Label>
+                                            <Label Content="Parameter"></Label>
                                             <Label Content="Weight"></Label>
                                             <Label Content="Enabled"></Label>
                                         </UniformGrid>
@@ -328,12 +329,13 @@
                             </ListBox.Template>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <UniformGrid Columns="6">
+                                    <UniformGrid Columns="7">
                                         <TextBox Text="{Binding name}" VerticalContentAlignment="Center" />
                                         <Controls:SplitButton ItemsSource="{Binding DataContext.metrics, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="name" SelectedValuePath="name" SelectedValue="{Binding metric, Mode=TwoWay}">
                                         </Controls:SplitButton>
                                         <Controls:SplitButton ItemsSource="{Binding Source={StaticResource EvaluatorTypes}}" SelectedValue="{Binding type.Value, Mode=TwoWay}"/>
                                         <TextBox Text="{Binding target, Mode=TwoWay}" VerticalContentAlignment="Center"/>
+                                        <TextBox Text="{Binding optionalparam, Mode=TwoWay}" VerticalContentAlignment="Center"/>
                                         <TextBox Text="{Binding weight, Mode=TwoWay}" VerticalContentAlignment="Center"/>
                                         <Controls:ToggleSwitch IsChecked="{Binding enabled.Value, Mode=TwoWay}" OnLabel="Enabled" OffLabel="Disabled"/>
                                     </UniformGrid>

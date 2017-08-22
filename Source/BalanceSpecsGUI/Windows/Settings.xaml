@@ -7,31 +7,52 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:p="clr-namespace:BalanceSpecsGUI.Properties"
         mc:Ignorable="d"
-        Title="Settings" Height="291.597" Width="526.891">
+        Title="Settings" Height="400" Width="700">
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Visible">
-            <StackPanel>
-                <UniformGrid Columns="2" Margin="15,15,15,15">
-                    <TextBlock Text="Show GA Settings Page" Height="35" VerticalAlignment="Center" TextAlignment="Center" FontSize="18"/>
-                    <Controls:ToggleSwitch Content="" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=ShowAdvanced, Mode=TwoWay}" Name="UsePredictorToggle" Height="35">
-                    </Controls:ToggleSwitch>
-                </UniformGrid>
-                <ListBox Name="ToolsInSettings" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools2, Mode=TwoWay}" Margin="0">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <UniformGrid Columns="3" Margin="5,5,5,5">
-                                <TextBlock Text="{Binding Name}" Margin="0,0,0,0"/>
-                                <TextBox Text="{Binding Name}" Width="100"/>
-                                <TextBox Text="{Binding PathToExe}" Width="100"/>
-                            </UniformGrid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+        <TabControl TabStripPlacement="Left" Margin="0,0,0,40">
+            <TabItem Header="General">
+                <ScrollViewer VerticalScrollBarVisibility="Visible">
+                    <StackPanel>
+                        <UniformGrid Columns="2" Margin="15,15,15,15">
+                            <TextBlock Text="Show GA Settings Page" Height="35" VerticalAlignment="Center" TextAlignment="Center" FontSize="18"/>
+                            <Controls:ToggleSwitch Content="" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=ShowAdvanced, Mode=TwoWay}" Name="UsePredictorToggle" Height="35">
+                            </Controls:ToggleSwitch>
+                        </UniformGrid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Tools">
+                <ScrollViewer VerticalScrollBarVisibility="Visible">
+                    <StackPanel>
+                        <ListBox Name="ToolsInSettings" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools2, Mode=TwoWay}" Margin="0">
+                            <ListBox.Template>
+                                <ControlTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <UniformGrid Columns="2">
+                                            <Label Content="Name"></Label>
+                                            <Label Content="PathToExe"></Label>
+                                        </UniformGrid>
+                                        <ItemsPresenter></ItemsPresenter>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </ListBox.Template>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="2" Margin="5,5,5,5">
+                                        <TextBox Text="{Binding Name}" />
+                                        <TextBox Text="{Binding PathToExe}"/>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
-                <Button Content="Remove" Click="Button_Click_1"/>
-            </StackPanel>
-        </ScrollViewer>
+                        <Button Content="Remove" Click="Button_Click_1"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+        
 
-        <Button Content="Save" Click="Button_Click" Height="35" VerticalAlignment="Bottom"/>
+        <Button Content="Save" Click="Button_Click" Height="35" VerticalAlignment="Bottom" Margin="5,0,5,5"/>
     </Grid>
 </Controls:MetroWindow>
