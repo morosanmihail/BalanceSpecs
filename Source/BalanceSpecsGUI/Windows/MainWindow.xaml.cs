@@ -11,8 +11,9 @@ using SharpGenetics.Predictor;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
-
+using System.Windows.Threading;
 
 namespace BalanceSpecsGUI.Windows
 {
@@ -187,7 +188,11 @@ namespace BalanceSpecsGUI.Windows
 
         private void ToolsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ExternalTool.RunTool(((sender as System.Windows.Controls.MenuItem).DataContext as ExternalTool).PathToExe);
+            var pProcess = ExternalTool.RunTool(((sender as System.Windows.Controls.MenuItem).DataContext as ExternalTool).PathToExe);
+
+            pProcess.Start();
+
+            pProcess.WaitForExit();
         }
 
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)

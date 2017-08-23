@@ -24,7 +24,7 @@ namespace BalanceSpecsGUI.Tools
 
         }
 
-        public static void RunTool(string PathString)
+        public static System.Diagnostics.Process RunTool(string PathString)
         {
             //Go through each %X in PathString and do something
 
@@ -59,11 +59,14 @@ namespace BalanceSpecsGUI.Tools
             pProcess.StartInfo.Arguments = string.Join(" ", InvokePath.Split(' ').Skip(1));
             pProcess.StartInfo.UseShellExecute = true;
             pProcess.StartInfo.RedirectStandardOutput = false;
+            pProcess.EnableRaisingEvents = true;
             //pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             //pProcess.StartInfo.CreateNoWindow = true; //not diplay a windows
-            pProcess.Start();
+            //pProcess.Start();
             //string output = pProcess.StandardOutput.ReadToEnd(); //The output result
-            pProcess.WaitForExit();
+            //pProcess.WaitForExit();
+
+            return pProcess;
         }
 
         static string LoadFolder()

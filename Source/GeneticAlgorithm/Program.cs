@@ -51,6 +51,8 @@ namespace GeneticAlgorithm
 
                     var classNodes = doc1.SelectNodes("/batch/run");
 
+                    Console.WriteLine("Successfully loaded batch file");
+
                     for (int i = 0; i < classNodes.Count; i++)
                     {
                         var ParamFile = classNodes[i].Attributes["paramfile"].Value;
