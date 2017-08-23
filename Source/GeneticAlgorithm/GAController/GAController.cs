@@ -73,13 +73,13 @@ namespace GeneticAlgorithm.GAController
             JSONParams = JsonConvert.DeserializeObject(JSONFile);
         }
 
-        public List<DataPoint> ParetoFront
+        public ObservableCollection<DataPoint> ParetoFront
         {
             get
             {
                 if (RunManager != null && RunManager.Populations.Count > 0)
                 {
-                    var X = new List<DataPoint>();
+                    var X = new ObservableCollection<DataPoint>();
                     for (int i = 0; i < RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)
                     {
                         X.Add(new DataPoint(RunManager.Populations[0].RunMetrics.TotalFitnessCalculations[i].Value, RunManager.Populations[0].RunMetrics.BestFitnesses[i].Value));
@@ -336,7 +336,20 @@ namespace GeneticAlgorithm.GAController
             }
         }
 
-        public void LoadRunFromFile(string Filename)
+        public static void SaveRunGAToFile(GPRunManager<BalanceGA, List<double>, List<double>> RunManager, string Filename)
+        {
+            var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
+
+            var settings = new XmlWriterSettings { Indent = true };
+
+            //serializer.WriteObject(stream, RunManager);
+            using (var w = XmlWriter.Create(Filename, settings))
+            {
+                serializer.WriteObject(w, RunManager);
+            }
+        }
+
+        public static GPRunManager<BalanceGA, List<double>, List<double>> LoadRunFromFile(string Filename)
         {
             FileStream fs = new FileStream(Filename, FileMode.Open);
 
@@ -345,12 +358,19 @@ namespace GeneticAlgorithm.GAController
             DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
 
             // Deserialize the data and read it from the instance.
-            RunManager = (GPRunManager<BalanceGA, List<double>, List<double>>)ser.ReadObject(reader, true);
-
-            ParetoFront = new List<DataPoint>();
-
+            var RunManager = (GPRunManager<BalanceGA, List<double>, List<double>>)ser.ReadObject(reader, true);
+            
             reader.Close();
             fs.Close();
+
+            return RunManager;
+        }
+
+        public void LoadRunFromFileAndSetDefaults(string Filename)
+        {
+            RunManager = LoadRunFromFile(Filename);
+
+            //ParetoFront = new ObservableCollection<DataPoint>();
 
             JSONParams = RunManager.Parameters.JsonParams;
 
@@ -406,22 +426,9 @@ namespace GeneticAlgorithm.GAController
                 RunManager.InitRun();
             }
 
-            ParetoFront = new List<DataPoint>();
+            //ParetoFront = new List<DataPoint>();
 
             GAThread.Start();
-        }
-
-        public void SaveRunGAToFile(string Filename)
-        {
-            var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
-
-            var settings = new XmlWriterSettings { Indent = true };
-
-            //serializer.WriteObject(stream, RunManager);
-            using (var w = XmlWriter.Create(Filename, settings))
-            {
-                serializer.WriteObject(w, RunManager);
-            }
         }
 
         private void ThreadCode()
@@ -453,7 +460,7 @@ namespace GeneticAlgorithm.GAController
 
                                 string filename = Path.Combine(AutosaveLocation, "Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + ".xml");
 
-                                SaveRunGAToFile(filename);
+                                SaveRunGAToFile(RunManager, filename);
                             }
                             catch (Exception e)
                             {

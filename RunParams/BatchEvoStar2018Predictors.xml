@@ -1,0 +1,5 @@
+<batch>
+	<run paramfile="F:\ExperimentResults\EvoStar2018Predictor\Pacman-MCTS-NoPredictor\Pacman-MCTS-NoPredictor.json" outputfolder="F:\ExperimentResults\EvoStar2018Predictor\Pacman-MCTS-NoPredictor" runs="3" generations="50" randomseed="20000" />
+	<run paramfile="F:\ExperimentResults\EvoStar2018Predictor\Pacman-MCTS-Predictor-NN-Cautious\Pacman-MCTS-Predictor-NN-Cautious.json" outputfolder="F:\ExperimentResults\EvoStar2018Predictor\Pacman-MCTS-Predictor-NN-Cautious" runs="3" generations="50" randomseed="20000" />
+	<run paramfile="F:\ExperimentResults\EvoStar2018Predictor\Pacman-MCTS-Predictor-NN-Aggressive\Pacman-MCTS-Predictor-NN-Aggressive.json" outputfolder="F:\ExperimentResults\EvoStar2018Predictor\Pacman-MCTS-Predictor-NN-Aggressive" runs="3" generations="50" randomseed="20000" />
+</batch>

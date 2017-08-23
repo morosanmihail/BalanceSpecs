@@ -16,21 +16,14 @@ namespace GeneticAlgorithm
     {
         static void Main(string[] args)
         {
-            //TODO
-            // This project is the one with the generic balancing code. It invokes sharpgenetics.
-            // It will know how to translate the specification file and invoke the bridges
             bool DoRun = true;
             do
             {
                 try
                 {
-                    GPRunManager<BalanceGA, int, double> RunManager = null;
+                    GPRunManager<BalanceGA, List<double>, List<double>> RunManager = null;
 
-                    List<GenericTest<int, double>> tests = new List<GenericTest<int, double>>();
-
-                    GenericTest<int, double> test = new GenericTest<int, double>();
-                    test.AddInput("table", 1);
-                    tests.Add(test);
+                    List<GenericTest<List<double>, List<double>>> tests = new List<GenericTest<List<double>, List<double>>>();
 
                     string BatchRun = "../RunParams/BatchRun.xml";
 
@@ -66,11 +59,10 @@ namespace GeneticAlgorithm
                         var GenToRun = int.Parse(classNodes[i].Attributes["generations"].Value);
                         var RandomSeed = int.Parse(classNodes[i].Attributes["randomseed"].Value);
 
-
                         for (int Run = 1; Run <= RunCount; Run++)
                         {
                             DoRun = true;
-                            var Folder = "Results/" + OutputFolder + "/Run" + Run;
+                            var Folder = Path.Combine(OutputFolder, "Run" + Run);
                             var GensToRun = GenToRun;
 
                             if (Directory.Exists(Folder))
@@ -83,14 +75,7 @@ namespace GeneticAlgorithm
 
                                     var BackupFilename = entries.Last();
 
-                                    FileStream fs = new FileStream(BackupFilename, FileMode.Open);
-
-                                    XmlDictionaryReader reader =
-                                        XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());
-                                    DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
-
-                                    // Deserialize the data and read it from the instance.
-                                    RunManager = (GPRunManager<BalanceGA, int, double>)ser.ReadObject(reader, true);
+                                    RunManager = GAController.GAController.LoadRunFromFile(BackupFilename);
 
                                     //string Json = File.ReadAllText(BackupFilename + ".json");
                                     //RunManager = JsonConvert.DeserializeObject<GPRunManager<BalanceGA, int, double>>(Json);
@@ -99,10 +84,7 @@ namespace GeneticAlgorithm
 
                                     //RunManager.ReloadParameters();
 
-                                    reader.Close();
-                                    fs.Close();
-
-                                    GensToRun = GenToRun - entries.Count();
+                                    GensToRun = GenToRun - RunManager.CurrentGen; //entries.Count();
                                 }
                                 else
                                 {
@@ -111,16 +93,13 @@ namespace GeneticAlgorithm
                             }
                             else
                             {
-                                RunManager = new GPRunManager<BalanceGA, int, double>(ParamFile, tests, RandomSeed * Run);
+                                RunManager = new GPRunManager<BalanceGA, List<double>, List<double>>(ParamFile, tests, RandomSeed + Run);
 
                                 RunManager.InitRun();
                             }
 
                             if (DoRun)
                             {
-                                //System.Console.WriteLine("How many generations to run?");
-                                //GenToRun = int.Parse(Console.ReadLine());
-
                                 int res = 0;
 
                                 for (int Gener = 0; Gener < GensToRun; Gener++)
@@ -137,17 +116,8 @@ namespace GeneticAlgorithm
                                     Directory.CreateDirectory(Folder);
 
                                     string filename = Folder + "/Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + ".xml";
-                                    //FileStream stream = File.Open(filename, FileMode.Create);
 
-                                    var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA, int, double>));
-
-                                    var settings = new XmlWriterSettings { Indent = true };
-
-                                    //serializer.WriteObject(stream, RunManager);
-                                    using (var w = XmlWriter.Create(filename, settings))
-                                    {
-                                        serializer.WriteObject(w, RunManager);
-                                    }
+                                    GAController.GAController.SaveRunGAToFile(RunManager, filename);
 
                                     //JSON
                                     /*JsonSerializer jserializer = new JsonSerializer();
@@ -160,8 +130,6 @@ namespace GeneticAlgorithm
                                     }*/
 
                                     Console.WriteLine("Saving to file done");
-
-                                    //stream.Close();
                                 }
                             }
                         }
@@ -169,7 +137,7 @@ namespace GeneticAlgorithm
                 }
                 catch(Exception e)
                 {
-
+                    Console.WriteLine("Error happened: " + e.Message);
                 }
             } while (DoRun);
         }

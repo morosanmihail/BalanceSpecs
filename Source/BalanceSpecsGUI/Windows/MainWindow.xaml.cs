@@ -162,7 +162,7 @@ namespace BalanceSpecsGUI.Windows
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 GAController GAController = new GAController("");
-                GAController.LoadRunFromFile(dlg.FileName);
+                GAController.LoadRunFromFileAndSetDefaults(dlg.FileName);
                 
                 GARun GARunWindow = new GARun(GAController);
                 GARunWindow.Show();

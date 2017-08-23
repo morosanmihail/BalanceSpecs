@@ -71,7 +71,7 @@ namespace BalanceSpecsGUI.Windows
             {
                 Filename = saveFileDialog.FileName;
 
-                GAC.SaveRunGAToFile(Filename);
+                GAController.SaveRunGAToFile(GAC.RunManager, Filename);
             }
         }
 
