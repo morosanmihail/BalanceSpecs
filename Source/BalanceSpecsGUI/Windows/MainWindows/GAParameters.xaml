@@ -1,0 +1,107 @@
+﻿<UserControl x:Class="BalanceSpecsGUI.Windows.MainWindows.GAParameters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:p="clr-namespace:BalanceSpecsGUI.Properties"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:w="clr-namespace:BalanceSpecsGUI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <w:JValueToDoubleConverter x:Key="JValueToDoubleConverter"/>
+        <w:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <w:PredictorConverter x:Key="PredictorConverter"/>
+        <ObjectDataProvider x:Key="PredictorTypes"
+                ObjectType="{x:Type w:ReturnPredictorTypes}"
+                MethodName="GetTypes" >
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <StackPanel>
+        <TextBlock Text="Genetic Algorithm Parameters" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+        <Button Content="Test" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.Row="7" Grid.Column="1"/>
+        <UniformGrid Columns="2">
+            <Label Content="Load Preset:"></Label>
+            <Controls:DropDownButton />
+        </UniformGrid>
+        <UniformGrid Columns="3">
+            <TextBlock Text="Max Generations" VerticalAlignment="Center" />
+            <Label />
+            <TextBox Height="23" TextWrapping="Wrap" Text="{Binding Par_MaxGenerations.Value, Mode=TwoWay}" Width="150"/>
+
+            <TextBlock Text="Population Size" VerticalAlignment="Center"/>
+            <Slider Minimum="{Binding Source={x:Static p:Settings.Default}, Path=PopSizeMin, Mode=OneWay}" Maximum="{Binding Source={x:Static p:Settings.Default}, Path=PopSizeMax, Mode=OneWay}" LargeChange="10" SmallChange="1" Value="{Binding Par_MaxPopMembers, Mode=TwoWay, Converter={StaticResource JValueToDoubleConverter}}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+            <TextBox TextWrapping="Wrap" Text="{Binding Par_MaxPopMembers, Mode=TwoWay}" Width="150" Height="23"/>
+
+            <TextBlock Text="Random Seed" VerticalAlignment="Center"/>
+            <Label />
+            <TextBox TextWrapping="Wrap" Text="{Binding Par_Seed.Value, FallbackValue='1337', Mode=TwoWay}" Width="150" Height="23"/>
+
+            <TextBlock Text="Elitism Ratio" VerticalAlignment="Center"/>
+            <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding Par_KeepEliteRatio, FallbackValue='0.15', Mode=TwoWay, Converter={StaticResource JValueToDoubleConverter}}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
+            <TextBox TextWrapping="Wrap" Text="{Binding Par_KeepEliteRatio, FallbackValue='0.15', Mode=TwoWay}" Width="150" Height="23"/>
+
+            <TextBlock Text="Mutation Ratio" VerticalAlignment="Center"/>
+            <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding Par_MutateRatio, FallbackValue='0.15', Mode=TwoWay, Converter={StaticResource JValueToDoubleConverter}}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
+            <TextBox TextWrapping="Wrap" Text="{Binding Par_MutateRatio, FallbackValue='0.35', Mode=TwoWay}" Width="150" Height="23"/>
+
+            <TextBlock Text="Crossover Ratio" VerticalAlignment="Center"/>
+            <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding Par_CrossoverRatio, FallbackValue='0.15', Mode=TwoWay, Converter={StaticResource JValueToDoubleConverter}}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
+            <TextBox TextWrapping="Wrap" Text="{Binding Par_CrossoverRatio, FallbackValue='0.35', Mode=TwoWay}" Width="150" Height="23"/>
+
+            <TextBlock Text="Tournament Size" VerticalAlignment="Center"/>
+            <Slider Minimum="1" Maximum="{Binding Par_MaxPopMembers.Value, Mode=OneWay}" LargeChange="2" SmallChange="1" Value="{Binding Par_TournamentSize, FallbackValue='2', Mode=TwoWay, Converter={StaticResource JValueToDoubleConverter}}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
+            <TextBox TextWrapping="Wrap" Text="{Binding Par_TournamentSize, FallbackValue='3', Mode=TwoWay}" Width="150" Height="23"/>
+
+            <TextBlock Text="Parameter Mutation Chance" VerticalAlignment="Center"/>
+            <Slider Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding extra_MutationChance, FallbackValue='0.15', Mode=TwoWay, Converter={StaticResource JValueToDoubleConverter}}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="0.01" VerticalAlignment="Center" />
+            <TextBox TextWrapping="Wrap" Text="{Binding extra_MutationChance, FallbackValue='0.5', Mode=TwoWay}" Width="150" Height="23"/>
+
+            <TextBlock Text="Reevaluate Elite Individuals" VerticalAlignment="Center"/>
+            <Controls:ToggleSwitch Content="" IsChecked="{Binding extra_recalculate_elite.Value, Mode=TwoWay}" Name="ReevaluateToggle">
+            </Controls:ToggleSwitch>
+            <TextBlock/>
+
+            <TextBlock Text="Use Predictor" VerticalAlignment="Center"/>
+            <Controls:ToggleSwitch Content="" IsChecked="{Binding extra_use_predictor.Value, Mode=TwoWay}" Name="UsePredictorToggle">
+            </Controls:ToggleSwitch>
+
+        </UniformGrid>
+        <Border BorderThickness="2" Visibility="{Binding ElementName=UsePredictorToggle, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel>
+                <UniformGrid Columns="3">
+
+                    <TextBlock Text="Predictor" VerticalAlignment="Center"/>
+                    <Controls:SplitButton Name="PredictorType" ItemsSource="{Binding Source={StaticResource PredictorTypes}}" SelectedValue="{Binding string_PredictorType.Value, Mode=TwoWay}">
+                    </Controls:SplitButton>
+                    <Label/>
+                </UniformGrid>
+
+                <UniformGrid Columns="1">
+                    <ListBox>
+                        <ListBox.ItemsSource>
+                            <MultiBinding Converter="{StaticResource PredictorConverter}">
+                                <Binding Path="SelectedValue" ElementName="PredictorType"></Binding>
+                            </MultiBinding>
+                        </ListBox.ItemsSource>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <UniformGrid Columns="2">
+                                    <TextBlock Text="{Binding Name.FriendlyName}" VerticalAlignment="Center" Width="Auto" TextWrapping="WrapWithOverflow"/>
+
+                                    <!-- <Label/>
+                                                        <Slider Name="{Binding Name.Name}" Minimum="{Binding Name.RangeMin}" Maximum="{Binding Name.RangeMax}" Value="{Binding Value.Value, Mode=TwoWay}" Controls:SliderHelper.EnableMouseWheel="MouseHover" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
+-->
+                                    <TextBox Text="{Binding Value.Value, FallbackValue='1', Mode=TwoWay}" Width="150"/>
+
+                                </UniformGrid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </UniformGrid>
+
+            </StackPanel>
+
+        </Border>
+    </StackPanel>
+</UserControl>

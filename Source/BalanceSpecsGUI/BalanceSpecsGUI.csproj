@@ -126,8 +126,32 @@
     <Compile Include="Windows\GARun.xaml.cs">
       <DependentUpon>GARun.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\MainWindows\BridgeConnection.xaml.cs">
+      <DependentUpon>BridgeConnection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindows\CustomData.xaml.cs">
+      <DependentUpon>CustomData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindows\Evaluators.xaml.cs">
+      <DependentUpon>Evaluators.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindows\GameParameters.xaml.cs">
+      <DependentUpon>GameParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindows\GAParameters.xaml.cs">
+      <DependentUpon>GAParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindows\Metrics.xaml.cs">
+      <DependentUpon>Metrics.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Settings\GeneralSettings.xaml.cs">
+      <DependentUpon>GeneralSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Settings\ToolsLister.xaml.cs">
+      <DependentUpon>ToolsLister.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SingleRunResults.xaml.cs">
       <DependentUpon>SingleRunResults.xaml</DependentUpon>
@@ -163,7 +187,39 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\MainWindows\BridgeConnection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindows\CustomData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindows\Evaluators.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindows\GameParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindows\GAParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindows\Metrics.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Settings\GeneralSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Settings\ToolsLister.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -196,6 +252,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <EmbeddedResource Include="Resources\EmptyBFF.json" />
+    <EmbeddedResource Include="Resources\DefaultTools.json" />
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>

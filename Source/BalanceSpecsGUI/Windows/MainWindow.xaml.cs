@@ -28,6 +28,8 @@ namespace BalanceSpecsGUI.Windows
         {
             InitializeComponent();
 
+            ExternalTool.Initialise("BalanceSpecsGUI.Resources.DefaultTools.json");
+
             NewButton_Click(null, null);
         }
 
@@ -59,83 +61,6 @@ namespace BalanceSpecsGUI.Windows
 
             this.DataContext = JsonO;
             JSONFile = JsonO;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            dynamic JsonO = this.DataContext;
-
-            MessageBox.Show(JsonO.gaparams.ToString());
-        }
-
-        private async void AddParameterButtonClick(object sender, RoutedEventArgs e)
-        {
-            dynamic JsonO = this.DataContext;
-
-            string Name = NewParameterName.Text.Trim();
-
-            if(Name.Length < 1)
-            {
-                await this.ShowMessageAsync("Error", "Empty names are not allowed!");
-                return;
-            }
-
-            JsonO.parameters.Add(new JObject(new JProperty("name",Name), new JProperty("enabled",true), new JProperty("listsize",1), new JProperty("minimise","ignore"), new JProperty("custom",new JObject())));
-        }
-
-        private async void AddMetricButtonClick(object sender, RoutedEventArgs e)
-        {
-            dynamic JsonO = this.DataContext;
-            
-            if(NewMetricName.Text.Trim().Length < 1)
-            {
-                await this.ShowMessageAsync("Error", "Empty names are not allowed!");
-                return;
-            }
-
-            try
-            {
-                JsonO.metrics.Add(new JObject(new JProperty("name", NewMetricName.Text), new JProperty("type", "Double")));
-            } catch(Exception ex)
-            {
-                await this.ShowMessageAsync("Error", "A metric with the same name already exists!");
-            }
-        }
-
-        private async void AddEvaluatorButtonClick(object sender, RoutedEventArgs e)
-        {
-            dynamic JsonO = this.DataContext;
-
-            if (NewEvaluatorName.Text.Trim().Length < 1)
-            {
-                await this.ShowMessageAsync("Error", "Empty names are not allowed!");
-                return;
-            }
-
-            try
-            {
-                JsonO.evaluators.Add(new JObject(new JProperty("name", NewEvaluatorName.Text), new JProperty("enabled",true), new JProperty("type", ReturnEvaluatorTypes.GetTypes()[0])));
-            }
-            catch (Exception ex)
-            {
-                await this.ShowMessageAsync("Error", "An evaluator with the same name already exists!");
-            }
-        }
-
-        private void AddCustomButtonClick(object sender, RoutedEventArgs e)
-        {
-            dynamic JsonO = this.DataContext;
-
-            JsonO.custom[NewCustomData.Text] = "";
-        }
-
-        private void AddParamCustomButtonClick(object sender, RoutedEventArgs e)
-        {
-            dynamic JsonO = (sender as FrameworkElement).DataContext;
-            if (JsonO != null)
-            {
-                JsonO[NewParamCustomData.Text] = "";
-            }
         }
         
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -190,9 +115,12 @@ namespace BalanceSpecsGUI.Windows
         {
             var pProcess = ExternalTool.RunTool(((sender as System.Windows.Controls.MenuItem).DataContext as ExternalTool).PathToExe);
 
-            pProcess.Start();
+            if(pProcess != null)
+            {
+                pProcess.Start();
 
-            pProcess.WaitForExit();
+                pProcess.WaitForExit();
+            }
         }
 
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)

@@ -1,6 +1,4 @@
-﻿using BalanceSpecsGUI.Tools;
-using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,23 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BalanceSpecsGUI.Windows
+namespace BalanceSpecsGUI.Windows.MainWindows
 {
     /// <summary>
-    /// Interaction logic for Settings.xaml
+    /// Interaction logic for BridgeConnection.xaml
     /// </summary>
-    public partial class SettingsWindow : MetroWindow
+    public partial class BridgeConnection : UserControl
     {
-        public SettingsWindow()
+        public BridgeConnection()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Save();
         }
     }
 }

@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="BalanceSpecsGUI.Windows.MainWindows.GameParameters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BalanceSpecsGUI.Windows.MainWindows"
+             xmlns:p="clr-namespace:BalanceSpecsGUI.Properties"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:w="clr-namespace:BalanceSpecsGUI.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <x:Array Type="{x:Type sys:String}" x:Key="ParameterMinimisations">
+            <sys:String>ignore</sys:String>
+            <sys:String>maximise</sys:String>
+            <sys:String>minimise</sys:String>
+        </x:Array>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical">
+        <TextBlock Text="Game Parameters to Balance" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Parameters" FontSize="14" FontWeight="Bold"/>
+                <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="220" ItemsSource="{Binding}" DisplayMemberPath="name"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Controls:TextBoxHelper.Watermark="Name" Text="" Width="120" Name="NewParameterName"/>
+                    <Button Content="Add" Click="AddParameterButtonClick"/>
+                    <Button Content="Remove"/>
+                </StackPanel>
+            </StackPanel>
+            <Grid DataContext="{Binding SelectedItem, ElementName=ParametersList}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+
+                <Controls:ToggleSwitch OnLabel="Enabled" OffLabel="Disabled" IsChecked="{Binding enabled.Value, Mode=TwoWay}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+                <TextBlock Text="Name" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding name, FallbackValue='noname', Mode=TwoWay}" Height="23" Grid.Row="1" Grid.Column="1"/>
+
+                <TextBlock Text="Range Min" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding rangeMin, FallbackValue=0, Mode=TwoWay}" Height="23" Grid.Row="2" Grid.Column="1"/>
+
+                <TextBlock Text="Range Max" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding rangeMax, FallbackValue=0, Mode=TwoWay}" Height="23" Grid.Row="3" Grid.Column="1"/>
+
+                <TextBlock Text="Decimal Accuracy" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding rangeAccuracy, FallbackValue=10, Mode=TwoWay}" Height="23" Grid.Row="4" Grid.Column="1"/>
+
+                <TextBlock Text="Fitness Importance (Weight)" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding weight, FallbackValue=0, Mode=TwoWay}" Height="23" Grid.Row="5" Grid.Column="1"/>
+
+
+                <TextBlock Text="Minimise Value" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+                <Controls:SplitButton Grid.Row="6" Grid.Column="1" ItemsSource="{StaticResource ParameterMinimisations}" SelectedValue="{Binding minimise.Value, Mode=TwoWay}">
+                </Controls:SplitButton>
+
+
+                <TextBlock Text="Parameter List Length" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding listsize, Mode=TwoWay}" TextWrapping="Wrap" Height="23" Grid.Row="7" Grid.Column="1" />
+
+                <TextBlock Text="Custom Properties" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" FontSize="14"/>
+
+                <ListBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding custom}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <UniformGrid Columns="2">
+                                <TextBlock Padding="5,0,5,0" Text="{Binding Name}" Width="200" />
+
+                                <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Value.Value, Mode=TwoWay}" VerticalAlignment="Top" Width="150"/>
+                            </UniformGrid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2">
+                    <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewParamCustomData" Width="250"/>
+                    <Button Content="Add" Click="AddParamCustomButtonClick" DataContext="{Binding custom}"/>
+                    <Button Content="Remove"/>
+                </StackPanel>
+            </Grid>
+
+        </StackPanel>
+    </StackPanel>
+</UserControl>

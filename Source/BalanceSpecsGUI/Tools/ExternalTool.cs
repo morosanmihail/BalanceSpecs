@@ -1,8 +1,11 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,23 +27,84 @@ namespace BalanceSpecsGUI.Tools
 
         }
 
+        public ExternalTool(string Path, string Name)
+        {
+            this.PathToExe = Path;
+            this.Name = Name;
+        }
+
+        public static void Initialise(string DefaultFile)
+        {
+            if (Properties.Settings.Default.Tools2 == null)
+            {
+                Properties.Settings.Default.Tools2 = new System.Collections.ObjectModel.ObservableCollection<ExternalTool>();
+            }
+
+            if (Properties.Settings.Default.FirstRun)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = DefaultFile;
+
+                string result = "";
+
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    result = reader.ReadToEnd();
+                }
+
+                dynamic JsonO = JArray.Parse(result);
+
+                foreach(var El in JsonO)
+                {
+                    AddToolToSettings((string)El.PathToExe, (string)El.Name);
+                }
+
+                Properties.Settings.Default.FirstRun = false;
+            }
+        }
+
+        public static void AddToolToSettings(string Path, string Name)
+        {
+            var Tool = new ExternalTool(Path, Name);
+
+            Properties.Settings.Default.Tools2.Add(Tool);
+
+            Properties.Settings.Default.Save();
+        }
+
         public static System.Diagnostics.Process RunTool(string PathString)
         {
             //Go through each %X in PathString and do something
 
             string InvokePath = "";
+            bool EscapeInvoke = false;
 
-            for(int i=0;i<PathString.Length;i++)
+            for(int i=0;(i<PathString.Length && !EscapeInvoke);i++)
             {
                 if(PathString[i] == '%' && i < PathString.Length-1)
                 {
                     switch(PathString[i+1])
                     {
                         case 'f':
-                            InvokePath += '"' + LoadFile() + '"';
+                            var Filename = LoadFile();
+
+                            if(Filename.Length == 0)
+                            {
+                                EscapeInvoke = true;
+                            }
+
+                            InvokePath += '"' + Filename + '"';
                             break;
                         case 'F':
-                            InvokePath += '"' + LoadFolder() + '"';
+                            var Folder = LoadFolder();
+
+                            if (Folder.Length == 0)
+                            {
+                                EscapeInvoke = true;
+                            }
+
+                            InvokePath += '"' + Folder + '"';
                             break;
                         default:
                             break;
@@ -51,6 +115,11 @@ namespace BalanceSpecsGUI.Tools
                 {
                     InvokePath += PathString[i];
                 }
+            }
+
+            if(EscapeInvoke)
+            {
+                return null;
             }
 
             //Actually run InvokePath TODO

@@ -28,18 +28,9 @@ namespace BalanceSpecsGUI.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(Properties.Settings.Default.Tools2 == null)
-            {
-                Properties.Settings.Default.Tools2 = new System.Collections.ObjectModel.ObservableCollection<ExternalTool>();
-            }
+            ExternalTool.Initialise("BalanceSpecsGUI.Resources.DefaultTools.json");
 
-            var Tool = new ExternalTool();
-            Tool.PathToExe = PathToExecutable.Text;
-            Tool.Name = Name.Text;
-
-            Properties.Settings.Default.Tools2.Add(Tool);
-
-            Properties.Settings.Default.Save();
+            ExternalTool.AddToolToSettings(PathToExecutable.Text, Name.Text);
 
             this.Close();
         }
