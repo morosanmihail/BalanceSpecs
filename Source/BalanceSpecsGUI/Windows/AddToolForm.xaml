@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BalanceSpecsGUI.Windows"
         mc:Ignorable="d"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="Add Tool to the Menu" Height="150" Width="300" MaxHeight="150" MinHeight="150">
+        Title="Add Tool to the Menu" Height="150" Width="300" MaxHeight="150" MinHeight="150" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
     <Grid>
         <TextBox x:Name="Name" Controls:TextBoxHelper.Watermark="Name" Margin="0,10,0,77" Height="32" />
         <TextBox x:Name="PathToExecutable" Controls:TextBoxHelper.Watermark="Path" Margin="0,47,0,40" Height="32" />

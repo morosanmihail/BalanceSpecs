@@ -1,5 +1,6 @@
 ﻿using BalanceSpecsGUI.Converters;
 using BalanceSpecsGUI.Tools;
+using GeneticAlgorithm.AnalysisTools;
 using GeneticAlgorithm.GAController;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -23,6 +24,8 @@ namespace BalanceSpecsGUI.Windows
     public partial class MainWindow : MetroWindow
     {
         public static dynamic JSONFile = null;
+
+        Analysis.AnalysisOfRun AnalysisWindow = null;
 
         public MainWindow()
         {
@@ -175,6 +178,33 @@ namespace BalanceSpecsGUI.Windows
             var AddToToolsWindow = new AddToolForm();
 
             AddToToolsWindow.ShowDialog();
+        }
+
+        private void MenuItem_Click_6(object sender, RoutedEventArgs e)
+        {
+            var dlg = new CommonOpenFileDialog();
+            dlg.Title = "Choose Folder";
+            dlg.IsFolderPicker = true;
+            dlg.AllowNonFileSystemItems = true;
+            dlg.EnsurePathExists = true;
+            dlg.EnsureReadOnly = false;
+            dlg.EnsureValidNames = true;
+            dlg.Multiselect = false;
+            dlg.ShowPlacesList = true;
+            //dlg.Filters.Add(new CommonFileDialogFilter("Balance File Format", "xml"));
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                if (AnalysisWindow == null)
+                {
+                    AnalysisWindow = new Analysis.AnalysisOfRun(dlg.FileName);
+
+                    AnalysisWindow.Show();
+                } else
+                {
+                    AnalysisWindow.AddFolder(dlg.FileName);
+                }
+            }
         }
     }
 }

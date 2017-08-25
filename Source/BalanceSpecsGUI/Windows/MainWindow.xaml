@@ -11,7 +11,7 @@
         xmlns:p="clr-namespace:BalanceSpecsGUI.Properties"
                       xmlns:sharpgen="clr-namespace:SharpGenetics.Predictor;assembly=SharpGenetics"
         mc:Ignorable="d"
-        Title="Balance Specs" Height="691.964" Width="1060.84">
+        Title="Balance Specs" Height="691.964" Width="1060.84" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
     <Controls:MetroWindow.Resources>
         <w:MethodToValueConverter x:Key="MethodToValueConverter"/>
         <w:JValueToDoubleConverter x:Key="JValueToDoubleConverter"/>
@@ -24,10 +24,7 @@
 
         <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
             <Style.Triggers>
-                <DataTrigger 
-            Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" 
-            Value="0"
-            >
+                <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" Value="0">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
@@ -59,8 +56,9 @@
             <MenuItem Header="Run">
                 <MenuItem Header="Evolve Current Configuration" Click="MenuItem_Click"></MenuItem>
                 <MenuItem Header="Load Run in Progress" Click="MenuItemProgress_Click"></MenuItem>
-                <MenuItem Header="Test Game With Custom Configuration" Click="MenuItem_Click_3">
-                </MenuItem>
+                <MenuItem Header="Test Game With Custom Configuration" Click="MenuItem_Click_3"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Analyze Results in Folder(s)" Click="MenuItem_Click_6"></MenuItem>
             </MenuItem>
             <MenuItem Header="Tools">
                 <MenuItem Header="Add Tool to List" Click="MenuItem_Click_5"/>

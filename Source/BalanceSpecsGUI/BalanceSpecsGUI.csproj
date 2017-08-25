@@ -123,6 +123,9 @@
     <Compile Include="Windows\AddToolForm.xaml.cs">
       <DependentUpon>AddToolForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Analysis\AnalysisOfRun.xaml.cs">
+      <DependentUpon>AnalysisOfRun.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\GARun.xaml.cs">
       <DependentUpon>GARun.xaml</DependentUpon>
     </Compile>
@@ -157,6 +160,10 @@
       <DependentUpon>SingleRunResults.xaml</DependentUpon>
     </Compile>
     <Page Include="Windows\AddToolForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Analysis\AnalysisOfRun.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

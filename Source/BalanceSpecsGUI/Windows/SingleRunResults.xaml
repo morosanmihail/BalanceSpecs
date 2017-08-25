@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BalanceSpecsGUI.Windows"
         mc:Ignorable="d"
-        Title="SingleRunResults" Height="271.429" Width="523.529">
+        Title="SingleRunResults" Height="271.429" Width="523.529" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
     <Grid>
         <Label Content="Running: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label Content="{Binding Running}" HorizontalAlignment="Left" Margin="75,10,0,0" VerticalAlignment="Top"/>

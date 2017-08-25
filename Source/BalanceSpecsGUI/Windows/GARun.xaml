@@ -11,7 +11,7 @@
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     mc:Ignorable="d"
-        Title="Genetic Algorithm Progress" Height="449.445" Width="827.836" Closing="MetroWindow_ClosingAsync">
+        Title="Genetic Algorithm Progress" Height="449.445" Width="827.836" Closing="MetroWindow_ClosingAsync" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
     <Controls:MetroWindow.Resources>
         <w:ListToChartValuesConverter x:Key="ListToChartValuesConverter"/> 
     </Controls:MetroWindow.Resources>
