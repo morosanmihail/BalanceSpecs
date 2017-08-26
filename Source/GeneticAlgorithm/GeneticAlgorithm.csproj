@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnalysisTools\AnalysisTool.cs" />
+    <Compile Include="AnalysisTools\FitnessOverTimeAnalysis.cs" />
     <Compile Include="AnalysisTools\MainAnalysisObject.cs" />
     <Compile Include="AnalysisTools\ParetoFrontAnalysis.cs" />
     <Compile Include="Evaluators\AverageEvaluator.cs" />

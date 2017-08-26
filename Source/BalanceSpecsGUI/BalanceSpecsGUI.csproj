@@ -116,6 +116,7 @@
     <Compile Include="Converters\JValueToDoubleConverter.cs" />
     <Compile Include="Converters\ListToChartValuesConverter.cs" />
     <Compile Include="Converters\PredictorTypeConverter.cs" />
+    <Compile Include="Converters\ReturnAnalysisToolTypes.cs" />
     <Compile Include="Converters\ReturnPredictorTypes.cs" />
     <Compile Include="DataContexts\SingleRunResultsContext.cs" />
     <Compile Include="Settings.cs" />

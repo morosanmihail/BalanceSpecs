@@ -1,4 +1,5 @@
-﻿using GeneticAlgorithm.GAController;
+﻿using GeneticAlgorithm.AnalysisTools;
+using GeneticAlgorithm.GAController;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
@@ -25,17 +26,25 @@ namespace BalanceSpecsGUI.Windows
     /// </summary>
     public partial class GARun : MetroWindow
     {
+        public MainAnalysisObject MA { get; set; }
+
+        GAController GAC;
+
         public GARun(GAController Controller)
         {
             InitializeComponent();
 
-            this.DataContext = Controller;
+            GAC = Controller;
+
+            MA = new MainAnalysisObject();
+            MA.Initialise(Controller);
+            MA.SelectedAnalysisTool = "ParetoFrontAnalysis";
+            
+            this.DataContext = MA;
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            var GAC = this.DataContext as GAController;
-
             if (GAC != null)
             {
                 GAC.KillRun();
@@ -46,22 +55,16 @@ namespace BalanceSpecsGUI.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var GAC = this.DataContext as GAController;
-            
             GAC.StartOrPauseRun();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var GAC = this.DataContext as GAController;
-
             GAC.KillRun();
         }
 
         private void ManualSaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var GAC = this.DataContext as GAController;
-
             string Filename = "";
 
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -77,8 +80,6 @@ namespace BalanceSpecsGUI.Windows
 
         private void AutosaveLocationTextbox_Click(object sender, RoutedEventArgs e)
         {
-            var GAC = this.DataContext as GAController;
-
             var dlg = new CommonOpenFileDialog();
             dlg.Title = "Choose Autosave location";
             dlg.IsFolderPicker = true;
@@ -100,8 +101,6 @@ namespace BalanceSpecsGUI.Windows
 
         private void MetroWindow_ClosingAsync(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var GAC = this.DataContext as GAController;
-
             if (GAC != null && GAC.isStarted)
             {
                 MessageBoxResult result = MessageBox.Show("Run is still in progress. Are you sure you want to close?", "Warning", MessageBoxButton.YesNo);

@@ -16,24 +16,24 @@
         <w:ListToChartValuesConverter x:Key="ListToChartValuesConverter"/> 
     </Controls:MetroWindow.Resources>
     <Grid>
-        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,81,0,10" Width="115" ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
-        <Label x:Name="IsRunningLabel" Content="{Binding isStarted}" HorizontalAlignment="Left" Margin="72,50,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="GenLabel" Content="{Binding RunManager.CurrentGen}" HorizontalAlignment="Left" Margin="102,50,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="ProgressListBox" HorizontalAlignment="Left" Margin="10,81,0,10" Width="115" ItemsSource="{Binding GACs[0].RunManager.Populations[0].RunMetrics.BestFitnesses}" DisplayMemberPath="Value" />
+        <Label x:Name="IsRunningLabel" Content="{Binding GACs[0].isStarted}" HorizontalAlignment="Left" Margin="72,50,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="GenLabel" Content="{Binding GACs[0].RunManager.CurrentGen}" HorizontalAlignment="Left" Margin="102,50,0,0" VerticalAlignment="Top"/>
         <TabControl DockPanel.Dock="Right" VerticalAlignment="Stretch" Margin="130,50,158,10" TabStripPlacement="Left">
             <TabItem Header="Fitness">
                 <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot" Margin="0,0,0,0">
                     <oxy:LineSeries Title="Best Fitness" DataFieldX="Generation" DataFieldY="Value"
-                        ItemsSource="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses}"
+                        ItemsSource="{Binding GACs[0].RunManager.Populations[0].RunMetrics.BestFitnesses}"
                         StrokeThickness="2" Color="Blue" />
                     <oxy:LineSeries Title="Average Fitness" DataFieldX="Generation" DataFieldY="Value"
-                        ItemsSource="{Binding RunManager.Populations[0].RunMetrics.AverageFitnesses}"
+                        ItemsSource="{Binding GACs[0].RunManager.Populations[0].RunMetrics.AverageFitnesses}"
                         StrokeThickness="2" Color="Green" />
                 </oxy:Plot>
             </TabItem>
             <TabItem Header="Pareto">
                 <oxy:Plot DockPanel.Dock="Right" VerticalAlignment="Stretch" x:Name="oxyPlot2" Margin="0,0,0,0">
                     <oxy:LineSeries Title="Best Fitness" DataFieldX="x" DataFieldY="y"
-                        ItemsSource="{Binding ParetoFront}"
+                        ItemsSource="{Binding GACs[0].ParetoFront}"
                         StrokeThickness="2" Color="Blue" />
                 </oxy:Plot>
             </TabItem>
@@ -41,7 +41,7 @@
             <TabItem Header="Pareto 2">
                 <lvc:CartesianChart>
                     <lvc:CartesianChart.Series>
-                        <lvc:LineSeries Values="{Binding ParetoFront2}" />
+                        <lvc:LineSeries Values="{Binding GACs[0].ParetoFront2}" />
                     </lvc:CartesianChart.Series>
                     <lvc:CartesianChart.DataTooltip>
                         <!--The Selection mode property should be done automatically in future versions-->
@@ -53,7 +53,7 @@
             <TabItem Header="Fitness 2">
                 <lvc:CartesianChart>
                     <lvc:CartesianChart.Series>
-                        <lvc:LineSeries Values="{Binding RunManager.Populations[0].RunMetrics.BestFitnesses, Converter={StaticResource ListToChartValuesConverter}, Mode=OneWay}" LineSmoothness="0" />
+                        <lvc:LineSeries Values="{Binding SelectedSeries, Mode=OneWay}" LineSmoothness="0" />
                         <lvc:LineSeries Values="{Binding RunManager.Populations[0].RunMetrics.AverageFitnesses, Converter={StaticResource ListToChartValuesConverter}, Mode=OneWay}" LineSmoothness="0" />
                     </lvc:CartesianChart.Series>
                     <lvc:CartesianChart.DataTooltip>
@@ -72,13 +72,13 @@
 
                     <!--<TextBox Text="{Binding HeatMapParameterIndexX}" Grid.Row="0"/>-->
 
-                    <Controls:SplitButton Grid.Row="0" ItemsSource="{Binding Parameters}" SelectedIndex="{Binding HeatMapParameterIndexX, Mode=TwoWay}"/>
-                    <Controls:SplitButton Grid.Row="1" ItemsSource="{Binding Parameters}" SelectedIndex="{Binding HeatMapParameterIndexY, Mode=TwoWay}"/>
+                    <Controls:SplitButton Grid.Row="0" ItemsSource="{Binding GACs[0].Parameters}" SelectedIndex="{Binding GACs[0].HeatMapParameterIndexX, Mode=TwoWay}"/>
+                    <Controls:SplitButton Grid.Row="1" ItemsSource="{Binding GACs[0].Parameters}" SelectedIndex="{Binding GACs[0].HeatMapParameterIndexY, Mode=TwoWay}"/>
 
                     
                     <lvc:CartesianChart Grid.Row="2">
                         <lvc:CartesianChart.Series>
-                            <lvc:HeatSeries Values="{Binding PredictionHeatMap}" Name="PredictionHeatMap" Title="Prediction" DrawsHeatRange="True" >
+                            <lvc:HeatSeries Values="{Binding GACs[0].PredictionHeatMap}" Name="PredictionHeatMap" Title="Prediction" DrawsHeatRange="True" >
                                 <lvc:HeatSeries.GradientStopCollection>
                                     <GradientStop Offset="0" Color="Green"></GradientStop>
                                     <GradientStop Offset="0.5" Color="White"></GradientStop>
@@ -90,10 +90,10 @@
                             <lvc:DefaultTooltip SelectionMode="OnlySender"></lvc:DefaultTooltip>
                         </lvc:CartesianChart.DataTooltip>
                         <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Title="{Binding HeatMapParameterY}"></lvc:Axis>
+                            <lvc:Axis Title="{Binding GACs[0].HeatMapParameterY}"></lvc:Axis>
                         </lvc:CartesianChart.AxisY>
                         <lvc:CartesianChart.AxisX>
-                            <lvc:Axis Title="{Binding HeatMapParameterX}"></lvc:Axis>
+                            <lvc:Axis Title="{Binding GACs[0].HeatMapParameterX}"></lvc:Axis>
                         </lvc:CartesianChart.AxisX>
                     </lvc:CartesianChart>
                 </Grid>
@@ -102,8 +102,8 @@
 
 
         <Label x:Name="IsRunningLabel_Copy" Content="Running:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
-        <Custom:ToggleSwitch Height="40" Margin="0,10,10,0" VerticalAlignment="Top" OnLabel="Autosave" OffLabel="No Autosave" IsChecked="{Binding IsAutosaving, Mode=TwoWay}" FontSize="11" HorizontalAlignment="Right" Width="143" />
-        <TextBox x:Name="AutosaveLocationTextbox" Controls:TextBoxHelper.Watermark="Autosave Location" Height="23" Margin="0,50,37,0" Text="{Binding AutosaveLocation, Mode=TwoWay}" VerticalAlignment="Top" HorizontalAlignment="Right" Width="116"/>
+        <Custom:ToggleSwitch Height="40" Margin="0,10,10,0" VerticalAlignment="Top" OnLabel="Autosave" OffLabel="No Autosave" IsChecked="{Binding GACs[0].IsAutosaving, Mode=TwoWay}" FontSize="11" HorizontalAlignment="Right" Width="143" />
+        <TextBox x:Name="AutosaveLocationTextbox" Controls:TextBoxHelper.Watermark="Autosave Location" Height="23" Margin="0,50,37,0" Text="{Binding GACs[0].AutosaveLocation, Mode=TwoWay}" VerticalAlignment="Top" HorizontalAlignment="Right" Width="116"/>
         <Button x:Name="ManualSaveButton" Content="Manual Save" Margin="0,0,10,10" HorizontalAlignment="Right" Width="143" Click="ManualSaveButton_Click" Height="27" VerticalAlignment="Bottom"/>
         <Button Margin="0,50,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="27" Height="26" Click="AutosaveLocationTextbox_Click">
             <iconPacks:PackIconModern Width="14" Height="14" Kind="Folder" />
@@ -114,22 +114,22 @@
                 <StackPanel>
 
                     <Label x:Name="BestSolutionLabel" Content="Best solution so far:"/>
-                    <Label Content="{Binding Path=RunManager.BestIndividualSoFar.Fitness}"/>
+                    <Label Content="{Binding Path=GACs[0].RunManager.BestIndividualSoFar.Fitness}"/>
                     <Label Content="Fitnesses:"/>
-                    <ListBox ItemsSource="{Binding RunManager.BestIndividualSoFar.ObjectivesFitness}"></ListBox>
+                    <ListBox ItemsSource="{Binding GACs[0].RunManager.BestIndividualSoFar.ObjectivesFitness}"></ListBox>
                     <Label Content="Parameters:"/>
                     <UniformGrid Columns="2">
-                        <ListBox ItemsSource="{Binding EnabledParameters}"/>
-                        <ListBox ItemsSource="{Binding RunManager.BestIndividualSoFar.Vector}"/>
+                        <ListBox ItemsSource="{Binding GACs[0].EnabledParameters}"/>
+                        <ListBox ItemsSource="{Binding GACs[0].RunManager.BestIndividualSoFar.Vector}"/>
                     </UniformGrid>
                 </StackPanel>
             </ScrollViewer>
         </Border>
         <ToolBar Height="50" Margin="2,0,158,0" VerticalAlignment="Top">
-            <Controls:NumericUpDown Maximum="100" Minimum="1" Value="{Binding GenerationsToRun}" HorizontalAlignment="Left" Width="135" Height="50" VerticalAlignment="Center" Controls:TextBoxHelper.Watermark="Generations" Controls:TextBoxHelper.UseFloatingWatermark="True"/>
+            <Controls:NumericUpDown Maximum="100" Minimum="1" Value="{Binding GACs[0].GenerationsToRun}" HorizontalAlignment="Left" Width="135" Height="50" VerticalAlignment="Center" Controls:TextBoxHelper.Watermark="Generations" Controls:TextBoxHelper.UseFloatingWatermark="True"/>
             <Button Content="Start / Pause" HorizontalAlignment="Left" Width="115" Click="Button_Click" Height="30" VerticalAlignment="Center"/>
             <Button Content="Kill Run" HorizontalAlignment="Left" Width="115" Click="Button_Click_1" Height="30" VerticalAlignment="Center"/>
         </ToolBar>
-        <Label Content="{Binding AutosaveLocation, Mode=OneWay}" Margin="0,84,115,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="38"/>
+        <Label Content="{Binding GACs[0].AutosaveLocation, Mode=OneWay}" Margin="0,84,115,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="38"/>
     </Grid>
 </Controls:MetroWindow>

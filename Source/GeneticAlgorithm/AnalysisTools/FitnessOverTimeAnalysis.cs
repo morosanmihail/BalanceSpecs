@@ -1,6 +1,5 @@
 ﻿using LiveCharts;
 using LiveCharts.Defaults;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace GeneticAlgorithm.AnalysisTools
 {
-    public class ParetoFrontAnalysis : AnalysisTool
+    public class FitnessOverTimeAnalysis : AnalysisTool
     {
-        public ParetoFrontAnalysis(MainAnalysisObject MA) : base(MA)
+        public FitnessOverTimeAnalysis(MainAnalysisObject MA) : base(MA)
         {
 
         }
@@ -24,37 +23,31 @@ namespace GeneticAlgorithm.AnalysisTools
                 {
                     var res = new ChartValues<ObservablePoint>();
 
-                    List<double> AvgFitness = new List<double>();
-                    List<double> Evals = new List<double>();
-
-                    int Count = MA.GACs[0].ParetoFront2.Count;
+                    int Count = MA.GACs[0].RunManager.Populations[0].RunMetrics.BestFitnesses.Count;
 
                     foreach (var G in MA.GACs)
                     {
-                        if (G.ParetoFront2.Count < Count)
+                        if (G.RunManager.Populations[0].RunMetrics.BestFitnesses.Count < Count)
                         {
-                            Count = G.ParetoFront2.Count;
+                            Count = G.RunManager.Populations[0].RunMetrics.BestFitnesses.Count;
                         }
                     }
 
                     for (int i = 0; i < Count; i++)
                     {
-                        res.Add(new ObservablePoint(0, 0));
+                        res.Add(new ObservablePoint(i, 0));
                     }
 
                     foreach (var G in MA.GACs)
                     {
-                        var PF = G.ParetoFront2;
                         for (int i = 0; i < Count; i++)
                         {
-                            res[i].X += PF[i].X;
-                            res[i].Y += PF[i].Y;
+                            res[i].Y += G.RunManager.Populations[0].RunMetrics.BestFitnesses[i].Value;
                         }
                     }
 
                     for (int i = 0; i < Count; i++)
                     {
-                        res[i].X /= MA.GACs.Count;
                         res[i].Y /= MA.GACs.Count;
                     }
 

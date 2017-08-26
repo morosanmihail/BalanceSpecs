@@ -18,6 +18,30 @@ namespace GeneticAlgorithm.AnalysisTools
         public ObservableCollection<GAController.GAController> GACs { get; set; }
 
         public string Folder { get; set; }
+
+        public string SelectedAnalysisTool { get; set; }
+
+        public ChartValues<ObservablePoint> SelectedSeries
+        {
+            get
+            {
+                //GET SelectedAnalysisTool
+                string AType = "GeneticAlgorithm.AnalysisTools." + SelectedAnalysisTool + ",GeneticAlgorithm";
+
+                var Tool = (AnalysisTool)Activator.CreateInstance(Type.GetType(AType), new object[] { this });
+                //AnalysisTool Tool = new ParetoFrontAnalysis(this);
+
+                return Tool.SeriesData;
+            }
+        }
+
+        public void Initialise(GAController.GAController GAC)
+        {
+            this.Folder = "";
+
+            GACs = new ObservableCollection<GAController.GAController>();
+            GACs.Add(GAC);
+        }
         
         public void Initialise(string Folder)
         {
@@ -47,69 +71,6 @@ namespace GeneticAlgorithm.AnalysisTools
                 GAController.LoadRunFromFileAndSetDefaults(Filename);
 
                 GACs.Add(GAController);
-            }
-        }
-
-        public ChartValues<ObservablePoint> ParetoFront2
-        {
-            get
-            {
-                if (GACs != null && GACs.Count > 0)
-                {
-                    var res = new ChartValues<ObservablePoint>();
-
-                    List<double> AvgFitness = new List<double>();
-                    List<double> Evals = new List<double>();
-
-                    int Count = GACs[0].ParetoFront2.Count;
-
-                    foreach (var G in GACs)
-                    {
-                        if(G.ParetoFront2.Count < Count)
-                        {
-                            Count = G.ParetoFront2.Count;
-                        }
-                    }
-
-                    for (int i=0;i<Count;i++)
-                    {
-                        res.Add(new ObservablePoint(0, 0));
-                    }
-
-                    foreach(var G in GACs)
-                    {
-                        var PF = G.ParetoFront2;
-                        for(int i=0;i<Count;i++)
-                        {
-                            res[i].X += PF[i].X;
-                            res[i].Y += PF[i].Y;
-                        }
-                    }
-
-                    for(int i=0;i<Count;i++)
-                    {
-                        res[i].X /= GACs.Count;
-                        res[i].Y /= GACs.Count;
-                    }
-
-                    return res;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        public string ParetoFrontJSON
-        {
-            get
-            {
-                var PF = this.ParetoFront2;
-
-                string json = JsonConvert.SerializeObject(PF, Formatting.Indented);
-
-                return json;
             }
         }
     }

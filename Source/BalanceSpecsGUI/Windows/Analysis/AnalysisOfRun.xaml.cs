@@ -25,18 +25,34 @@ namespace BalanceSpecsGUI.Windows.Analysis
     {
         public ObservableCollection<MainAnalysisObject> MAS { get; set; }
 
-        public SeriesCollection AllSeries { get; set; }
+        public SeriesCollection AllSeries
+        {
+            get
+            {
+                var A = new SeriesCollection();
+
+                foreach(var M in MAS)
+                {
+                    M.SelectedAnalysisTool = SelectedAnalysisTool;
+                    A.Add(new LineSeries { Title = M.Folder, Values = M.SelectedSeries });
+                }
+
+                return A;
+            }
+        }
+
+        public string SelectedAnalysisTool { get; set; }
 
         public AnalysisOfRunDataContext()
         {
             MAS = new ObservableCollection<MainAnalysisObject>();
-            AllSeries = new SeriesCollection();
+
+            SelectedAnalysisTool = "ParetoFrontAnalysis";
         }
 
         public void AddAnalysisObject(MainAnalysisObject ma)
         {
             MAS.Add(ma);
-            AllSeries.Add(new LineSeries { Values = ma.ParetoFront2, Title = ma.Folder });
         }
     }
 
@@ -62,6 +78,8 @@ namespace BalanceSpecsGUI.Windows.Analysis
             ma.Initialise(Folder);
 
             DC.AddAnalysisObject(ma);
+
+            MainChart.GetBindingExpression(CartesianChart.SeriesProperty).UpdateTarget();
         }
     }
 }
