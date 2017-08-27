@@ -9,7 +9,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:w="clr-namespace:BalanceSpecsGUI.Converters"
         mc:Ignorable="d"
-        Title="Analysis Of Run(s)" Height="334.454" Width="390.756" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
+        Title="Analysis Of Run(s)" Height="334.454" Width="390.756" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" Closing="MetroWindow_Closing">
     <Controls:MetroWindow.Resources>
         <ObjectDataProvider x:Key="AnalysisToolTypes"
                 ObjectType="{x:Type w:ReturnAnalysisToolTypes}"

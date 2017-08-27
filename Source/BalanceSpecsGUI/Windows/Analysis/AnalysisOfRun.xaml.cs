@@ -63,10 +63,14 @@ namespace BalanceSpecsGUI.Windows.Analysis
     {
         AnalysisOfRunDataContext DC = new AnalysisOfRunDataContext();
 
-        public AnalysisOfRun(string Folder)
+        MainWindow Parent;
+
+        public AnalysisOfRun(string Folder, MainWindow ParentWindow)
         {
             InitializeComponent();
-            
+
+            Parent = ParentWindow;
+
             this.DataContext = DC;
 
             AddFolder(Folder);
@@ -80,6 +84,11 @@ namespace BalanceSpecsGUI.Windows.Analysis
             DC.AddAnalysisObject(ma);
 
             MainChart.GetBindingExpression(CartesianChart.SeriesProperty).UpdateTarget();
+        }
+
+        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Parent.AnalysisWindow = null;
         }
     }
 }

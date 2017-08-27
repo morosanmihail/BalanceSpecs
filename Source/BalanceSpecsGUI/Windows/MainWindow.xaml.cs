@@ -25,7 +25,7 @@ namespace BalanceSpecsGUI.Windows
     {
         public static dynamic JSONFile = null;
 
-        Analysis.AnalysisOfRun AnalysisWindow = null;
+        public Analysis.AnalysisOfRun AnalysisWindow = null;
 
         public MainWindow()
         {
@@ -197,7 +197,7 @@ namespace BalanceSpecsGUI.Windows
             {
                 if (AnalysisWindow == null)
                 {
-                    AnalysisWindow = new Analysis.AnalysisOfRun(dlg.FileName);
+                    AnalysisWindow = new Analysis.AnalysisOfRun(dlg.FileName, this);
 
                     AnalysisWindow.Show();
                 } else
