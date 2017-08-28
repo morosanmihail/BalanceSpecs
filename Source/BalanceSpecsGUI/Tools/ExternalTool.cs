@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BalanceSpecsGUI.Tools
 {
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     [DataContract]
     public class ExternalTool
     {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BalanceSpecsGUI.DataContexts
 {
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class ValueWrapper
     {
         public double Value { get; set; }
@@ -20,7 +20,7 @@ namespace BalanceSpecsGUI.DataContexts
         }
     }
 
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class SingleRunResultsContext
     {
         public bool Running { get; set; }

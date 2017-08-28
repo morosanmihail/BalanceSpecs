@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GeneticAlgorithm.AnalysisTools
 {
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class MainAnalysisObject
     {
         public ObservableCollection<GAController.GAController> GACs { get; set; }
@@ -25,14 +25,38 @@ namespace GeneticAlgorithm.AnalysisTools
         {
             get
             {
-                //GET SelectedAnalysisTool
-                string AType = "GeneticAlgorithm.AnalysisTools." + SelectedAnalysisTool + ",GeneticAlgorithm";
-
-                var Tool = (AnalysisTool)Activator.CreateInstance(Type.GetType(AType), new object[] { this });
-                //AnalysisTool Tool = new ParetoFrontAnalysis(this);
-
-                return Tool.SeriesData;
+                return GetSeries(SelectedAnalysisTool);
             }
+        }
+
+        public ChartValues<HeatPoint> SelectedHeatMap
+        {
+            get
+            {
+                return GetHeatMap(SelectedAnalysisTool, 0, 1);
+            }
+        }
+
+        AnalysisTool GetAnalysisTool(string Tool)
+        {
+            string AType = "GeneticAlgorithm.AnalysisTools." + Tool + ",GeneticAlgorithm";
+
+            var NTool = (AnalysisTool)Activator.CreateInstance(Type.GetType(AType), new object[] { this });
+
+            return NTool;
+        }
+
+        public ChartValues<ObservablePoint> GetSeries(string SelectedTool)
+        {
+            return GetAnalysisTool(SelectedTool).SeriesData;
+        }
+
+        public ChartValues<HeatPoint> GetHeatMap(string SelectedTool, int X, int Y)
+        {
+            var Tool = GetAnalysisTool(SelectedTool);
+            Tool.X = X;
+            Tool.Y = Y;
+            return Tool.SeriesHeatMap;
         }
 
         public void Initialise(GAController.GAController GAC)

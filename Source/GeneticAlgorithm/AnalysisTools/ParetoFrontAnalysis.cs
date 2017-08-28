@@ -16,6 +16,24 @@ namespace GeneticAlgorithm.AnalysisTools
 
         }
 
+        public ChartValues<ObservablePoint> GetParetoFront(GAController.GAController GAC)
+        {
+            var RunManager = GAC.RunManager;
+            if (RunManager != null && RunManager.Populations.Count > 0)
+            {
+                var X = new ChartValues<ObservablePoint>();
+                for (int i = 0; i < RunManager.Populations[0].RunMetrics.BestFitnesses.Count; i++)
+                {
+                    X.Add(new ObservablePoint(RunManager.Populations[0].RunMetrics.TotalFitnessCalculations[i].Value, RunManager.Populations[0].RunMetrics.BestFitnesses[i].Value));
+                }
+                return X;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public override ChartValues<ObservablePoint> SeriesData
         {
             get
@@ -27,14 +45,11 @@ namespace GeneticAlgorithm.AnalysisTools
                     List<double> AvgFitness = new List<double>();
                     List<double> Evals = new List<double>();
 
-                    int Count = MA.GACs[0].ParetoFront2.Count;
+                    int Count = GetParetoFront(MA.GACs[0]).Count; //MA.GACs[0].ParetoFront2.Count;
 
                     foreach (var G in MA.GACs)
                     {
-                        if (G.ParetoFront2.Count < Count)
-                        {
-                            Count = G.ParetoFront2.Count;
-                        }
+                        Count = Math.Min(Count, GetParetoFront(G).Count);
                     }
 
                     for (int i = 0; i < Count; i++)
@@ -44,7 +59,7 @@ namespace GeneticAlgorithm.AnalysisTools
 
                     foreach (var G in MA.GACs)
                     {
-                        var PF = G.ParetoFront2;
+                        var PF = GetParetoFront(G);// G.ParetoFront2;
                         for (int i = 0; i < Count; i++)
                         {
                             res[i].X += PF[i].X;

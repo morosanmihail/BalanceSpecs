@@ -1,9 +1,12 @@
 ﻿using GeneticAlgorithm.AnalysisTools;
 using GeneticAlgorithm.GAController;
+using LiveCharts;
+using LiveCharts.Defaults;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -21,33 +24,95 @@ using System.Windows.Shapes;
 
 namespace BalanceSpecsGUI.Windows
 {
+    [AddINotifyPropertyChangedInterface]
+    public class GARunDataContext
+    {
+        public MainAnalysisObject MA { get; set; }
+        public GAController GAC { get; set; }
+        
+        public int HeatMapParameterIndexX { get; set; }
+
+        public int HeatMapParameterIndexY { get; set; }
+
+        public GARunDataContext()
+        {
+            HeatMapParameterIndexX = 0;
+            HeatMapParameterIndexY = 1;
+        }
+
+        public ChartValues<ObservablePoint> BestFitnessEval
+        {
+            get
+            {
+                return MA.GetSeries("FitnessOverTimeAnalysis");
+            }
+        }
+
+        public ChartValues<ObservablePoint> ParetoFront
+        {
+            get
+            {
+                return MA.GetSeries("ParetoFrontAnalysis");
+            }
+        }
+
+        public ChartValues<HeatPoint> PredictorHeatMap
+        {
+            get
+            {
+                return MA.GetHeatMap("PredictionHeatMapAnalysis", HeatMapParameterIndexX, HeatMapParameterIndexY);
+            }
+        }
+
+        public string HeatMapParameterX
+        {
+            get
+            {
+                return GAC.Parameters[HeatMapParameterIndexX].Name;
+            }
+        }
+
+        public string HeatMapParameterY
+        {
+            get
+            {
+                return GAC.Parameters[HeatMapParameterIndexY].Name;
+            }
+        }
+    }
+
     /// <summary>
     /// Interaction logic for GARun.xaml
     /// </summary>
     public partial class GARun : MetroWindow
     {
-        public MainAnalysisObject MA { get; set; }
+        //public MainAnalysisObject MA { get; set; }
 
-        GAController GAC;
+        //GAController GAC;
+
+        GARunDataContext Context { get; set; }
 
         public GARun(GAController Controller)
         {
             InitializeComponent();
 
-            GAC = Controller;
+            Context = new GARunDataContext();
+            Context.GAC = Controller;
 
-            MA = new MainAnalysisObject();
-            MA.Initialise(Controller);
-            MA.SelectedAnalysisTool = "ParetoFrontAnalysis";
+            //GAC = Controller;
+
+            Context.MA = new MainAnalysisObject();
+            Context.MA.Initialise(Controller);
+            Context.MA.SelectedAnalysisTool = "ParetoFrontAnalysis";
             
-            this.DataContext = MA;
+            this.DataContext = Context;
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            if (GAC != null)
+            if (Context.GAC != null)
             {
-                GAC.KillRun();
+                Context.GAC.KillRun();
             }
 
             base.OnClosed(e);
@@ -55,12 +120,12 @@ namespace BalanceSpecsGUI.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            GAC.StartOrPauseRun();
+            Context.GAC.StartOrPauseRun();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            GAC.KillRun();
+            Context.GAC.KillRun();
         }
 
         private void ManualSaveButton_Click(object sender, RoutedEventArgs e)
@@ -74,7 +139,7 @@ namespace BalanceSpecsGUI.Windows
             {
                 Filename = saveFileDialog.FileName;
 
-                GAController.SaveRunGAToFile(GAC.RunManager, Filename);
+                GAController.SaveRunGAToFile(Context.GAC.RunManager, Filename);
             }
         }
 
@@ -93,15 +158,15 @@ namespace BalanceSpecsGUI.Windows
 
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                GAC.AutosaveLocation = dlg.FileName;
-                GAC.IsAutosaving = true;
+                Context.GAC.AutosaveLocation = dlg.FileName;
+                Context.GAC.IsAutosaving = true;
                 //AutosaveLocationTextbox.Text = dlg.FileName;
             }
         }
 
         private void MetroWindow_ClosingAsync(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (GAC != null && GAC.isStarted)
+            if (Context.GAC != null && Context.GAC.isStarted)
             {
                 MessageBoxResult result = MessageBox.Show("Run is still in progress. Are you sure you want to close?", "Warning", MessageBoxButton.YesNo);
                 if (result != MessageBoxResult.Yes)

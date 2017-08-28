@@ -20,7 +20,7 @@ using System.Windows.Shapes;
 
 namespace BalanceSpecsGUI.Windows.Analysis
 {
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class AnalysisOfRunDataContext
     {
         public ObservableCollection<MainAnalysisObject> MAS { get; set; }
