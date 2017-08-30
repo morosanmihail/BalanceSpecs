@@ -67,7 +67,7 @@ namespace GeneticAlgorithm
                             var Folder = Path.Combine(OutputFolder, "Run" + Run);
                             var GensToRun = GenToRun;
 
-                            if (Directory.Exists(Folder))
+                            if (Directory.Exists(Folder) && Directory.EnumerateFiles(Folder).Count() > 0)
                             {
                                 var rawentries = Directory.GetFiles(Folder, "*.xml");
 
