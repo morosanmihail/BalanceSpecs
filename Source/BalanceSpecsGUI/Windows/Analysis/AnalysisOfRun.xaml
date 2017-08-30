@@ -9,7 +9,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:w="clr-namespace:BalanceSpecsGUI.Converters"
         mc:Ignorable="d"
-        Title="Analysis Of Run(s)" Height="334.454" Width="390.756" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" Closing="MetroWindow_Closing">
+        Title="Analysis Of Run(s)" Height="436.454" Width="585.756" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" Closing="MetroWindow_Closing">
     <Controls:MetroWindow.Resources>
         <ObjectDataProvider x:Key="AnalysisToolTypes"
                 ObjectType="{x:Type w:ReturnAnalysisToolTypes}"
@@ -17,14 +17,45 @@
         </ObjectDataProvider>
     </Controls:MetroWindow.Resources>
     <Grid>
-        <Controls:SplitButton Margin="0,0,0,0" VerticalAlignment="Top" SelectedValue="{Binding SelectedAnalysisTool}" ItemsSource="{Binding Source={StaticResource AnalysisToolTypes}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Controls:SplitButton Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,0" VerticalAlignment="Top" SelectedValue="{Binding SelectedAnalysisTool}" ItemsSource="{Binding Source={StaticResource AnalysisToolTypes}}">
         </Controls:SplitButton>
-        <lvc:CartesianChart Margin="0,30,0,0" Series="{Binding AllSeries}" Name="MainChart">
+
+        <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding MAS}" Name="ListOfEntries">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <Button Content="Add Folder(s)" Click="Button_Click"></Button>
+                        <Button Content="Remove Entry" Click="Button_Click_1"></Button>
+                        <ItemsPresenter></ItemsPresenter>
+                    </StackPanel>
+                </ControlTemplate>
+            </ListBox.Template>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Folder}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <GridSplitter Grid.Column="0" Grid.RowSpan="2" Margin="0" Width="3" HorizontalAlignment="Right" VerticalAlignment="Stretch"/>
+
+        <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Margin="0,0,0,0" Series="{Binding AllSeries}" Name="MainChart">
             
             <lvc:CartesianChart.DataTooltip>
                 <!--The Selection mode property should be done automatically in future versions-->
                 <lvc:DefaultTooltip SelectionMode="OnlySender"></lvc:DefaultTooltip>
             </lvc:CartesianChart.DataTooltip>
         </lvc:CartesianChart>
+
     </Grid>
 </Controls:MetroWindow>

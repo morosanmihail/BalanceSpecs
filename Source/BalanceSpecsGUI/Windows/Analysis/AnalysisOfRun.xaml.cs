@@ -2,6 +2,7 @@
 using LiveCharts;
 using LiveCharts.Wpf;
 using MahApps.Metro.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
@@ -63,32 +64,52 @@ namespace BalanceSpecsGUI.Windows.Analysis
     {
         AnalysisOfRunDataContext DC = new AnalysisOfRunDataContext();
 
-        MainWindow Parent;
-
-        public AnalysisOfRun(string Folder, MainWindow ParentWindow)
+        public AnalysisOfRun()
         {
             InitializeComponent();
 
-            Parent = ParentWindow;
-
             this.DataContext = DC;
-
-            AddFolder(Folder);
         }
 
-        public void AddFolder(string Folder)
+        public void AddFolder()
         {
-            MainAnalysisObject ma = new MainAnalysisObject();
-            ma.Initialise(Folder);
+            var dlg = new CommonOpenFileDialog();
+            dlg.Title = "Choose Folder";
+            dlg.IsFolderPicker = true;
+            dlg.AllowNonFileSystemItems = true;
+            dlg.EnsurePathExists = true;
+            dlg.EnsureReadOnly = false;
+            dlg.EnsureValidNames = true;
+            dlg.Multiselect = false;
+            dlg.ShowPlacesList = true;
+            //dlg.Filters.Add(new CommonFileDialogFilter("Balance File Format", "xml"));
 
-            DC.AddAnalysisObject(ma);
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                MainAnalysisObject ma = new MainAnalysisObject();
+                ma.Initialise(dlg.FileName);
 
-            MainChart.GetBindingExpression(CartesianChart.SeriesProperty).UpdateTarget();
+                DC.AddAnalysisObject(ma);
+
+                MainChart.GetBindingExpression(CartesianChart.SeriesProperty).UpdateTarget();
+            }
         }
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Parent.AnalysisWindow = null;
+            
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            AddFolder();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            DC.MAS.Remove(ListOfEntries.SelectedItem as MainAnalysisObject);
+
+            MainChart.GetBindingExpression(CartesianChart.SeriesProperty).UpdateTarget();
         }
     }
 }
