@@ -16,7 +16,7 @@ namespace GeneticAlgorithm.AnalysisTools
 
         }
 
-        public ChartValues<ObservablePoint> GetParetoFront(GAController.GAController GAC)
+        public static ChartValues<ObservablePoint> GetParetoFront(GAController.GAController GAC)
         {
             var RunManager = GAC.RunManager;
             if (RunManager != null && RunManager.Populations.Count > 0)

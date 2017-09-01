@@ -1,5 +1,6 @@
 ﻿using GeneticAlgorithm.AnalysisTools;
 using LiveCharts;
+using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using MahApps.Metro.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -32,6 +33,26 @@ namespace BalanceSpecsGUI.Windows.Analysis
             {
                 var A = new SeriesCollection();
 
+                if (SelectedAnalysisTool == "StatisticalPAnalysis")
+                {
+                    var T = StatisticalPAnalysis.PValues(MAS);
+                    A.Add(new LineSeries { Title = "PValues", Values = T, ScalesYAt = 1 });
+
+                    if (T == null)
+                        return A;
+
+                    var ParetoFrontAnalysisA = new ParetoFrontAnalysis(MAS[0]);
+                    A.Add(new LineSeries { Title = "First", Values = ParetoFrontAnalysisA.SeriesData, ScalesYAt = 0 });
+                    var ParetoFrontAnalysisB = new ParetoFrontAnalysis(MAS[1]);
+                    A.Add(new LineSeries { Title = "Second", Values = ParetoFrontAnalysisB.SeriesData, ScalesYAt = 0 });
+
+                    var SigLine = new ChartValues<ObservablePoint>() { new ObservablePoint(0, 0.05), new ObservablePoint(T.Last().X, 0.05) };
+
+                    A.Add(new LineSeries { Title = "Significance", Values = SigLine, ScalesYAt = 1 });
+                    
+                    return A;
+                }
+
                 foreach(var M in MAS)
                 {
                     M.SelectedAnalysisTool = SelectedAnalysisTool;
@@ -41,6 +62,20 @@ namespace BalanceSpecsGUI.Windows.Analysis
                 return A;
             }
         }
+
+        /*public AxesCollection GetStatisticalAnalysisAxis
+        {
+            get
+            {
+                var A = new AxesCollection();
+
+                A.Add(new Axis)
+                var Axis1 = new Axis();
+
+
+                return A;
+            }
+        }*/
 
         public string SelectedAnalysisTool { get; set; }
 
