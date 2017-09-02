@@ -101,7 +101,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
         List<double> RunGames(int CurrentGeneration)
         {
             string NewResults = "";
-            if ((string)Manager.GetParameters().GetParameter("string_Bridge_Type") == "local")
+            if ((string)Manager.GetParameters().JsonParams.bridge.type == "local")
             {
                 NewResults = RunGamesLocal(Manager.GetParameters().JsonParams, Vector, rand.Next());
             }
@@ -369,7 +369,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
         {
             var newData = new List<double>(Vector);
 
-            double MutationChance = (double)Manager.GetParameters().GetParameter("extra_MutationChance");
+            double MutationChance = Manager.GetParameters().GetParameter("extra_MutationChance", 0.5);
 
             dynamic Params = Manager.GetParameters().JsonParams.parameters;
 

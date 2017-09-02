@@ -95,7 +95,22 @@ namespace GeneticAlgorithm
                             }
                             else
                             {
-                                RunManager = new GPRunManager<BalanceGA, List<double>, List<double>>(ParamFile, tests, RandomSeed + Run);
+                                var Params = GPRunManager<BalanceGA, List<double>, List<double>>.LoadParamsFromFile(ParamFile);
+
+                                //Change params as needed
+                                for(int y = 0; y < classNodes[i].Attributes.Count;y++)
+                                {
+                                    var Attr = classNodes[i].Attributes[y];
+                                    if(Attr.Name.Contains("prop."))
+                                    {
+                                        var JsonPropName = Attr.Name.Split('.')[1];
+                                        Params.JsonParams.gaparams[JsonPropName] = double.Parse(Attr.Value);
+                                    }
+                                }
+
+                                Params.JsonParameters = JsonConvert.SerializeObject(Params.JsonParams, Newtonsoft.Json.Formatting.Indented);
+
+                                RunManager = new GPRunManager<BalanceGA, List<double>, List<double>>(Params, tests, RandomSeed + Run);
 
                                 RunManager.InitRun();
                             }
