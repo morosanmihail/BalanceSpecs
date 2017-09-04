@@ -193,8 +193,12 @@ namespace GeneticAlgorithm.GAController
         {
             FileStream fs = new FileStream(Filename, FileMode.Open);
 
+            var quotas = new XmlDictionaryReaderQuotas();
+            quotas.MaxArrayLength = 2147483647;
+            quotas.MaxStringContentLength = 2147483647;
+
             XmlDictionaryReader reader =
-                XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());
+                XmlDictionaryReader.CreateTextReader(fs, quotas);
             DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
 
             // Deserialize the data and read it from the instance.

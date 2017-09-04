@@ -88,7 +88,7 @@ namespace GeneticAlgorithm.AnalysisTools
 
                 if(PerRunFitnessesA.Except(PerRunFitnessesB).Count() == 0)
                 {
-                    res.Add(new ObservablePoint(Evals, 1.0));
+                    res.Add(new ObservablePoint(Evals, 0.5));
                 } else
                 {
                     Accord.Statistics.Testing.TwoSampleHypothesis Hypo = Accord.Statistics.Testing.TwoSampleHypothesis.FirstValueIsGreaterThanSecond;
