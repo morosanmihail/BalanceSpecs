@@ -314,7 +314,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 {
                     try
                     {
-                        rpcClient = new RPCClient((string)P.queuename, (string)P.server, (int)P.port, (string)P.username, (string)P.password);
+                        rpcClient = new RPCClient((string)P.queuename, (string)P.server, (int)P.port, (string)P.username, (string)P.password, (string)P.amqpurl);
                     }
                     catch
                     {

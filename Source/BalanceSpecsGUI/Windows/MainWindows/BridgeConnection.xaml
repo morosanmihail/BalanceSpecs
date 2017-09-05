@@ -29,6 +29,10 @@
                 <TextBox HorizontalAlignment="Left" Width="170" Height="23" TextWrapping="Wrap" Text="{Binding username, Mode=TwoWay}" Tag="{Binding type}" VerticalAlignment="Top" />
                 <TextBlock Padding="5,0,5,0" Text="Password" />
                 <TextBox HorizontalAlignment="Left" Width="170" Height="23" Text="{Binding password, Mode=TwoWay}"/>
+                
+                <TextBlock Padding="5,0,5,0" Text="AMQP URL" />
+                <TextBox HorizontalAlignment="Left" Width="170" Height="23" Text="{Binding amqpurl, Mode=TwoWay}"/>
+
                 <TextBlock Padding="5,0,5,0" Text="Queue Name" />
                 <TextBox HorizontalAlignment="Left" Width="170" Height="23" Text="{Binding queuename, Mode=TwoWay}"/>
             </UniformGrid>
