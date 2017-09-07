@@ -60,6 +60,9 @@ namespace GeneticAlgorithm
                         var RunCount = int.Parse(classNodes[i].Attributes["runs"].Value);
                         var GenToRun = int.Parse(classNodes[i].Attributes["generations"].Value);
                         var RandomSeed = int.Parse(classNodes[i].Attributes["randomseed"].Value);
+                        var EvaluationsMax = int.Parse(classNodes[i].Attributes["evaluations"].Value);
+
+                        var ExperimentName = Path.GetFileName(OutputFolder);
 
                         for (int Run = 1; Run <= RunCount; Run++)
                         {
@@ -87,6 +90,11 @@ namespace GeneticAlgorithm
                                     //RunManager.ReloadParameters();
 
                                     GensToRun = GenToRun - RunManager.CurrentGen; //entries.Count();
+
+                                    if(RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value > EvaluationsMax)
+                                    {
+                                        DoRun = false;
+                                    }
                                 }
                                 else
                                 {
@@ -122,17 +130,23 @@ namespace GeneticAlgorithm
                                 for (int Gener = 0; Gener < GensToRun; Gener++)
                                 {
                                     res = RunManager.StartRun(1);
-
-                                    int c = 0;
+                                    
                                     foreach (BalanceGA FN in RunManager.GetBestMembers())
                                     {
-                                        Console.WriteLine("Population " + c + " - " + FN + " - " + FN.Fitness);
-                                        c++;
+                                        Console.WriteLine(ExperimentName + 
+                                            " (" + Run + "." + RunManager.CurrentGen + 
+                                            ") - (Fit: " + FN.Fitness + 
+                                            ") (Evals: " + RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value +
+                                            ") (Pred: " + RunManager.Populations[0].Predictor.AcceptedPredictions +
+                                            ") (False: " + RunManager.Populations[0].Predictor.FalseNegativesByGeneration.Sum() +
+                                            ") (PredAcc: " + RunManager.Populations[0].Predictor.NetworkAccuracy +
+                                            ")");
+                                        
                                     }
 
                                     Directory.CreateDirectory(Folder);
 
-                                    string filename = Folder + "/Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + ".xml";
+                                    string filename = Path.Combine(Folder, "Backup_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + "_" + RunManager.CurrentGen + ".xml");
 
                                     GAController.GAController.SaveRunGAToFile(RunManager, filename);
 
@@ -146,7 +160,20 @@ namespace GeneticAlgorithm
                                         jserializer.Serialize(writer, RunManager);
                                     }*/
 
-                                    Console.WriteLine("Saving to file done");
+                                    //Console.WriteLine("Saving to file done");
+
+                                    //Remove other files
+                                    var Files = Directory.GetFiles(Folder);
+                                    var OrderedFiles = Files.OrderBy(t => t).ToList();
+                                    for(int f=0;f<OrderedFiles.Count() - 1;f++)
+                                    {
+                                        File.Delete(OrderedFiles[f]);
+                                    }
+
+                                    if (RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value > EvaluationsMax)
+                                    {
+                                        break;
+                                    }
                                 }
                             }
                         }

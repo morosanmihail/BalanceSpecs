@@ -82,14 +82,20 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
         public override double CalculateFitness<T, Y>(int CurrentGeneration, params GenericTest<T, Y>[] values)
         {
-            //TODO check if prediction is on
-            if (this.Fitness < 0 || Manager.RecalculateAfterAGeneration)
+            if ((this.Fitness < 0 || (this.Predicted && this.RealFitness < 0)) || Manager.RecalculateAfterAGeneration)
             {
                 if (this.UpdatedAtGeneration < CurrentGeneration)
                 {
                     this.Evaluations++;
 
-                    ObjectivesFitness = RunGames(CurrentGeneration);
+                    var CalculatedFitnessScores = RunGames(CurrentGeneration);
+                    if (!Predicted)
+                    {
+                        ObjectivesFitness = CalculatedFitnessScores;
+                    } else
+                    {
+                        RealFitness = CalculatedFitnessScores.Sum();
+                    }
 
                     this.UpdatedAtGeneration = CurrentGeneration;
                 }

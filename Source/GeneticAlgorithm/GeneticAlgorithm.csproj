@@ -82,6 +82,7 @@
     <Compile Include="AnalysisTools\ParetoFrontAnalysis.cs" />
     <Compile Include="AnalysisTools\PredictionHeatMapAnalysis.cs" />
     <Compile Include="AnalysisTools\StatisticalPAnalysis.cs" />
+    <Compile Include="Evaluators\AtLeastEvaluator.cs" />
     <Compile Include="Evaluators\AverageEvaluator.cs" />
     <Compile Include="Evaluators\MedianEvaluator.cs" />
     <Compile Include="Evaluators\MetricEvaluator.cs" />

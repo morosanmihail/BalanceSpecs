@@ -19,7 +19,7 @@ namespace GeneticAlgorithm.AnalysisTools
 
         public static ChartValues<ObservablePoint> PValues(ObservableCollection<MainAnalysisObject> MAS)
         {
-            if (MAS == null || MAS.Count != 2)
+            if (MAS == null || MAS.Count < 2)
             {
                 return null;
             }
@@ -91,8 +91,8 @@ namespace GeneticAlgorithm.AnalysisTools
                     res.Add(new ObservablePoint(Evals, 0.5));
                 } else
                 {
-                    Accord.Statistics.Testing.TwoSampleHypothesis Hypo = Accord.Statistics.Testing.TwoSampleHypothesis.FirstValueIsGreaterThanSecond;
-                    var WilcoxonTest = new TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), Hypo, null, false);
+                    TwoSampleHypothesis Hypo = TwoSampleHypothesis.FirstValueIsGreaterThanSecond;
+                    var WilcoxonTest = new TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), Hypo);
 
                     res.Add(new ObservablePoint(Evals, WilcoxonTest.PValue));
                 }
