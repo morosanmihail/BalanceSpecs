@@ -34,51 +34,61 @@ namespace GeneticAlgorithm.AnalysisTools
             }
         }
 
+        public static ChartValues<ObservablePoint> GetParetoFrontsAverage(List<GAController.GAController> GACS)
+        {
+            if(GACS == null || GACS.Count == 0)
+            {
+                return null;
+            }
+
+            var res = new ChartValues<ObservablePoint>();
+
+            double MinFinalEvals = double.PositiveInfinity;
+            double MinStartEvals = double.PositiveInfinity;
+
+            foreach (var M in GACS)
+            {
+                MinFinalEvals = Math.Min(M.RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value, MinFinalEvals);
+
+                MinStartEvals = Math.Min(M.RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.First().Value, MinStartEvals);
+            }
+
+            double Step = Math.Max((MinFinalEvals - MinStartEvals) / 100, 1);
+
+            var ParetoFronts = GACS.Select(g => ParetoFrontAnalysis.GetParetoFront(g)).ToList();
+
+            for (double Evals = MinStartEvals; Evals < MinFinalEvals; Evals += Step)
+            {
+                double Evaluations = 0;
+                double Fitness = 0;
+
+                for (int i = 0; i < GACS.Count; i++)
+                {
+                    foreach (var Val in ParetoFronts[i])
+                    {
+                        if (Val.X > Evals)
+                        {
+                            Evaluations += Val.X;
+                            Fitness += Val.Y;
+                            break;
+                        }
+                    }
+                }
+
+                Evaluations /= GACS.Count;
+                Fitness /= GACS.Count;
+
+                res.Add(new ObservablePoint(Evaluations, Fitness));
+            }
+            
+            return res;
+        }
+
         public override ChartValues<ObservablePoint> SeriesData
         {
             get
             {
-                if (MA.GACs != null && MA.GACs.Count > 0)
-                {
-                    var res = new ChartValues<ObservablePoint>();
-
-                    List<double> AvgFitness = new List<double>();
-                    List<double> Evals = new List<double>();
-
-                    int Count = GetParetoFront(MA.GACs[0]).Count; //MA.GACs[0].ParetoFront2.Count;
-
-                    foreach (var G in MA.GACs)
-                    {
-                        Count = Math.Min(Count, GetParetoFront(G).Count);
-                    }
-
-                    for (int i = 0; i < Count; i++)
-                    {
-                        res.Add(new ObservablePoint(0, 0));
-                    }
-
-                    foreach (var G in MA.GACs)
-                    {
-                        var PF = GetParetoFront(G);// G.ParetoFront2;
-                        for (int i = 0; i < Count; i++)
-                        {
-                            res[i].X += PF[i].X;
-                            res[i].Y += PF[i].Y;
-                        }
-                    }
-
-                    for (int i = 0; i < Count; i++)
-                    {
-                        res[i].X /= MA.GACs.Count;
-                        res[i].Y /= MA.GACs.Count;
-                    }
-
-                    return res;
-                }
-                else
-                {
-                    return null;
-                }
+                return GetParetoFrontsAverage(MA.GACs.ToList());
             }
         }
     }

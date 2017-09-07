@@ -9,7 +9,7 @@
              xmlns:w="clr-namespace:BalanceSpecsGUI.Converters"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="300" d:DesignWidth="904.639">
     <UserControl.Resources>
         <x:Array Type="{x:Type sys:String}" x:Key="ParameterMinimisations">
             <sys:String>ignore</sys:String>
@@ -17,10 +17,18 @@
             <sys:String>minimise</sys:String>
         </x:Array>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical">
-        <TextBlock Text="Game Parameters to Balance" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-            <StackPanel Orientation="Vertical">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Game Parameters to Balance" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+        <Grid Grid.Row="1" Margin="0,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="210"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Column="0">
                 <TextBlock Text="Parameters" FontSize="14" FontWeight="Bold"/>
                 <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="220" ItemsSource="{Binding}" DisplayMemberPath="name"/>
                 <StackPanel Orientation="Horizontal">
@@ -29,8 +37,8 @@
                     <Button Content="Remove"/>
                 </StackPanel>
             </StackPanel>
-            <Grid DataContext="{Binding SelectedItem, ElementName=ParametersList}">
-                <Grid.ColumnDefinitions>
+            <UniformGrid Grid.Column="1" Columns="2" DataContext="{Binding SelectedItem, ElementName=ParametersList}" Margin="0,0,0,0" HorizontalAlignment="Center">
+                <!--<Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -46,8 +54,9 @@
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
+                </Grid.RowDefinitions>-->
 
+                <TextBlock Text="Enabled" VerticalAlignment="Center" FontWeight="Bold" FontSize="16"/>
                 <Controls:ToggleSwitch OnLabel="Enabled" OffLabel="Disabled" IsChecked="{Binding enabled.Value, Mode=TwoWay}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
 
                 <TextBlock Text="Name" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
@@ -75,6 +84,7 @@
                 <TextBox Text="{Binding listsize, Mode=TwoWay}" TextWrapping="Wrap" Height="23" Grid.Row="7" Grid.Column="1" />
 
                 <TextBlock Text="Custom Properties" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" FontSize="14"/>
+                <TextBlock></TextBlock>
 
                 <ListBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding custom}">
                     <ListBox.ItemTemplate>
@@ -93,8 +103,8 @@
                     <Button Content="Add" Click="AddParamCustomButtonClick" DataContext="{Binding custom}"/>
                     <Button Content="Remove"/>
                 </StackPanel>
-            </Grid>
+            </UniformGrid>
 
-        </StackPanel>
-    </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>
