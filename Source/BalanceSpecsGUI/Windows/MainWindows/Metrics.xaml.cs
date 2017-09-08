@@ -46,7 +46,21 @@ namespace BalanceSpecsGUI.Windows.MainWindows
             {
                 var window = Window.GetWindow(this) as MahApps.Metro.Controls.MetroWindow;
                 await window.ShowMessageAsync("Error", "A metric with the same name already exists!");
+            } finally
+            {
+                NewMetricName.Text = "";
             }
+        }
+
+        private void RemoveMetricButtonClick(object sender, RoutedEventArgs e)
+        {
+            dynamic JsonO = this.DataContext;
+
+            try
+            {
+                JsonO.RemoveAt(MetricsList.SelectedIndex);
+            }
+            catch { }
         }
     }
 }

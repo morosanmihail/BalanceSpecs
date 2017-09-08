@@ -50,6 +50,21 @@ namespace BalanceSpecsGUI.Windows.MainWindows
             {
                 JsonO[NewParamCustomData.Text] = "";
             }
+
+            NewParamCustomData.Text = "";
+        }
+
+        private void RemoveParamCustomButtonClick(object sender, RoutedEventArgs e)
+        {
+            dynamic JsonO = (sender as FrameworkElement).DataContext;
+            if (JsonO != null)
+            {
+                dynamic Selected = CustomProperties.SelectedItem;
+
+                JsonO.Remove(Selected.Name);
+
+                //JsonO[Selected.Name] = null;
+            }
         }
     }
 }

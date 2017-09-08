@@ -48,6 +48,21 @@ namespace BalanceSpecsGUI.Windows.MainWindows
                 var window = Window.GetWindow(this) as MahApps.Metro.Controls.MetroWindow;
                 await window.ShowMessageAsync("Error", "An evaluator with the same name already exists!");
             }
+            finally
+            {
+                NewEvaluatorName.Text = "";
+            }
+        }
+
+        private void RemoveEvaluatorButtonClick(object sender, RoutedEventArgs e)
+        {
+            dynamic JsonO = this.DataContext;
+
+            try
+            {
+                JsonO.RemoveAt(EvaluatorsList.SelectedIndex);
+            }
+            catch { }
         }
     }
 }

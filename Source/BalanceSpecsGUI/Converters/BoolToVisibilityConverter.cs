@@ -29,4 +29,25 @@ namespace BalanceSpecsGUI.Converters
             throw new NotImplementedException();
         }
     }
+
+    public class IntToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var isChecked = ((int)value) != -1;
+            if (parameter is string)
+            {
+                if ((string)parameter == "true")
+                {
+                    isChecked = !isChecked;
+                }
+            }
+            return isChecked ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

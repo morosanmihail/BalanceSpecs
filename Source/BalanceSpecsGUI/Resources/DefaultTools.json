@@ -1,10 +1,10 @@
 ﻿[
   {
-    "PathToExe": "..\\..\\PacMan-CSharp\\Binaries\\NeuralNetworkRunToFile.exe %F",
+    "PathToExe": "PacMan-CSharp\\Binaries\\NeuralNetworkRunToFile.exe %f",
     "Name": "Save PacMan run to Neural Network"
   },
   {
-    "PathToExe": "..\\..\\PacMan-CSharp\\Binaries\\Pacman.Simulator.exe 3 %f",
+    "PathToExe": "PacMan-CSharp\\Binaries\\Pacman.Simulator.exe 3 %f",
     "Name": "Run PacMan Simulator with Neural Network"
   }
 ]

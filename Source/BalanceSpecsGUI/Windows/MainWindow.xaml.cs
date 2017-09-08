@@ -116,13 +116,19 @@ namespace BalanceSpecsGUI.Windows
 
         private void ToolsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var pProcess = ExternalTool.RunTool(((sender as System.Windows.Controls.MenuItem).DataContext as ExternalTool).PathToExe);
-
-            if(pProcess != null)
+            try
             {
-                pProcess.Start();
+                var pProcess = ExternalTool.RunTool(((sender as System.Windows.Controls.MenuItem).DataContext as ExternalTool).PathToExe);
 
-                pProcess.WaitForExit();
+                if (pProcess != null)
+                {
+                    pProcess.Start();
+
+                    pProcess.WaitForExit();
+                }
+            } catch(Exception ex)
+            {
+                this.ShowMessageAsync("Error", ex.Message);
             }
         }
 

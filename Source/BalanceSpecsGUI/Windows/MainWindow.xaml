@@ -28,7 +28,7 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                <TextBlock>No items to display. Add one below.</TextBlock>
+                                <TextBlock>No items to display</TextBlock>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>

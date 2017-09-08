@@ -9,13 +9,15 @@
              xmlns:w="clr-namespace:BalanceSpecsGUI.Converters"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="904.639">
+             d:DesignHeight="548.145" d:DesignWidth="904.639">
     <UserControl.Resources>
         <x:Array Type="{x:Type sys:String}" x:Key="ParameterMinimisations">
             <sys:String>ignore</sys:String>
             <sys:String>maximise</sys:String>
             <sys:String>minimise</sys:String>
         </x:Array>
+
+        <w:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -26,19 +28,20 @@
         <Grid Grid.Row="1" Margin="0,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="210"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Vertical" Grid.Column="0">
                 <TextBlock Text="Parameters" FontSize="14" FontWeight="Bold"/>
-                <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="220" ItemsSource="{Binding}" DisplayMemberPath="name"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBox Controls:TextBoxHelper.Watermark="Name" Text="" Width="120" Name="NewParameterName"/>
                     <Button Content="Add" Click="AddParameterButtonClick"/>
                     <Button Content="Remove"/>
                 </StackPanel>
+                <ListBox x:Name="ParametersList" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="220" ItemsSource="{Binding}" DisplayMemberPath="name"/>
+                
             </StackPanel>
-            <UniformGrid Grid.Column="1" Columns="2" DataContext="{Binding SelectedItem, ElementName=ParametersList}" Margin="0,0,0,0" HorizontalAlignment="Center">
-                <!--<Grid.ColumnDefinitions>
+            <Grid Visibility="{Binding ElementName=ParametersList, Path=SelectedIndex, Converter={StaticResource IntToVisibilityConverter}}" Grid.Column="1" DataContext="{Binding SelectedItem, ElementName=ParametersList}" Margin="0,0,0,0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -54,10 +57,10 @@
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>-->
+                </Grid.RowDefinitions>
 
-                <TextBlock Text="Enabled" VerticalAlignment="Center" FontWeight="Bold" FontSize="16"/>
-                <Controls:ToggleSwitch OnLabel="Enabled" OffLabel="Disabled" IsChecked="{Binding enabled.Value, Mode=TwoWay}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+                <!--<TextBlock Text="Enabled" VerticalAlignment="Center" FontWeight="Bold" FontSize="16"/> -->
+                <Controls:ToggleSwitch Grid.ColumnSpan="2" OnLabel="Enabled" OffLabel="Disabled" IsChecked="{Binding enabled.Value, Mode=TwoWay}" Grid.Row="0" Grid.Column="0"/>
 
                 <TextBlock Text="Name" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
                 <TextBox TextWrapping="Wrap" Text="{Binding name, FallbackValue='noname', Mode=TwoWay}" Height="23" Grid.Row="1" Grid.Column="1"/>
@@ -86,7 +89,7 @@
                 <TextBlock Text="Custom Properties" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" FontSize="14"/>
                 <TextBlock></TextBlock>
 
-                <ListBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding custom}">
+                <ListBox x:Name="CustomProperties" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding custom}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <UniformGrid Columns="2">
@@ -101,9 +104,9 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2">
                     <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewParamCustomData" Width="250"/>
                     <Button Content="Add" Click="AddParamCustomButtonClick" DataContext="{Binding custom}"/>
-                    <Button Content="Remove"/>
+                    <Button Content="Remove" Click="RemoveParamCustomButtonClick" DataContext="{Binding custom}"/>
                 </StackPanel>
-            </UniformGrid>
+            </Grid>
 
         </Grid>
     </Grid>
