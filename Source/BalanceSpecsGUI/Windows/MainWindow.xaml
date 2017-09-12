@@ -77,13 +77,32 @@
         </Menu>
 
         <Controls:MetroTabControl Grid.Row="1" TabStripPlacement="Left">
+            <TabItem Header="Welcome" Selector.IsSelected="True">
+                <ScrollViewer VerticalScrollBarVisibility="Visible" Padding="10,10,10,10">
+                    <StackPanel>
+                        <TextBlock FontSize="30" FontWeight="Bold">Welcome!</TextBlock>
+                        <TextBlock FontSize="20">File - Load -> Bridges/Pacman.json</TextBlock>
+                        <TextBlock FontSize="20">Go to the Evaluators tab - play around with the values there!</TextBlock>
+                        <TextBlock FontSize="20">Run - Evolve Current Configuration</TextBlock>
+                        <TextBlock FontSize="20">Set generations to ~30 -> Start</TextBlock>
+                        <TextBlock FontSize="20">...</TextBlock>
+                        <TextBlock FontSize="20">...we wait...</TextBlock>
+                        <TextBlock FontSize="20">...</TextBlock>
+                        <TextBlock FontSize="20">Manual Save -> run.xml</TextBlock>
+                        <TextBlock FontSize="20">Tools - Save to Neural Network -> run.xml</TextBlock>
+                        <TextBlock FontSize="20">Tools - Run Simulator -> neuralnetwork.nn (same folder as run.xml)</TextBlock>
+                        <TextBlock FontSize="20">Witness your customised agent!</TextBlock>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
             <TabItem Header="GA Parameters" Name="ParamsTab" Visibility="{Binding Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToVisibilityConverter}, Path=ShowAdvanced, Mode=OneWay}">
                 <ScrollViewer VerticalScrollBarVisibility="Visible">
                     <pages:GAParameters DataContext="{Binding gaparams}"></pages:GAParameters>
                 </ScrollViewer>
-
             </TabItem>
-            <TabItem Header="Game Parameters" Selector.IsSelected="True">
+            
+            <TabItem Header="Game Parameters">
                 <ScrollViewer VerticalScrollBarVisibility="Visible">
                     <pages:GameParameters DataContext="{Binding parameters}"></pages:GameParameters>
                 </ScrollViewer>
