@@ -38,6 +38,9 @@ namespace BalanceSpecsGUI.Windows.Analysis
                     var T = StatisticalPAnalysis.PValues(MAS);
                     A.Add(new LineSeries { Title = "PValues", Values = T, ScalesYAt = 1 });
 
+                    var T2 = StatisticalPAnalysis.PValues(MAS, Accord.Statistics.Testing.TwoSampleHypothesis.FirstValueIsSmallerThanSecond);
+                    A.Add(new LineSeries { Title = "PValuesWorse", Values = T2, ScalesYAt = 1 });
+
                     if (T == null)
                         return A;
 

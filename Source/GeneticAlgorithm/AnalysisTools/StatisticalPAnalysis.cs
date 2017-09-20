@@ -17,7 +17,7 @@ namespace GeneticAlgorithm.AnalysisTools
 
         }
 
-        public static ChartValues<ObservablePoint> PValues(ObservableCollection<MainAnalysisObject> MAS)
+        public static ChartValues<ObservablePoint> PValues(ObservableCollection<MainAnalysisObject> MAS, TwoSampleHypothesis Hypo = TwoSampleHypothesis.FirstValueIsGreaterThanSecond)
         {
             if (MAS == null || MAS.Count < 2)
             {
@@ -91,7 +91,6 @@ namespace GeneticAlgorithm.AnalysisTools
                     res.Add(new ObservablePoint(Evals, 0.5));
                 } else
                 {
-                    TwoSampleHypothesis Hypo = TwoSampleHypothesis.FirstValueIsGreaterThanSecond;
                     var WilcoxonTest = new TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), Hypo);
 
                     res.Add(new ObservablePoint(Evals, WilcoxonTest.PValue));

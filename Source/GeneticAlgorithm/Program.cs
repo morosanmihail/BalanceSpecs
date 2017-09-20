@@ -137,11 +137,13 @@ namespace GeneticAlgorithm
                                             " (" + Run + "." + RunManager.CurrentGen + 
                                             ") - (Fit: " + FN.Fitness + 
                                             ") (Evals: " + RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value +
-                                            ") (Pred: " + RunManager.Populations[0].Predictor.AcceptedPredictions +
-                                            ") (False: " + RunManager.Populations[0].Predictor.FalseNegativesByGeneration.Sum() +
-                                            ") (PredAcc: " + RunManager.Populations[0].Predictor.NetworkAccuracy +
-                                            ")");
-                                        
+                                            ((RunManager.Populations[0].Predictor != null) ? (
+                                                ") (Pred: " + RunManager.Populations[0].Predictor.AcceptedPredictions +
+                                                ") (False: " + RunManager.Populations[0].Predictor.FalseNegativesByGeneration.Sum() +
+                                                ") (PredAcc: " + RunManager.Populations[0].Predictor.NetworkAccuracy
+                                                ) : "") +
+                                            ")"
+                                            );
                                     }
 
                                     Directory.CreateDirectory(Folder);
