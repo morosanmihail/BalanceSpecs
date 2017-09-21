@@ -22,7 +22,7 @@ namespace GeneticAlgorithm.RemoteControl
 
             ConnectionFactory factory = null;
 
-            if (AMQPURL == "")
+            if (AMQPURL == null || AMQPURL == "")
             {
                 factory = new ConnectionFactory()
                 {
