@@ -91,7 +91,7 @@ namespace BalanceSpecsGUI.DataContexts
         private void ThreadCode()
         {
             Running = true;
-            Results = GeneticAlgorithm.GeneticAlgorithm.BalanceGA.RunGamesRemote(JsonParams, Vector, RandSeed);
+            Results = GeneticAlgorithm.GeneticAlgorithm.BalanceGA.RunGamesRemote(JsonParams, Vector, (int)RandSeed);
             Running = false;
         }
 

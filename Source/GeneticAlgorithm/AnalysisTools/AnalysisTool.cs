@@ -11,19 +11,21 @@ namespace GeneticAlgorithm.AnalysisTools
 {
     public class AnalysisTool
     {
-        public MainAnalysisObject MA;
-
         public int X { get; set; }
         public int Y { get; set; }
 
-        public AnalysisTool(MainAnalysisObject MA)
+        public AnalysisTool()
         {
-            this.MA = MA;
             this.X = 0;
             this.Y = 1;
         }
 
-        public virtual ChartValues<ObservablePoint> SeriesData
+        public virtual List<Tuple<Tuple<string, int>, ChartValues<ObservablePoint>>> GetSeries(List<MainAnalysisObject> MAS)
+        {
+            return null;
+        }
+
+        /*public virtual ChartValues<ObservablePoint> SeriesData
         {
             get;
         }
@@ -31,9 +33,9 @@ namespace GeneticAlgorithm.AnalysisTools
         public virtual ChartValues<HeatPoint> SeriesHeatMap
         {
             get;
-        }
+        }*/
 
-        public string SeriesDataJSON
+        /*public string SeriesDataJSON
         {
             get
             {
@@ -43,6 +45,6 @@ namespace GeneticAlgorithm.AnalysisTools
 
                 return json;
             }
-        }
+        }*/
     }
 }

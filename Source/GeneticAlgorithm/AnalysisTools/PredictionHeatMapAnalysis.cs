@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GeneticAlgorithm.AnalysisTools
 {
-    public class PredictionHeatMapAnalysis : AnalysisTool
+    /*public class PredictionHeatMapAnalysis : AnalysisTool
     {
         public PredictionHeatMapAnalysis(MainAnalysisObject MA) : base(MA)
         {
@@ -118,5 +118,5 @@ namespace GeneticAlgorithm.AnalysisTools
             }
         }
         
-    }
+    }*/
 }

@@ -18,7 +18,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
     [DataContract]
     public class BalanceGA : PopulationMember
     {
-        PopulationManager<BalanceGA, List<double>, List<double>> Manager;
+        PopulationManager<BalanceGA> Manager;
 
         [DataMember]
         public String CreatedBy = "";
@@ -26,7 +26,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
         [DataMember]
         public string Results = "";
 
-        public BalanceGA(PopulationManager<BalanceGA, List<double>, List<double>> Manager, List<double> root = null, CRandom rand = null)
+        public BalanceGA(PopulationManager<BalanceGA> Manager, List<double> root = null, CRandom rand = null)
         {
             UpdatedAtGeneration = -1;
 
@@ -49,9 +49,9 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             this.CreatedAtGeneration = Manager.GenerationsRun + 1;
         }
 
-        public override void ReloadParameters<T, I, O>(PopulationManager<T, I, O> Manager)
+        public override void ReloadParameters<T>(PopulationManager<T> Manager)
         {
-            this.Manager = Manager as PopulationManager<BalanceGA, List<double>, List<double>>;
+            this.Manager = Manager as PopulationManager<BalanceGA>;
         }
 
         List<double> GenerateData()
@@ -80,15 +80,16 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             return Math.Round(rand.Next((int)(ValueRangeMin * ValueRangeAccuracy), (int)(ValueRangeMax * ValueRangeAccuracy)) / (float)ValueRangeAccuracy, (int)Math.Log10(ValueRangeAccuracy));
         }
 
-        public override double CalculateFitness<T, Y>(int CurrentGeneration, params GenericTest<T, Y>[] values)
+        public override double CalculateFitness(int CurrentGeneration)
         {
+            int RandSeed = rand.Next();
             if ((this.Fitness < 0 || (this.Predicted && this.RealFitness < 0)) || Manager.RecalculateAfterAGeneration)
             {
                 if (this.UpdatedAtGeneration < CurrentGeneration)
                 {
                     this.Evaluations++;
 
-                    var CalculatedFitnessScores = RunGames(CurrentGeneration);
+                    var CalculatedFitnessScores = RunGames(CurrentGeneration, RandSeed);
                     if (!Predicted)
                     {
                         ObjectivesFitness = CalculatedFitnessScores;
@@ -104,16 +105,16 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             return this.Fitness;
         }
 
-        List<double> RunGames(int CurrentGeneration)
+        List<double> RunGames(int CurrentGeneration, int RandSeed)
         {
             string NewResults = "";
             if ((string)Manager.GetParameters().JsonParams.bridge.type == "local")
             {
-                NewResults = RunGamesLocal(Manager.GetParameters().JsonParams, Vector, rand.Next());
+                NewResults = RunGamesLocal(Manager.GetParameters().JsonParams, Vector, RandSeed);
             }
             else
             {
-                NewResults = RunGamesRemote(Manager.GetParameters().JsonParams, Vector, rand.Next());
+                NewResults = RunGamesRemote(Manager.GetParameters().JsonParams, Vector, RandSeed);
             }
 
             var JsonParams = Manager.GetParameters().JsonParams;
@@ -229,13 +230,18 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                     }
 
                     finalResults.Add(ParamFitness);
+                } else
+                {
+                    x += P.listsize != null ? (int)P.listsize : 1;
                 }
+
+
             }
 
             return finalResults;
         }
 
-        public static string RunGamesLocal(dynamic JsonParams, List<double> Vector, double RandSeed)
+        public static string RunGamesLocal(dynamic JsonParams, List<double> Vector, int RandSeed)
         {
             try
             {
@@ -285,7 +291,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             }
         }
 
-        public static string RunGamesRemote(dynamic JsonParams, List<double> Vector, double RandSeed)
+        public static string RunGamesRemote(dynamic JsonParams, List<double> Vector, int RandSeed)
         {
             try
             {
@@ -392,12 +398,13 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                     {
                         if (rand.Next(0, 100) <= MutationChance * 100)
                         {
-                            double Shift = Math.Round(rand.NextDouble(-MutateRange, MutateRange), (int)Math.Log10((double)P.rangeAccuracy));
+                            /*double Shift = Math.Round(rand.NextDouble(-MutateRange, MutateRange), (int)Math.Log10((double)P.rangeAccuracy));
                             newData[x] += Shift;
                             if (newData[x] > (double)P.rangeMax)
                                 newData[x] = (double)P.rangeMax;
                             if (newData[x] < (double)P.rangeMin)
-                                newData[x] = (double)P.rangeMin;
+                                newData[x] = (double)P.rangeMin;*/
+                            newData[x] = GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy);
                         }
                         x++;
                     }
@@ -427,9 +434,9 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             return this.Fitness;
         }
 
-        public override PopulationManager<T, I, O> GetParentManager<T, I, O>()
+        public override PopulationManager<T> GetParentManager<T>()
         {
-            return Manager as PopulationManager<T, I, O>;
+            return Manager as PopulationManager<T>;
         }
     }
 }

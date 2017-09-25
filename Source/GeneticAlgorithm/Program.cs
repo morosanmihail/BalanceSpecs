@@ -21,9 +21,7 @@ namespace GeneticAlgorithm
             {
                 try
                 {
-                    GPRunManager<BalanceGA, List<double>, List<double>> RunManager = null;
-
-                    List<GenericTest<List<double>, List<double>>> tests = new List<GenericTest<List<double>, List<double>>>();
+                    GPRunManager<BalanceGA> RunManager = null;
 
                     string BatchRun = "../RunParams/BatchRun.xml";
 
@@ -91,7 +89,7 @@ namespace GeneticAlgorithm
 
                                     GensToRun = GenToRun - RunManager.CurrentGen; //entries.Count();
 
-                                    if(RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value > EvaluationsMax)
+                                    if (RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value > EvaluationsMax)
                                     {
                                         DoRun = false;
                                     }
@@ -103,13 +101,13 @@ namespace GeneticAlgorithm
                             }
                             else
                             {
-                                var Params = GPRunManager<BalanceGA, List<double>, List<double>>.LoadParamsFromFile(ParamFile);
+                                var Params = GPRunManager<BalanceGA>.LoadParamsFromFile(ParamFile);
 
                                 //Change params as needed
-                                for(int y = 0; y < classNodes[i].Attributes.Count;y++)
+                                for (int y = 0; y < classNodes[i].Attributes.Count; y++)
                                 {
                                     var Attr = classNodes[i].Attributes[y];
-                                    if(Attr.Name.Contains("prop."))
+                                    if (Attr.Name.Contains("prop."))
                                     {
                                         var JsonPropName = Attr.Name.Split('.')[1];
                                         Params.JsonParams.gaparams[JsonPropName] = double.Parse(Attr.Value);
@@ -118,7 +116,7 @@ namespace GeneticAlgorithm
 
                                 Params.JsonParameters = JsonConvert.SerializeObject(Params.JsonParams, Newtonsoft.Json.Formatting.Indented);
 
-                                RunManager = new GPRunManager<BalanceGA, List<double>, List<double>>(Params, tests, RandomSeed + Run);
+                                RunManager = new GPRunManager<BalanceGA>(Params, RandomSeed + Run);
 
                                 RunManager.InitRun();
                             }
@@ -130,12 +128,12 @@ namespace GeneticAlgorithm
                                 for (int Gener = 0; Gener < GensToRun; Gener++)
                                 {
                                     res = RunManager.StartRun(1);
-                                    
+
                                     foreach (BalanceGA FN in RunManager.GetBestMembers())
                                     {
-                                        Console.WriteLine(ExperimentName + 
-                                            " (" + Run + "." + RunManager.CurrentGen + 
-                                            ") - (Fit: " + FN.Fitness + 
+                                        Console.WriteLine(ExperimentName +
+                                            " (" + Run + "." + RunManager.CurrentGen +
+                                            ") - (Fit: " + FN.Fitness +
                                             ") (Evals: " + RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value +
                                             ((RunManager.Populations[0].Predictor != null) ? (
                                                 ") (Pred: " + RunManager.Populations[0].Predictor.AcceptedPredictions +
@@ -165,11 +163,14 @@ namespace GeneticAlgorithm
                                     //Console.WriteLine("Saving to file done");
 
                                     //Remove other files
-                                    var Files = Directory.GetFiles(Folder);
-                                    var OrderedFiles = Files.OrderBy(t => t).ToList();
-                                    for(int f=0;f<OrderedFiles.Count() - 1;f++)
+                                    if (true)
                                     {
-                                        File.Delete(OrderedFiles[f]);
+                                        var Files = Directory.GetFiles(Folder);
+                                        var OrderedFiles = Files.OrderBy(t => t).ToList();
+                                        for (int f = 0; f < OrderedFiles.Count() - 1; f++)
+                                        {
+                                            File.Delete(OrderedFiles[f]);
+                                        }
                                     }
 
                                     if (RunManager.Populations[0].RunMetrics.TotalFitnessCalculations.Last().Value > EvaluationsMax)
@@ -181,7 +182,7 @@ namespace GeneticAlgorithm
                         }
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine("Error happened: " + e.Message);
                 }

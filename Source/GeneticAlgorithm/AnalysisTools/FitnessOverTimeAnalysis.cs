@@ -10,15 +10,26 @@ namespace GeneticAlgorithm.AnalysisTools
 {
     public class FitnessOverTimeAnalysis : AnalysisTool
     {
-        public FitnessOverTimeAnalysis(MainAnalysisObject MA) : base(MA)
+        public FitnessOverTimeAnalysis()
         {
 
         }
 
-        public override ChartValues<ObservablePoint> SeriesData
+        public override List<Tuple<Tuple<string, int>, ChartValues<ObservablePoint>>> GetSeries(List<MainAnalysisObject> MAS)
         {
-            get
+            var Res = new List<Tuple<Tuple<string, int>, ChartValues<ObservablePoint>>>();
+
+            foreach (var M in MAS)
             {
+                Res.Add(new Tuple<Tuple<string, int>, ChartValues<ObservablePoint>>(new Tuple<string, int>(M.Folder, 0), SeriesData(M)));
+            }
+
+            return Res;
+        }
+
+        private ChartValues<ObservablePoint> SeriesData(MainAnalysisObject MA)
+        {
+
                 if (MA.GACs != null && MA.GACs.Count > 0)
                 {
                     var res = new ChartValues<ObservablePoint>();
@@ -57,7 +68,7 @@ namespace GeneticAlgorithm.AnalysisTools
                 {
                     return null;
                 }
-            }
+            
         }
     }
 }

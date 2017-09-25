@@ -11,9 +11,21 @@ namespace GeneticAlgorithm.AnalysisTools
 {
     public class ParetoFrontAnalysis : AnalysisTool
     {
-        public ParetoFrontAnalysis(MainAnalysisObject MA) : base(MA)
+        public ParetoFrontAnalysis()
         {
 
+        }
+
+        public override List<Tuple<Tuple<string, int>, ChartValues<ObservablePoint>>> GetSeries(List<MainAnalysisObject> MAS)
+        {
+            var Res = new List<Tuple<Tuple<string, int>, ChartValues<ObservablePoint>>>();
+
+            foreach (var M in MAS)
+            {
+                Res.Add(new Tuple<Tuple<string, int>, ChartValues<ObservablePoint>>(new Tuple<string, int>(M.Folder, 0), GetParetoFrontsAverage(M.GACs.ToList())));
+            }
+
+            return Res;
         }
 
         public static ChartValues<ObservablePoint> GetParetoFront(GAController.GAController GAC)
@@ -66,7 +78,7 @@ namespace GeneticAlgorithm.AnalysisTools
                 {
                     foreach (var Val in ParetoFronts[i])
                     {
-                        if (Val.X > Evals)
+                        if (Val.X >= Evals)
                         {
                             Evaluations += Val.X;
                             Fitness += Val.Y;
@@ -82,14 +94,6 @@ namespace GeneticAlgorithm.AnalysisTools
             }
             
             return res;
-        }
-
-        public override ChartValues<ObservablePoint> SeriesData
-        {
-            get
-            {
-                return GetParetoFrontsAverage(MA.GACs.ToList());
-            }
         }
     }
 }

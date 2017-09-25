@@ -33,52 +33,16 @@ namespace BalanceSpecsGUI.Windows.Analysis
             {
                 var A = new SeriesCollection();
 
-                if (SelectedAnalysisTool == "StatisticalPAnalysis")
+                var ChartValues = MainAnalysisObject.GetAnalysisTool(SelectedAnalysisTool).GetSeries(MAS.Where(m => m.Enabled).ToList());
+
+                foreach(var Chart in ChartValues)
                 {
-                    var T = StatisticalPAnalysis.PValues(MAS);
-                    A.Add(new LineSeries { Title = "PValues", Values = T, ScalesYAt = 1 });
-
-                    var T2 = StatisticalPAnalysis.PValues(MAS, Accord.Statistics.Testing.TwoSampleHypothesis.FirstValueIsSmallerThanSecond);
-                    A.Add(new LineSeries { Title = "PValuesWorse", Values = T2, ScalesYAt = 1 });
-
-                    if (T == null)
-                        return A;
-
-                    var ParetoFrontAnalysisA = new ParetoFrontAnalysis(MAS[0]);
-                    A.Add(new LineSeries { Title = "First", Values = ParetoFrontAnalysisA.SeriesData, ScalesYAt = 0 });
-                    var ParetoFrontAnalysisB = new ParetoFrontAnalysis(MAS[1]);
-                    A.Add(new LineSeries { Title = "Second", Values = ParetoFrontAnalysisB.SeriesData, ScalesYAt = 0 });
-
-                    var SigLine = new ChartValues<ObservablePoint>() { new ObservablePoint(0, 0.05), new ObservablePoint(T.Last().X, 0.05) };
-
-                    A.Add(new LineSeries { Title = "Significance", Values = SigLine, ScalesYAt = 1 });
-                    
-                    return A;
-                }
-
-                foreach(var M in MAS)
-                {
-                    M.SelectedAnalysisTool = SelectedAnalysisTool;
-                    A.Add(new LineSeries { Title = M.Folder, Values = M.SelectedSeries });
+                    A.Add(new LineSeries { Title = Chart.Item1.Item1, Values = Chart.Item2, ScalesYAt = Chart.Item1.Item2 });
                 }
 
                 return A;
             }
         }
-
-        /*public AxesCollection GetStatisticalAnalysisAxis
-        {
-            get
-            {
-                var A = new AxesCollection();
-
-                A.Add(new Axis)
-                var Axis1 = new Axis();
-
-
-                return A;
-            }
-        }*/
 
         public string SelectedAnalysisTool { get; set; }
 
@@ -107,6 +71,12 @@ namespace BalanceSpecsGUI.Windows.Analysis
             InitializeComponent();
 
             this.DataContext = DC;
+
+            Style itemContainerStyle = new Style(typeof(ListBoxItem));
+            itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));
+            itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(s_PreviewMouseLeftButtonDown)));
+            itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.DropEvent, new DragEventHandler(listbox1_Drop)));
+            ListOfEntries.ItemContainerStyle = itemContainerStyle;
         }
 
         public void AddFolder()
@@ -128,8 +98,7 @@ namespace BalanceSpecsGUI.Windows.Analysis
                 ma.Initialise(dlg.FileName);
 
                 DC.AddAnalysisObject(ma);
-
-                MainChart.GetBindingExpression(CartesianChart.SeriesProperty).UpdateTarget();
+                ResetGraph();
             }
         }
 
@@ -148,6 +117,53 @@ namespace BalanceSpecsGUI.Windows.Analysis
             DC.MAS.Remove(ListOfEntries.SelectedItem as MainAnalysisObject);
 
             MainChart.GetBindingExpression(CartesianChart.SeriesProperty).UpdateTarget();
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            ResetGraph();
+        }
+
+        private void ResetGraph()
+        {
+            MainChart.GetBindingExpression(CartesianChart.SeriesProperty).UpdateTarget();
+        }
+
+        void s_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+            if (sender is ListBoxItem)
+            {
+                ListBoxItem draggedItem = sender as ListBoxItem;
+                DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+                draggedItem.IsSelected = true;
+            }
+        }
+
+        void listbox1_Drop(object sender, DragEventArgs e)
+        {
+            MainAnalysisObject droppedData = e.Data.GetData(typeof(MainAnalysisObject)) as MainAnalysisObject;
+            MainAnalysisObject target = ((ListBoxItem)(sender)).DataContext as MainAnalysisObject;
+
+            int removedIdx = ListOfEntries.Items.IndexOf(droppedData);
+            int targetIdx = ListOfEntries.Items.IndexOf(target);
+
+            if (removedIdx < targetIdx)
+            {
+                DC.MAS.Insert(targetIdx + 1, droppedData);
+                DC.MAS.RemoveAt(removedIdx);
+            }
+            else
+            {
+                int remIdx = removedIdx + 1;
+                if (DC.MAS.Count + 1 > remIdx)
+                {
+                    DC.MAS.Insert(targetIdx, droppedData);
+                    DC.MAS.RemoveAt(remIdx);
+                }
+            }
+
+            ResetGraph();
         }
     }
 }

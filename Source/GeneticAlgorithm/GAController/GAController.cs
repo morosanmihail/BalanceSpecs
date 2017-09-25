@@ -52,7 +52,7 @@ namespace GeneticAlgorithm.GAController
 
         public string AutosaveLocation { get; set; }
 
-        public GPRunManager<BalanceGA, List<double>, List<double>> RunManager { get; set; }
+        public GPRunManager<BalanceGA> RunManager { get; set; }
 
         public int GenerationsToRun { get; set; }
         int GensToRun = 0;
@@ -176,9 +176,9 @@ namespace GeneticAlgorithm.GAController
             }
         }
 
-        public static void SaveRunGAToFile(GPRunManager<BalanceGA, List<double>, List<double>> RunManager, string Filename)
+        public static void SaveRunGAToFile(GPRunManager<BalanceGA> RunManager, string Filename)
         {
-            var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
+            var serializer = new DataContractSerializer(typeof(GPRunManager<BalanceGA>));
 
             var settings = new XmlWriterSettings { Indent = true };
 
@@ -189,7 +189,7 @@ namespace GeneticAlgorithm.GAController
             }
         }
 
-        public static GPRunManager<BalanceGA, List<double>, List<double>> LoadRunFromFile(string Filename)
+        public static GPRunManager<BalanceGA> LoadRunFromFile(string Filename)
         {
             FileStream fs = new FileStream(Filename, FileMode.Open);
 
@@ -199,10 +199,10 @@ namespace GeneticAlgorithm.GAController
 
             XmlDictionaryReader reader =
                 XmlDictionaryReader.CreateTextReader(fs, quotas);
-            DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA, List<double>, List<double>>));
+            DataContractSerializer ser = new DataContractSerializer(typeof(GPRunManager<BalanceGA>));
 
             // Deserialize the data and read it from the instance.
-            var RunManager = (GPRunManager<BalanceGA, List<double>, List<double>>)ser.ReadObject(reader, true);
+            var RunManager = (GPRunManager<BalanceGA>)ser.ReadObject(reader, true);
             
             reader.Close();
             fs.Close();
@@ -261,9 +261,8 @@ namespace GeneticAlgorithm.GAController
             {
                 string TempPath = Path.GetTempFileName() + ".json";
                 File.WriteAllText(TempPath, JSONFile);
-
-                List<GenericTest<List<double>, List<double>>> tests = new List<GenericTest<List<double>, List<double>>>();
-                RunManager = new GPRunManager<BalanceGA, List<double>, List<double>>(TempPath, tests);
+                
+                RunManager = new GPRunManager<BalanceGA>(TempPath);
 
                 GensToRun = GenerationsToRun;
 

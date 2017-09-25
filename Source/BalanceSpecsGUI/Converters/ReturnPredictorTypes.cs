@@ -30,11 +30,11 @@ namespace BalanceSpecsGUI.Converters
             var list2 = list.Select(t => t.Name).ToList();
 
             return list2;*/
-            Assembly cA = Assembly.GetAssembly(typeof(ResultPredictor<,>));
+            Assembly cA = Assembly.GetAssembly(typeof(ResultPredictor));
 
             var list = cA.GetTypes();
 
-            var list2 = list.Where(t => t.IsSubclassOf(typeof(ResultPredictor<List<double>, List<double>>)) && !t.IsAbstract && t.IsPublic).ToList();
+            var list2 = list.Where(t => t.IsSubclassOf(typeof(ResultPredictor)) && !t.IsAbstract && t.IsPublic).ToList();
             //var list2 = list.Where(t => t.GetInterfaces().Contains(typeof(AnalysisTool)) && !t.IsAbstract && t.IsPublic).ToList();
 
             var list3 = list2.Select(p => p.Name).ToList();

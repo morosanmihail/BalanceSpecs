@@ -26,7 +26,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Controls:SplitButton Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,0" VerticalAlignment="Top" SelectedValue="{Binding SelectedAnalysisTool}" ItemsSource="{Binding Source={StaticResource AnalysisToolTypes}}">
         </Controls:SplitButton>
 
@@ -42,7 +42,10 @@
             </ListBox.Template>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Folder}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding Enabled}" Click="CheckBox_Click"/>
+                        <TextBlock Text="{Binding Folder}"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

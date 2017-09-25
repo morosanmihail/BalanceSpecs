@@ -21,7 +21,9 @@ namespace GeneticAlgorithm.AnalysisTools
 
         public string SelectedAnalysisTool { get; set; }
 
-        public ChartValues<ObservablePoint> SelectedSeries
+        public bool Enabled { get; set; }
+
+        /*public ChartValues<ObservablePoint> SelectedSeries
         {
             get
             {
@@ -35,28 +37,34 @@ namespace GeneticAlgorithm.AnalysisTools
             {
                 return GetHeatMap(SelectedAnalysisTool, 0, 1);
             }
+        }*/
+
+        public MainAnalysisObject()
+        {
+            Enabled = true;
         }
 
-        AnalysisTool GetAnalysisTool(string Tool)
+        public static AnalysisTool GetAnalysisTool(string Tool)
         {
             string AType = "GeneticAlgorithm.AnalysisTools." + Tool + ",GeneticAlgorithm";
 
-            var NTool = (AnalysisTool)Activator.CreateInstance(Type.GetType(AType), new object[] { this });
+            var NTool = (AnalysisTool)Activator.CreateInstance(Type.GetType(AType), new object[] { });
 
             return NTool;
         }
 
         public ChartValues<ObservablePoint> GetSeries(string SelectedTool)
         {
-            return GetAnalysisTool(SelectedTool).SeriesData;
+            return GetAnalysisTool(SelectedTool).GetSeries(new List<MainAnalysisObject>() { this })[0].Item2;
         }
 
         public ChartValues<HeatPoint> GetHeatMap(string SelectedTool, int X, int Y)
         {
-            var Tool = GetAnalysisTool(SelectedTool);
+            /*var Tool = GetAnalysisTool(SelectedTool);
             Tool.X = X;
             Tool.Y = Y;
-            return Tool.SeriesHeatMap;
+            return Tool.SeriesHeatMap;*/
+            return null;
         }
 
         public void Initialise(GAController.GAController GAC)
@@ -66,7 +74,7 @@ namespace GeneticAlgorithm.AnalysisTools
             GACs = new ObservableCollection<GAController.GAController>();
             GACs.Add(GAC);
         }
-        
+
         public void Initialise(string Folder)
         {
             this.Folder = Path.GetFileName(Folder);
@@ -75,20 +83,20 @@ namespace GeneticAlgorithm.AnalysisTools
 
             List<string> Folders = new List<string>();
 
-            if(Directory.EnumerateFiles(Folder, "*.xml").Count() > 0)
+            if (Directory.EnumerateFiles(Folder, "*.xml").Count() > 0)
             {
                 //It's a basic folder
                 Folders.Add(Folder);
             }
 
             var dirs = Directory.EnumerateDirectories(Folder);
-            if(dirs.Count() > 0 && Directory.EnumerateFiles(dirs.First(), "*.xml").Count() > 0)
+            if (dirs.Count() > 0 && Directory.EnumerateFiles(dirs.First(), "*.xml").Count() > 0)
             {
                 //It's a folder with multiple runs in it
                 Folders.AddRange(dirs);
             }
 
-            foreach(var f in Folders)
+            foreach (var f in Folders)
             {
                 var Filename = Directory.EnumerateFiles(f).Last();
                 GAController.GAController GAController = new GAController.GAController("");
