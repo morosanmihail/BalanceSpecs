@@ -74,7 +74,7 @@ namespace BalanceSpecsGUI.Windows.Analysis
 
             Style itemContainerStyle = new Style(typeof(ListBoxItem));
             itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));
-            itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(s_PreviewMouseLeftButtonDown)));
+            itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseRightButtonDownEvent, new MouseButtonEventHandler(s_PreviewMouseLeftButtonDown)));
             itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.DropEvent, new DragEventHandler(listbox1_Drop)));
             ListOfEntries.ItemContainerStyle = itemContainerStyle;
         }
@@ -100,6 +100,8 @@ namespace BalanceSpecsGUI.Windows.Analysis
                 DC.AddAnalysisObject(ma);
                 ResetGraph();
             }
+
+            this.Focus();
         }
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -131,7 +133,7 @@ namespace BalanceSpecsGUI.Windows.Analysis
 
         void s_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            
             if (sender is ListBoxItem)
             {
                 ListBoxItem draggedItem = sender as ListBoxItem;
@@ -164,6 +166,11 @@ namespace BalanceSpecsGUI.Windows.Analysis
             }
 
             ResetGraph();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

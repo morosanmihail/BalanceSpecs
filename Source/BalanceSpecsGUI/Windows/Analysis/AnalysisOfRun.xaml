@@ -50,9 +50,11 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
+        <Button Grid.Row="2" Grid.Column="0" Content="Save to PDF" Click="Button_Click_2"></Button>
+
         <GridSplitter Grid.Column="0" Grid.RowSpan="2" Margin="0" Width="3" HorizontalAlignment="Right" VerticalAlignment="Stretch"/>
 
-        <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Margin="0,0,0,0" Series="{Binding AllSeries}" Name="MainChart" LegendLocation="Right">
+        <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="0,0,0,0" Series="{Binding AllSeries}" Name="MainChart" LegendLocation="Right">
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis MinValue="0"/>
                 <lvc:Axis MinValue="0" Position="RightTop"/>
