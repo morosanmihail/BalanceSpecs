@@ -1,4 +1,5 @@
-﻿using GeneticAlgorithm.AnalysisTools;
+﻿using CsvHelper;
+using GeneticAlgorithm.AnalysisTools;
 using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
@@ -8,6 +9,7 @@ using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -170,7 +172,34 @@ namespace BalanceSpecsGUI.Windows.Analysis
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            
+            var dlg = new CommonOpenFileDialog();
+            dlg.Title = "Choose where to save";
+            dlg.IsFolderPicker = false;
+            dlg.AllowNonFileSystemItems = true;
+            dlg.EnsurePathExists = true;
+            dlg.EnsureReadOnly = false;
+            dlg.EnsureValidNames = true;
+            dlg.Multiselect = false;
+            dlg.ShowPlacesList = true;
+            dlg.Filters.Add(new CommonFileDialogFilter("Comma Separated Values", "csv"));
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var textWriter = new StreamWriter(dlg.FileName);
+                var csv = new CsvWriter(textWriter);
+                //var generatedMap = csv.Configuration.AutoMap<ObservablePoint>();
+                csv.WriteHeader<ObservablePoint>();
+
+                foreach(var S in MainChart.Series)
+                {
+                    foreach(ObservablePoint P in S.Values)
+                    {
+                        csv.WriteRecord(P);
+                    }
+                }
+
+                textWriter.Close();
+            }
         }
     }
 }

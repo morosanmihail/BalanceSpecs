@@ -148,10 +148,13 @@ namespace GeneticAlgorithm.AnalysisTools
 
                 if(PerRunFitnessesA.Except(PerRunFitnessesB).Count() == 0)
                 {
-                    res.Add(new ObservablePoint(Evals, 0.5));
-                } else
-                {
-                    var WilcoxonTest = new TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), Hypo);
+                        res.Add(new ObservablePoint(Evals, 0.5));
+                    } else
+                    {
+                    var WilcoxonTest = new TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), Hypo, true, true);
+                    //var KolmogTest = new TwoSampleKolmogorovSmirnovTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), TwoSampleKolmogorovSmirnovTestHypothesis.FirstSampleIsSmallerThanSecond);
+                    //var MannTest = new MannWhitneyWilcoxonTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), TwoSampleHypothesis.FirstValueIsSmallerThanSecond);
+                    //var WelchTest = new Accord.Statistics.Testing.TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray());
 
                     res.Add(new ObservablePoint(Evals, WilcoxonTest.PValue));
                 }
