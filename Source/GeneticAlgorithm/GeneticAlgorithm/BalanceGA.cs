@@ -313,7 +313,7 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                             Param.Add("value", Vector != null ? new JArray(Vector.GetRange(x, ListSize)) : new JArray(new double[ListSize]));
                         }
 
-                        x++;
+                        x+=ListSize;
                     }
                 }
 
