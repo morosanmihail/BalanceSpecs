@@ -40,7 +40,7 @@ namespace BalanceSpecsGUI.Windows.MainWindows
                 return;
             }
 
-            JsonO.Add(new JObject(new JProperty("name", Name), new JProperty("enabled", true), new JProperty("listsize", 1), new JProperty("minimise", "ignore"), new JProperty("custom", new JObject())));
+            JsonO.Add(new JObject(new JProperty("name", Name), new JProperty("enabled", true), new JProperty("distinct",false), new JProperty("listsize", 1), new JProperty("minimise", "ignore"), new JProperty("custom", new JObject())));
         }
 
         private void AddParamCustomButtonClick(object sender, RoutedEventArgs e)

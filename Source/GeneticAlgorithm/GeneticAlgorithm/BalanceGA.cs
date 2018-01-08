@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Accord.Math;
 
 namespace GeneticAlgorithm.GeneticAlgorithm
 {
@@ -65,9 +66,28 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                 if ((bool)P.enabled == true)
                 {
                     int ListSize = P.listsize != null ? (int)P.listsize : 1;
-                    for (int i = 0; i < ListSize; i++)
+
+                    if (P.distinct == null || (bool)P.distinct == false)
                     {
-                        data.Add(GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy));
+                        for (int i = 0; i < ListSize; i++)
+                        {
+                            data.Add(GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy));
+                        }
+                    }
+                    else
+                    {
+                        //Only works with 1 parameter
+                        var Allowed = new List<double>();
+                        for (int i = (int)P.rangeMin; i <= (int)P.rangeMax; i++)
+                        {
+                            Allowed.Add(i);
+                        }
+
+                        for (int i = 0; i < ListSize; i++)
+                        {
+                            data.Add(Allowed[rand.Next(0, Allowed.Count)]);
+                            Allowed.Remove(data.Last());
+                        }
                     }
                 }
             }
@@ -346,6 +366,28 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             }
         }
 
+        bool IsDistinctPresent()
+        {
+            bool DistinctIsPresent = false;
+
+            dynamic Params = Manager.GetParameters().JsonParams.parameters;
+
+            foreach (var P in Params)
+            {
+                if ((bool)P.enabled == true)
+                {
+                    int ListSize = P.listsize != null ? (int)P.listsize : 1;
+
+                    if (ListSize > 1 && P.distinct != null && (bool)P.distinct == true)
+                    {
+                        DistinctIsPresent = true;
+                    }
+                }
+            }
+
+            return DistinctIsPresent;
+        }
+
         public override T Crossover<T>(T b)
         {
             BalanceGA CWith = ((BalanceGA)(object)b);
@@ -354,20 +396,36 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
             int Length = Vector.Count;
 
-            if (Length == 1)
+            if (!IsDistinctPresent())
             {
-                newData[0] = (Vector[0] + CWith.Vector[0]) / 2;
-            }
-            else
-            {
-
-                int p1 = rand.Next(Length - 1);
-                int p2 = rand.Next(p1 + 1, Length);
-
-                for (int i = p1; i < p2; i++)
+                if (Length == 1)
                 {
-                    newData[i] = CWith.Vector[i];
+                    newData[0] = (Vector[0] + CWith.Vector[0]) / 2;
                 }
+                else
+                {
+
+                    int p1 = rand.Next(Length - 1);
+                    int p2 = rand.Next(p1 + 1, Length);
+
+                    for (int i = p1; i < p2; i++)
+                    {
+                        newData[i] = CWith.Vector[i];
+                    }
+                }
+            } else
+            {
+                //For now, distinct only works when there is a single parameter list
+                var newSet = new HashSet<double>();
+                foreach (var X in Vector)
+                    newSet.Add(X);
+                foreach (var X in CWith.Vector)
+                    newSet.Add(X);
+
+                var vec = newSet.ToList();
+                vec.Shuffle();
+                
+                newData = vec.Take(Length).ToList();
             }
 
             PopulationMember ret = (T)Activator.CreateInstance(typeof(T), new object[] { Manager, newData, rand });
@@ -394,19 +452,46 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
                     double MutateRange = (double)((double)P.rangeMax - (double)P.rangeMin) / (double)P.rangeAccuracy;
 
-                    for (int i = 0; i < ListSize; i++)
+                    if (P.distinct == null || (bool)P.distinct == false)
                     {
-                        if (rand.Next(0, 100) <= MutationChance * 100)
+                        for (int i = 0; i < ListSize; i++)
                         {
-                            /*double Shift = Math.Round(rand.NextDouble(-MutateRange, MutateRange), (int)Math.Log10((double)P.rangeAccuracy));
-                            newData[x] += Shift;
-                            if (newData[x] > (double)P.rangeMax)
-                                newData[x] = (double)P.rangeMax;
-                            if (newData[x] < (double)P.rangeMin)
-                                newData[x] = (double)P.rangeMin;*/
-                            newData[x] = GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy);
+                            if (rand.Next(0, 100) <= MutationChance * 100)
+                            {
+                                /*double Shift = Math.Round(rand.NextDouble(-MutateRange, MutateRange), (int)Math.Log10((double)P.rangeAccuracy));
+                                newData[x] += Shift;
+                                if (newData[x] > (double)P.rangeMax)
+                                    newData[x] = (double)P.rangeMax;
+                                if (newData[x] < (double)P.rangeMin)
+                                    newData[x] = (double)P.rangeMin;*/
+                                newData[x] = GetValInRange((double)P.rangeMin, (double)P.rangeMax, (int)P.rangeAccuracy);
+                            }
+                            x++;
                         }
-                        x++;
+                    } else
+                    {
+                        //Only works with 1 parameter
+                        var Allowed = new List<double>();
+                        for(int i=(int)P.rangeMin; i<=(int)P.rangeMax; i++)
+                        {
+                            Allowed.Add(i);
+                        }
+                        foreach(var X in Vector)
+                        {
+                            Allowed.Remove(X);
+                        }
+
+                        for (int i = 0; i < ListSize; i++)
+                        {
+                            if (rand.Next(0, 100) <= MutationChance * 100)
+                            {
+                                double temp = newData[x];
+                                newData[x] = Allowed[rand.Next(0, Allowed.Count)];
+                                Allowed.Remove(newData[x]);
+                                Allowed.Add(temp);
+                            }
+                            x++;
+                        }
                     }
                 }
             }

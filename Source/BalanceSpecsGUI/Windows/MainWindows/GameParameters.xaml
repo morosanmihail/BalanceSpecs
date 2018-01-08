@@ -55,6 +55,7 @@
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
@@ -86,10 +87,13 @@
                 <TextBlock Text="Parameter List Length" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding listsize, Mode=TwoWay}" TextWrapping="Wrap" Height="23" Grid.Row="7" Grid.Column="1" />
 
-                <TextBlock Text="Custom Properties" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" FontSize="14"/>
+                <Controls:ToggleSwitch Grid.ColumnSpan="2" OnLabel="Distinct" OffLabel="NonDistinct" IsChecked="{Binding distinct.Value, Mode=TwoWay}" Grid.Row="8" Grid.Column="0"/>
+
+
+                <TextBlock Text="Custom Properties" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" FontSize="14"/>
                 <TextBlock></TextBlock>
 
-                <ListBox x:Name="CustomProperties" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding custom}">
+                <ListBox x:Name="CustomProperties" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding custom}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <UniformGrid Columns="2">
@@ -101,7 +105,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2">
                     <TextBox Controls:TextBoxHelper.Watermark="Name" Name="NewParamCustomData" Width="250"/>
                     <Button Content="Add" Click="AddParamCustomButtonClick" DataContext="{Binding custom}"/>
                     <Button Content="Remove" Click="RemoveParamCustomButtonClick" DataContext="{Binding custom}"/>
