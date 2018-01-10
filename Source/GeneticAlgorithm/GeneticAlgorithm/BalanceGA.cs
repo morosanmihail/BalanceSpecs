@@ -366,66 +366,61 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             }
         }
 
-        bool IsDistinctPresent()
-        {
-            bool DistinctIsPresent = false;
-
-            dynamic Params = Manager.GetParameters().JsonParams.parameters;
-
-            foreach (var P in Params)
-            {
-                if ((bool)P.enabled == true)
-                {
-                    int ListSize = P.listsize != null ? (int)P.listsize : 1;
-
-                    if (ListSize > 1 && P.distinct != null && (bool)P.distinct == true)
-                    {
-                        DistinctIsPresent = true;
-                    }
-                }
-            }
-
-            return DistinctIsPresent;
-        }
-
         public override T Crossover<T>(T b)
         {
             BalanceGA CWith = ((BalanceGA)(object)b);
 
             var newData = new List<double>(Vector);
 
-            int Length = Vector.Count;
+            dynamic Params = Manager.GetParameters().JsonParams.parameters;
 
-            if (!IsDistinctPresent())
+            int x = 0;
+            foreach (var P in Params)
             {
-                if (Length == 1)
+                if ((bool)P.enabled == true)
                 {
-                    newData[0] = (Vector[0] + CWith.Vector[0]) / 2;
-                }
-                else
-                {
+                    int ListSize = P.listsize != null ? (int)P.listsize : 1;
 
-                    int p1 = rand.Next(Length - 1);
-                    int p2 = rand.Next(p1 + 1, Length);
-
-                    for (int i = p1; i < p2; i++)
+                    if (P.distinct == null || (bool)P.distinct == false)
                     {
-                        newData[i] = CWith.Vector[i];
+                        if (ListSize == 1)
+                        {
+                            newData[x] = (Vector[x] + CWith.Vector[x]) / 2;
+                        }
+                        else
+                        {
+
+                            int p1 = rand.Next(x, x + ListSize - 1);
+                            int p2 = rand.Next(p1 + 1, x + ListSize);
+
+                            for (int i = p1; i < p2; i++)
+                            {
+                                newData[i] = CWith.Vector[i];
+                            }
+                        }
+
+                        x += ListSize;
+                    }
+                    else
+                    {
+                        var newSet = new HashSet<double>();
+                        foreach (var X in Vector.Skip(x).Take(ListSize))
+                            newSet.Add(X);
+                        foreach (var X in CWith.Vector.Skip(x).Take(ListSize))
+                            newSet.Add(X);
+
+                        var vec = newSet.ToList();
+                        vec.Shuffle();
+
+                        var L = vec.Take(ListSize).ToList();
+                        for (int i = 0; i < ListSize; i++)
+                        {
+                            newData[x + i] = L[i];
+                        }
+
+                        x += ListSize;
                     }
                 }
-            } else
-            {
-                //For now, distinct only works when there is a single parameter list
-                var newSet = new HashSet<double>();
-                foreach (var X in Vector)
-                    newSet.Add(X);
-                foreach (var X in CWith.Vector)
-                    newSet.Add(X);
-
-                var vec = newSet.ToList();
-                vec.Shuffle();
-                
-                newData = vec.Take(Length).ToList();
             }
 
             PopulationMember ret = (T)Activator.CreateInstance(typeof(T), new object[] { Manager, newData, rand });
@@ -470,7 +465,6 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                         }
                     } else
                     {
-                        //Only works with 1 parameter
                         var Allowed = new List<double>();
                         for(int i=(int)P.rangeMin; i<=(int)P.rangeMax; i++)
                         {
