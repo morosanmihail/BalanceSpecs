@@ -61,6 +61,8 @@
                 <MenuItem Header="Analyze Results in Folder(s)" Click="MenuItem_Click_6"></MenuItem>
             </MenuItem>
             <MenuItem Header="Tools">
+                <MenuItem Header="Statistical Tests" Click="MenuItem_Click_7"></MenuItem>
+                <Separator/>
                 <MenuItem Header="Add Tool to List" Click="MenuItem_Click_5"/>
                 <Separator/>
                 <MenuItem Header="Available Tools" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools2}">
@@ -77,7 +79,7 @@
         </Menu>
 
         <Controls:MetroTabControl Grid.Row="1" TabStripPlacement="Left">
-            <TabItem Header="Welcome" Selector.IsSelected="True">
+            <!--<TabItem Header="Welcome" Selector.IsSelected="True">
                 <ScrollViewer VerticalScrollBarVisibility="Visible" Padding="10,10,10,10">
                     <StackPanel>
                         <TextBlock FontSize="30" FontWeight="Bold">Welcome!</TextBlock>
@@ -94,7 +96,7 @@
                         <TextBlock FontSize="20">Witness your customised agent!</TextBlock>
                     </StackPanel>
                 </ScrollViewer>
-            </TabItem>
+            </TabItem>-->
             
             <TabItem Header="GA Parameters" Name="ParamsTab" Visibility="{Binding Source={x:Static p:Settings.Default}, Converter={StaticResource BoolToVisibilityConverter}, Path=ShowAdvanced, Mode=OneWay}">
                 <ScrollViewer VerticalScrollBarVisibility="Visible">

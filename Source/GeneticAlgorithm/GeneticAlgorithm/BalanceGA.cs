@@ -375,6 +375,10 @@ namespace GeneticAlgorithm.GeneticAlgorithm
             dynamic Params = Manager.GetParameters().JsonParams.parameters;
 
             int x = 0;
+            int NonDistinctRangeStart = -1;
+            int NonDistinctRangeEnd = -1;
+            bool DistinctFlag = false;
+            int LastNonDistinctAccuracy = 1;
             foreach (var P in Params)
             {
                 if ((bool)P.enabled == true)
@@ -383,26 +387,18 @@ namespace GeneticAlgorithm.GeneticAlgorithm
 
                     if (P.distinct == null || (bool)P.distinct == false)
                     {
-                        if (ListSize == 1)
+                        if(NonDistinctRangeStart == -1)
                         {
-                            newData[x] = (Vector[x] + CWith.Vector[x]) / 2;
-                        }
-                        else
-                        {
-
-                            int p1 = rand.Next(x, x + ListSize - 1);
-                            int p2 = rand.Next(p1 + 1, x + ListSize);
-
-                            for (int i = p1; i < p2; i++)
-                            {
-                                newData[i] = CWith.Vector[i];
-                            }
+                            NonDistinctRangeStart = x;
                         }
 
-                        x += ListSize;
+                        LastNonDistinctAccuracy = (int)P.rangeAccuracy;
+
+                        NonDistinctRangeEnd = x + ListSize;
                     }
                     else
                     {
+                        DistinctFlag = true;
                         var newSet = new HashSet<double>();
                         foreach (var X in Vector.Skip(x).Take(ListSize))
                             newSet.Add(X);
@@ -417,9 +413,31 @@ namespace GeneticAlgorithm.GeneticAlgorithm
                         {
                             newData[x + i] = L[i];
                         }
-
-                        x += ListSize;
                     }
+
+                    x += ListSize;
+                }
+
+                if(NonDistinctRangeStart != -1 && (DistinctFlag || NonDistinctRangeEnd == Vector.Count))
+                {
+                    if (NonDistinctRangeEnd - NonDistinctRangeStart == 1)
+                    {
+                        newData[x] = Math.Round((Vector[NonDistinctRangeStart] + CWith.Vector[NonDistinctRangeStart]) / 2, (int)Math.Log10(LastNonDistinctAccuracy));
+                    }
+                    else
+                    {
+
+                        int p1 = rand.Next(NonDistinctRangeStart, NonDistinctRangeEnd - 1);
+                        int p2 = rand.Next(p1 + 1, NonDistinctRangeEnd);
+
+                        for (int i = p1; i < p2; i++)
+                        {
+                            newData[i] = CWith.Vector[i];
+                        }
+                    }
+
+                    NonDistinctRangeStart = -1;
+                    DistinctFlag = false;
                 }
             }
 

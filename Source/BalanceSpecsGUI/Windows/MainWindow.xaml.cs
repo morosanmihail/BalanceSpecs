@@ -192,5 +192,12 @@ namespace BalanceSpecsGUI.Windows
 
             AnalysisWindow.Show();
         }
+
+        private void MenuItem_Click_7(object sender, RoutedEventArgs e)
+        {
+            var StatsWindow = new Analysis.StatisticalTests();
+
+            StatsWindow.Show();
+        }
     }
 }

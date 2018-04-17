@@ -144,6 +144,9 @@
     <Compile Include="Windows\Analysis\AnalysisOfRun.xaml.cs">
       <DependentUpon>AnalysisOfRun.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Analysis\StatisticalTests.xaml.cs">
+      <DependentUpon>StatisticalTests.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\GARun.xaml.cs">
       <DependentUpon>GARun.xaml</DependentUpon>
     </Compile>
@@ -182,6 +185,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Analysis\AnalysisOfRun.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Analysis\StatisticalTests.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
