@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Accord.Statistics.Testing;
 
 namespace BalanceSpecsGUI.Windows.Analysis
 {
@@ -49,18 +50,17 @@ namespace BalanceSpecsGUI.Windows.Analysis
                 return;
             }
 
-            Accord.Statistics.Testing.TwoSampleHypothesis Hypo = Accord.Statistics.Testing.TwoSampleHypothesis.FirstValueIsGreaterThanSecond;
-            string HypoString = ((Button)sender).Content.ToString();
-            switch (HypoString)
+            var Hypo = TwoSampleHypothesis.FirstValueIsGreaterThanSecond;
+            switch (((Button)sender).Content.ToString())
             {
                 case "Dif":
-                    Hypo = Accord.Statistics.Testing.TwoSampleHypothesis.ValuesAreDifferent;
+                    Hypo = TwoSampleHypothesis.ValuesAreDifferent;
                     break;
                 case "Less":
-                    Hypo = Accord.Statistics.Testing.TwoSampleHypothesis.FirstValueIsSmallerThanSecond;
+                    Hypo = TwoSampleHypothesis.FirstValueIsSmallerThanSecond;
                     break;
                 case "More":
-                    Hypo = Accord.Statistics.Testing.TwoSampleHypothesis.FirstValueIsGreaterThanSecond;
+                    Hypo = TwoSampleHypothesis.FirstValueIsGreaterThanSecond;
                     break;
                 default:
                     break;
@@ -70,15 +70,21 @@ namespace BalanceSpecsGUI.Windows.Analysis
 
             if (vpop1.Count == vpop2.Count)
             {
-                test = new Accord.Statistics.Testing.PairedTTest(vpop1.ToArray(), vpop2.ToArray(), Hypo);
+                test = new PairedTTest(vpop1.ToArray(), vpop2.ToArray(), Hypo);
 
-                testWilcoxon = new Accord.Statistics.Testing.TwoSampleWilcoxonSignedRankTest(vpop1.ToArray(), vpop2.ToArray(), Hypo);
+                testWilcoxon = new TwoSampleWilcoxonSignedRankTest(vpop1.ToArray(), vpop2.ToArray(), Hypo);
             }
             else
             {
-                test = new Accord.Statistics.Testing.TTest(vpop1.ToArray(), vpop2[0], Accord.Statistics.Testing.OneSampleHypothesis.ValueIsSmallerThanHypothesis);
+                test = new TTest(
+                    vpop1.ToArray(),
+                    vpop2[0],
+                    OneSampleHypothesis.ValueIsSmallerThanHypothesis);
 
-                testWilcoxon = new Accord.Statistics.Testing.WilcoxonSignedRankTest(vpop1.ToArray(), vpop2[0], Accord.Statistics.Testing.OneSampleHypothesis.ValueIsSmallerThanHypothesis);
+                testWilcoxon = new WilcoxonSignedRankTest(
+                    vpop1.ToArray(),
+                    vpop2[0],
+                    OneSampleHypothesis.ValueIsSmallerThanHypothesis);
             }
 
             results.Text = "T-Test:\n Significant: " + test.Significant + "\n p-value: " + test.PValue +
