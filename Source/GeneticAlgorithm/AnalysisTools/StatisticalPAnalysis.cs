@@ -151,7 +151,7 @@ namespace GeneticAlgorithm.AnalysisTools
                         res.Add(new ObservablePoint(Evals, 0.5));
                     } else
                     {
-                    var WilcoxonTest = new TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), Hypo, true, true);
+                    var WilcoxonTest = new TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), Hypo, false, true);
                     //var KolmogTest = new TwoSampleKolmogorovSmirnovTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), TwoSampleKolmogorovSmirnovTestHypothesis.FirstSampleIsSmallerThanSecond);
                     //var MannTest = new MannWhitneyWilcoxonTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray(), TwoSampleHypothesis.FirstValueIsSmallerThanSecond);
                     //var WelchTest = new Accord.Statistics.Testing.TwoSampleWilcoxonSignedRankTest(PerRunFitnessesA.ToArray(), PerRunFitnessesB.ToArray());
