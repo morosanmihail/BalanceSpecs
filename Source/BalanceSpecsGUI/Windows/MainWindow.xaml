@@ -63,6 +63,8 @@
             <MenuItem Header="Tools">
                 <MenuItem Header="Statistical Tests" Click="MenuItem_Click_7"></MenuItem>
                 <Separator/>
+                <MenuItem Header="Run Comparisons" Click="MenuItem_Click_RunCompare"></MenuItem>
+                <Separator/>
                 <MenuItem Header="Add Tool to List" Click="MenuItem_Click_5"/>
                 <Separator/>
                 <MenuItem Header="Available Tools" ItemsSource="{Binding Source={x:Static p:Settings.Default}, Path=Tools2}">

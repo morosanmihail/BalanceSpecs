@@ -199,5 +199,12 @@ namespace BalanceSpecsGUI.Windows
 
             StatsWindow.Show();
         }
+
+        private void MenuItem_Click_RunCompare(object sender, RoutedEventArgs e)
+        {
+            var RunCompareWindow = new Analysis.RunComparison();
+
+            RunCompareWindow.Show();
+        }
     }
 }
